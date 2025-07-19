@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sách Ảnh Nhatquang</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
@@ -14,17 +14,18 @@
             background-color: #d9e3bf;
             margin: 0;
             font-family: Arial, sans-serif;
-            flex-direction: column; /* Giữ cột để sách và nút vẫn nằm trên cùng một luồng, nhưng sẽ dùng absolute cho nút */
-            position: relative; /* Quan trọng để các nút absolute căn cứ vào body */
+            line-height: none;
+            flex-direction: column;
+            position: relative;
         }
 
         .book {
             width: 400px; /* Chiều rộng của cuốn sách */
             height: 600px; /* Chiều cao của cuốn sách */
-            position: relative;
+            position: relative; /* Quan trọng: để các phần tử con absolute căn cứ vào đây */
             perspective: 1500px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 10; /* Đảm bảo sách nằm trên các nút nếu cần */
+            z-index: 10;
         }
 
         .page {
@@ -43,7 +44,7 @@
             transition: transform 0.8s ease-in-out, z-index 0s 0.4s;
             backface-visibility: hidden;
             overflow: hidden;
-            border: 5px solid #996c03; /* Viền màu xám nhạt cho các trang bên trong */
+            border: 3px solid #996c03;
         }
 
         .page img {
@@ -71,9 +72,10 @@
         }
 
         .cover-front {
-            background-color: none;
+            background-color: #dedede;
             color: orange;
             flex-direction: column;
+
             text-align: center;
             z-index: 100;
             border: none;
@@ -81,7 +83,6 @@
             justify-content: center;
             align-items: center;
 
-            /* KHUNG ẢNH CHO BÌA TRƯỚC */
             border: 20px solid transparent;
             border-image: url('data/golden-border.png') 450 stretch;
             background-clip: padding-box;
@@ -97,12 +98,12 @@
         }
 
         .cover-back {
-            background-color: none;
+            background-color: #dedede;
             color: #003399;
             flex-direction: column;
             text-align: center;
             z-index: 9999;
-            transform: rotateY(-0deg);
+            transform: rotateY(0deg);
             opacity: 0;
             pointer-events: none;
             border: none;
@@ -110,7 +111,6 @@
             justify-content:center;
             align-items: center;
 
-            /* KHUNG ẢNH CHO BÌA SAU */
             border: 20px solid transparent;
             border-image: url('data/golden-border.png') 450 stretch;
             background-clip: padding-box;
@@ -125,45 +125,46 @@
         }
 
         .cover-back h2 {
-            font-size: 1.5em;
+            font-size: 1.2em;
             color: #003399;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
-            line-height: 1.2; /* Điều chỉnh khoảng cách dòng nếu cần */
+            text-shadow: 0 0 5px rgba(0,0,0,0.2);
+            line-height: 1;
+            font-family: 'Great Vibes', cursive;
         }
 
         /* --- CSS MỚI CHO NÚT ĐIỀU HƯỚNG --- */
         .navigation-buttons {
-            /* Loại bỏ display: flex và margin-top ban đầu */
-            /* Nó sẽ không còn là một flex container theo cách cũ */
-            position: absolute; /* Đặt vị trí tuyệt đối so với body */
-            top: 50%; /* Dịch xuống 50% chiều cao của body */
-            transform: translateY(-50%); /* Dịch ngược lên 50% chiều cao của chính nó để căn giữa */
-            display: flex; /* Giữ flex để các nút nằm ngang hàng */
-            justify-content: space-between; /* Đẩy hai nút ra hai biên của container */
-            width: 100%; /* Chiếm toàn bộ chiều rộng để nút có thể ra sát lề */
-            padding: 0 20px; /* Thêm padding ngang để nút không dính sát màn hình */
-            box-sizing: border-box; /* Đảm bảo padding không làm tăng width */
+            position: absolute; /* Quan trọng: Đặt vị trí tuyệt đối so với .book */
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            width: 100%; /* Chiếm toàn bộ chiều rộng của .book */
+            padding: 0 10px; /* Giảm padding để nút nằm sát viền trang hơn */
+            box-sizing: border-box;
             pointer-events: none; /* Ban đầu không cho tương tác, chỉ các nút bên trong mới tương tác */
-            z-index: 5; /* Đặt dưới sách (z-index: 10) nhưng trên background */
+            z-index: 1001; /* Đảm bảo nút nằm trên tất cả các trang và bìa */
         }
 
         button {
-            padding: 12px 25px;
-            font-size: 1.1em;
+            padding: 12px 20px; /* Giảm padding ngang của nút để gọn hơn */
+            font-size: 1em; /* Giảm nhẹ font-size cho nút để phù hợp hơn */
             cursor: pointer;
-            background-color: #007bff;
+            background-color: #dba800;
             color: white;
-            border: none;
+            border: 1px solid #2e7eff;
             border-radius: 8px;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
             pointer-events: auto; /* Cho phép tương tác với các nút */
+            opacity: 0.4; /* Chỉnh độ trong suốt cho nút */
         }
 
         button:hover {
             background-color: #0056b3;
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+            opacity: 1; /* Nút rõ nét hơn khi hover */
         }
 
         button:active {
@@ -176,35 +177,24 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+            opacity: 0.4; /* Độ trong suốt thấp hơn khi bị disable */
         }
 
-        /* Thêm một số điều chỉnh nhỏ để nút nằm gần sách hơn nếu màn hình rộng */
-        /* Đây là một ví dụ, bạn có thể cần điều chỉnh thêm */
-        @media (min-width: 900px) { /* Khi màn hình đủ rộng */
+        /* Các media query cho màn hình lớn không còn cần thiết cho vị trí nút */
+        /* vì nút đã nằm trong .book và chiếm 100% chiều rộng của .book */
+        /* Bạn có thể xóa bỏ phần này hoặc giữ lại nếu muốn điều chỉnh kích thước nút trên màn hình lớn */
+        /* Tuy nhiên, các margin âm sẽ không còn áp dụng */
+        @media (min-width: 900px) {
+            /* Các điều chỉnh này không còn cần thiết hoặc có thể gây lỗi khi nút nằm trong book */
+            /* Ví dụ:
             .navigation-buttons {
-                width: calc(100% - 400px - 100px); /* Giảm chiều rộng để nó không quá xa sách (400px là sách, 100px là khoảng cách) */
-                max-width: 800px; /* Giới hạn chiều rộng tối đa */
+                width: 100%; // Giữ nguyên 100% của book
+                max-width: none; // Không giới hạn max-width nữa
             }
-            #prevBtn {
-                margin-left: -250px; /* Dịch sang trái so với vị trí mặc định */
-            }
-            #nextBtn {
-                margin-right: -250px; /* Dịch sang phải so với vị trí mặc định */
-            }
+            #prevBtn { margin-left: 0; }
+            #nextBtn { margin-right: 0; }
+            */
         }
-        @media (max-width: 899px) { /* Khi màn hình nhỏ hơn, quay về mặc định */
-            .navigation-buttons {
-                width: 100%;
-                padding: 0 20px;
-            }
-            #prevBtn {
-                margin-left: 0;
-            }
-            #nextBtn {
-                margin-right: 0;
-            }
-        }
-
     </style>
 </head>
 <body>
@@ -233,12 +223,13 @@
         </div>
         <div class="page cover-back">
             <h2>Cảm ơn bạn đã đọc!</h2>
+	    <p>Mời đọc tiếp sách vào kỳ sau</p>
         </div>
-    </div>
 
-    <div class="navigation-buttons">
-        <button id="prevBtn">Trang trước</button>
-        <button id="nextBtn">Trang sau</button>
+        <div class="navigation-buttons">
+            <button id="prevBtn">Trang trước</button>
+            <button id="nextBtn">Trang sau</button>
+        </div>
     </div>
 
     <script>
@@ -275,22 +266,17 @@
                 prevBtn.disabled = currentPageIndex === 0;
                 nextBtn.disabled = currentPageIndex >= pages.length - 1;
 
-                // Cập nhật văn bản của nút điều hướng
                 if (currentPageIndex === 0) {
-                    // Đang ở bìa trước
                     prevBtn.textContent = 'Trang đầu';
                     nextBtn.textContent = `Trang 1/${totalContentPages}`;
                 } else if (currentPageIndex === pages.length - 1) {
-                    // Đang ở bìa sau
                     prevBtn.textContent = `Trang ${totalContentPages}/${totalContentPages}`;
                     nextBtn.textContent = 'Trang cuối';
                 } else {
-                    // Đang ở các trang nội dung
                     prevBtn.textContent = `Trang ${currentPageIndex - 1}/${totalContentPages}`;
                     nextBtn.textContent = `Trang ${currentPageIndex + 1}/${totalContentPages}`;
                 }
 
-                // Xử lý trường hợp đặc biệt cho nút "Trang trước" khi ở trang 1 nội dung
                 if (currentPageIndex === 1) {
                     prevBtn.textContent = 'Bìa trước';
                 }
