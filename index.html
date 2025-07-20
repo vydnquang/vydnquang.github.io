@@ -82,12 +82,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-
+            
             border: 20px solid transparent;
-            border-image: url('data/golden-border.png') 450 stretch;
+            /* Cập nhật border-image cho bìa trước */
+            border-image: url('data/golden-border.png') 450 fill round; /* Dùng slice 450 và round */
             background-clip: padding-box;
             background-origin: padding-box;
             padding: 40px;
+
         }
 
         .cover-front h3 {
@@ -112,7 +114,8 @@
             align-items: center;
 
             border: 20px solid transparent;
-            border-image: url('data/golden-border.png') 450 stretch;
+            /* Cập nhật border-image cho bìa sau */
+            border-image: url('data/golden-border.png') 450 fill round; /* Dùng slice 450 và round */
             background-clip: padding-box;
             background-origin: padding-box;
             padding: 40px;
