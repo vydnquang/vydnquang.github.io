@@ -14,7 +14,7 @@
             background-color: #d9e3bf;
             margin: 0;
             font-family: Arial, sans-serif;
-            line-height: none;
+            line-height: 1.5;
             flex-direction: column;
             position: relative;
         }
@@ -26,6 +26,7 @@
             perspective: 1500px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             z-index: 10;
+            overflow: hidden; /* Quan trọng: Để marquee không tràn ra ngoài book */
         }
 
         .page {
@@ -75,7 +76,6 @@
             background-color: #dedede;
             color: orange;
             flex-direction: column;
-
             text-align: center;
             z-index: 100;
             border: none;
@@ -84,12 +84,10 @@
             align-items: center;
             
             border: 20px solid transparent;
-            /* Cập nhật border-image cho bìa trước */
-            border-image: url('data/golden-border.png') 450 fill round; /* Dùng slice 450 và round */
+            border-image: url('data/golden-border.png') 450 fill round;
             background-clip: padding-box;
             background-origin: padding-box;
             padding: 40px;
-
         }
 
         .cover-front h3 {
@@ -114,8 +112,7 @@
             align-items: center;
 
             border: 20px solid transparent;
-            /* Cập nhật border-image cho bìa sau */
-            border-image: url('data/golden-border.png') 450 fill round; /* Dùng slice 450 và round */
+            border-image: url('data/golden-border.png') 450 fill round;
             background-clip: padding-box;
             background-origin: padding-box;
             padding: 40px;
@@ -128,14 +125,14 @@
         }
 
         .cover-back h2 {
-            font-size: 1.2em;
+            font-size: 1.5em;
             color: #003399;
             text-shadow: 0 0 5px rgba(0,0,0,0.2);
-            line-height: 1;
+            line-height: 1.2;
             font-family: 'Great Vibes', cursive;
         }
 
-	.navigation-buttons {
+        .navigation-buttons {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
@@ -149,8 +146,8 @@
         }
 
         button {
-            padding: 12px 20px; /* Đã đặt lại padding bằng px */
-            font-size: 16px; /* **Quan trọng:** Đặt font-size bằng px để cố định */
+            padding: 12px 20px;
+            font-size: 16px;
             cursor: pointer;
             background-color: #dba800;
             color: white;
@@ -162,12 +159,11 @@
             opacity: 0.4;
         }
         
-
         button:hover {
             background-color: #0056b3;
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
-            opacity: 1; /* Nút rõ nét hơn khi hover */
+            opacity: 1;
         }
 
         button:active {
@@ -180,29 +176,54 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
-            opacity: 0.4; /* Độ trong suốt thấp hơn khi bị disable */
+            opacity: 0.4;
         }
 
-        /* Các media query cho màn hình lớn không còn cần thiết cho vị trí nút */
-        /* vì nút đã nằm trong .book và chiếm 100% chiều rộng của .book */
-        /* Bạn có thể xóa bỏ phần này hoặc giữ lại nếu muốn điều chỉnh kích thước nút trên màn hình lớn */
-        /* Tuy nhiên, các margin âm sẽ không còn áp dụng */
-        @media (min-width: 900px) {
-            /* Các điều chỉnh này không còn cần thiết hoặc có thể gây lỗi khi nút nằm trong book */
-            /* Ví dụ:
-            .navigation-buttons {
-                width: 100%; // Giữ nguyên 100% của book
-                max-width: none; // Không giới hạn max-width nữa
-            }
-            #prevBtn { margin-left: 0; }
-            #nextBtn { margin-right: 0; }
-            */
+        /* --- CSS MỚI CHO MARQUEE --- */
+        .page-marquee {
+            position: absolute;
+            top: 5px; /* Vị trí cách đỉnh book 10px */
+            width: 98%;
+	    opacity: 0.3;
+	    left: 0;
+	    right: 0;
+	    margin: 0 auto;
+	    align-items: center;
+            text-align: center;
+            font-family: 'Great Vibes', cursive;
+            font-size: 25px; /* Kích thước font cố định */
+            font-weight: bold;
+            color: #000599; /* Màu cam nổi bật */
+            z-index: 1000; /* Nằm trên các trang nhưng dưới nút điều hướng */
+            white-space: nowrap; /* Đảm bảo nội dung nằm trên một dòng */
+            overflow: hidden; /* Ẩn phần nội dung tràn ra ngoài */
+            background-color: #fbffc9; /* Nền trong suốt nhẹ */
+
+            padding: 2px 0;
+            display: none; /* Mặc định ẩn, sẽ hiển thị bằng JS */
+        }
+
+        .page-marquee marquee {
+            /* Marquee element itself */
+            display: inline-block; /* Đảm bảo marquee hoạt động đúng */
+            width: 100%; /* Đảm bảo marquee chiếm đủ không gian để cuộn */
+        }
+
+        /* Optional: Điều chỉnh vị trí của trang số nếu marquee che mất */
+        .page-number {
+            bottom: 30px; /* Tăng khoảng cách từ đáy lên để tránh marquee nếu có */
         }
     </style>
 </head>
 <body>
 
     <div class="book">
+        <div id="bookMarquee" class="page-marquee">
+            <marquee behavior="scroll" direction="left" scrollamount="4">
+                Mỗi ngày đọc 10 trang sách, nhận thêm sức khỏe về cho mình!
+            </marquee>
+        </div>
+
         <div class="page cover-front">
             <h3>NHỮNG PHƯƠNG THỨC PHỤC HỒI SỨC KHỎE THEO TỰ NHIÊN</h3>
             <p>Tác giả: Nishi Katsuzo</p>
@@ -226,7 +247,7 @@
         </div>
         <div class="page cover-back">
             <h2>Cảm ơn bạn đã đọc!</h2>
-	    <p>Mời đọc tiếp sách vào kỳ sau</p>
+            <p>Mời đọc tiếp sách vào kỳ sau</p>
         </div>
 
         <div class="navigation-buttons">
@@ -240,6 +261,7 @@
             const pages = document.querySelectorAll('.page');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
+            const bookMarquee = document.getElementById('bookMarquee'); // Lấy phần tử marquee
             const totalContentPages = pages.length - 2;
             let currentPageIndex = 0;
 
@@ -268,6 +290,13 @@
 
                 prevBtn.disabled = currentPageIndex === 0;
                 nextBtn.disabled = currentPageIndex >= pages.length - 1;
+
+                // --- LOGIC HIỂN THỊ/ẨN MARQUEE ---
+                if (currentPageIndex > 0 && currentPageIndex < pages.length - 1) {
+                    bookMarquee.style.display = 'block'; // Hiển thị marquee trên các trang nội dung
+                } else {
+                    bookMarquee.style.display = 'none'; // Ẩn marquee trên bìa và trang cuối
+                }
 
                 if (currentPageIndex === 0) {
                     prevBtn.textContent = 'Trang đầu';
@@ -299,6 +328,7 @@
                 }
             });
 
+            // Khởi tạo trạng thái ban đầu
             updateBook();
         });
     </script>
