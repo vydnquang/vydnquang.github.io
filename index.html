@@ -135,23 +135,22 @@
             font-family: 'Great Vibes', cursive;
         }
 
-        /* --- CSS MỚI CHO NÚT ĐIỀU HƯỚNG --- */
-        .navigation-buttons {
-            position: absolute; /* Quan trọng: Đặt vị trí tuyệt đối so với .book */
+	.navigation-buttons {
+            position: absolute;
             top: 50%;
             transform: translateY(-50%);
             display: flex;
             justify-content: space-between;
-            width: 100%; /* Chiếm toàn bộ chiều rộng của .book */
-            padding: 0 10px; /* Giảm padding để nút nằm sát viền trang hơn */
+            width: 100%;
+            padding: 0 10px;
             box-sizing: border-box;
-            pointer-events: none; /* Ban đầu không cho tương tác, chỉ các nút bên trong mới tương tác */
-            z-index: 1001; /* Đảm bảo nút nằm trên tất cả các trang và bìa */
+            pointer-events: none;
+            z-index: 1001;
         }
 
         button {
-            padding: 12px 20px; /* Giảm padding ngang của nút để gọn hơn */
-            font-size: 1em; /* Giảm nhẹ font-size cho nút để phù hợp hơn */
+            padding: 12px 20px; /* Đã đặt lại padding bằng px */
+            font-size: 16px; /* **Quan trọng:** Đặt font-size bằng px để cố định */
             cursor: pointer;
             background-color: #dba800;
             color: white;
@@ -159,9 +158,10 @@
             border-radius: 8px;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-            pointer-events: auto; /* Cho phép tương tác với các nút */
-            opacity: 0.4; /* Chỉnh độ trong suốt cho nút */
+            pointer-events: auto;
+            opacity: 0.4;
         }
+        
 
         button:hover {
             background-color: #0056b3;
