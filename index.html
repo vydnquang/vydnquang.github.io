@@ -81,8 +81,7 @@
             border: none;
             display: flex;
             justify-content: center;
-            align-items: center;
-            
+            align-items: center;  
             border: 20px solid transparent;
             border-image: url('data/golden-border.png') 450 fill round;
             background-clip: padding-box;
@@ -92,9 +91,16 @@
 
         .cover-front h3 {
             font-family: 'Pacifico', cursive;
-            font-size: 1em;
-            margin-bottom: 10px;
+            font-size: 0.8em;
+            margin-bottom: 180px;
             color: #003399;
+        }
+
+	.cover-front p {
+            margin-top: 5px; /* Giảm khoảng cách dưới của mỗi đoạn văn */
+            line-height: 0.1;
+            font-size: 20px; /* Có thể giảm kích thước font một chút cho hợp lý hơn */
+            color: orange; /* Thêm màu sắc cho chữ rõ ràng hơn */
         }
 
         .cover-back {
@@ -110,7 +116,6 @@
             display: flex;
             justify-content:center;
             align-items: center;
-
             border: 20px solid transparent;
             border-image: url('data/golden-border.png') 450 fill round;
             background-clip: padding-box;
@@ -125,11 +130,18 @@
         }
 
         .cover-back h2 {
-            font-size: 1.5em;
+            font-size: 1em;
             color: #003399;
             text-shadow: 0 0 5px rgba(0,0,0,0.2);
             line-height: 1.2;
             font-family: 'Great Vibes', cursive;
+        }
+
+	.cover-back p {
+            margin-top: 40px; /* Giảm khoảng cách dưới của mỗi đoạn văn */
+            line-height: 0.1;
+            font-size: 20px; /* Có thể giảm kích thước font một chút cho hợp lý hơn */
+            color: orange; /* Thêm màu sắc cho chữ rõ ràng hơn */
         }
 
         .navigation-buttons {
@@ -179,39 +191,58 @@
             opacity: 0.4;
         }
 
-        /* --- CSS MỚI CHO MARQUEE --- */
-        .page-marquee {
+        /* CSS CHO MARQUEE CỐ ĐỊNH TRÊN BOOK */
+        #bookMarquee {
             position: absolute;
-            top: 5px; /* Vị trí cách đỉnh book 10px */
-            width: 98%;
-	    opacity: 0.3;
-	    left: 0;
-	    right: 0;
-	    margin: 0 auto;
-	    align-items: center;
+            top: 5px; 
+            width: 98%; /* Giữ nguyên 80% như bạn đã chỉnh */
+            opacity: 0.7;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
             text-align: center;
             font-family: 'Great Vibes', cursive;
-            font-size: 25px; /* Kích thước font cố định */
+            font-size: 25px; 
             font-weight: bold;
-            color: #000599; /* Màu cam nổi bật */
-            z-index: 1000; /* Nằm trên các trang nhưng dưới nút điều hướng */
-            white-space: nowrap; /* Đảm bảo nội dung nằm trên một dòng */
-            overflow: hidden; /* Ẩn phần nội dung tràn ra ngoài */
-            background-color: #fbffc9; /* Nền trong suốt nhẹ */
-
-            padding: 2px 0;
-            display: none; /* Mặc định ẩn, sẽ hiển thị bằng JS */
+            color: #000599; 
+            z-index: 1000; 
+            white-space: nowrap;
+            overflow: hidden;
+            background-color: none; 
+            padding: 5px 0; /* Đã tăng padding lên 5px như bạn yêu cầu */
+            box-sizing: border-box;
+            display: none;
         }
 
         .page-marquee marquee {
-            /* Marquee element itself */
-            display: inline-block; /* Đảm bảo marquee hoạt động đúng */
-            width: 100%; /* Đảm bảo marquee chiếm đủ không gian để cuộn */
+            display: inline-block;
+            width: 100%;
         }
 
-        /* Optional: Điều chỉnh vị trí của trang số nếu marquee che mất */
         .page-number {
-            bottom: 30px; /* Tăng khoảng cách từ đáy lên để tránh marquee nếu có */
+            bottom: 30px;
+        }
+
+        /* CSS MỚI CHO NÚT ĐIỀU KHIỂN NHẠC */
+        #musicToggleBtn {
+            position: absolute;
+            bottom: 20px; /* Cách đáy trang 20px */
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 15px; /* Kích thước nút nhỏ hơn một chút */
+            font-size: 14px; /* Font nhỏ hơn */
+            background-color: #00aaff; /* Màu xanh dương */
+            border: 1px solid #007bbd;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            z-index: 1002; /* Đảm bảo nút nằm trên mọi thứ */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        #musicToggleBtn:hover {
+            background-color: #007bbd;
         }
     </style>
 </head>
@@ -247,7 +278,7 @@
         </div>
         <div class="page cover-back">
             <h2>Cảm ơn bạn đã đọc!</h2>
-            <p>Mời đọc tiếp sách vào kỳ sau</p>
+            <p>Mời đón đọc các kỳ tiếp theo</p>
         </div>
 
         <div class="navigation-buttons">
@@ -256,14 +287,54 @@
         </div>
     </div>
 
+    <audio id="backgroundMusic" loop autoplay>
+        <source src="data/nhac-docsach.mp3" type="audio/mpeg">
+        Trình duyệt của bạn không hỗ trợ thẻ audio.
+    </audio>
+    <button id="musicToggleBtn">Dừng nhạc</button>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const pages = document.querySelectorAll('.page');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const bookMarquee = document.getElementById('bookMarquee'); // Lấy phần tử marquee
+            const bookMarquee = document.getElementById('bookMarquee'); 
             const totalContentPages = pages.length - 2;
             let currentPageIndex = 0;
+
+            // --- Biến và sự kiện cho nhạc nền ---
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            const musicToggleBtn = document.getElementById('musicToggleBtn');
+            let isMusicPlaying = true; // Mặc định là đang phát vì có autoplay
+
+            // Đặt âm lượng mặc định là 40% (0.4)
+            backgroundMusic.volume = 0.2; 
+
+            // Cố gắng phát nhạc. Handle trường hợp autoplay bị chặn.
+            backgroundMusic.play().then(() => {
+                isMusicPlaying = true;
+                musicToggleBtn.textContent = 'Dừng nhạc';
+            }).catch(error => {
+                // Autoplay bị chặn, nhạc chưa phát
+                console.log("Autoplay bị chặn bởi trình duyệt. Vui lòng bấm nút để phát nhạc.");
+                isMusicPlaying = false;
+                musicToggleBtn.textContent = 'Phát nhạc';
+            });
+
+            // Sự kiện click cho nút điều khiển nhạc
+            musicToggleBtn.addEventListener('click', () => {
+                if (isMusicPlaying) {
+                    backgroundMusic.pause();
+                    musicToggleBtn.textContent = 'Phát nhạc';
+                } else {
+                    backgroundMusic.play();
+                    musicToggleBtn.textContent = 'Dừng nhạc';
+                }
+                isMusicPlaying = !isMusicPlaying; // Đảo ngược trạng thái
+            });
+            // --- Kết thúc Biến và sự kiện cho nhạc nền ---
+
 
             function updateBook() {
                 pages.forEach((page, index) => {
@@ -291,11 +362,11 @@
                 prevBtn.disabled = currentPageIndex === 0;
                 nextBtn.disabled = currentPageIndex >= pages.length - 1;
 
-                // --- LOGIC HIỂN THỊ/ẨN MARQUEE ---
+                // LOGIC HIỂN THỊ/ẨN MARQUEE
                 if (currentPageIndex > 0 && currentPageIndex < pages.length - 1) {
-                    bookMarquee.style.display = 'block'; // Hiển thị marquee trên các trang nội dung
+                    bookMarquee.style.display = 'block'; 
                 } else {
-                    bookMarquee.style.display = 'none'; // Ẩn marquee trên bìa và trang cuối
+                    bookMarquee.style.display = 'none'; 
                 }
 
                 if (currentPageIndex === 0) {
@@ -328,8 +399,7 @@
                 }
             });
 
-            // Khởi tạo trạng thái ban đầu
-            updateBook();
+            updateBook(); // Khởi tạo trạng thái ban đầu
         });
     </script>
 </body>
