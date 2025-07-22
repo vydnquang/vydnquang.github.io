@@ -261,7 +261,7 @@ position: fixed; /* Đặt vị trí cố định trên viewport */
     padding: 5px 0; 
     text-align: center;
     font-size: 1em; 
-    z-index: 5; 
+    z-index: 999; 
     overflow: hidden; /* Quan trọng để ẩn phần chữ tràn ra */
     white-space: nowrap; /* Đảm bảo chữ nằm trên một dòng */
     display: none; /* Mặc định ẩn, sẽ được hiển thị bằng JS */
