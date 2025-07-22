@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sách ảnh Nhatquang</title>
+    <title>Sách ảnh lật trang</title>
     <link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
 </head>
@@ -24,7 +24,7 @@
             <input type="range" id="volumeSlider" min="0" max="100" value="40">
         </div>
 
-<div id="global-marquee-container" class="marquee-container"></div>
+<div id="global-marquee-container" class="marquee-container"><span class="marquee-text"></span></div>
 
         <div id="flipbook">
             <div class="page title-page">
@@ -57,6 +57,7 @@
         $(document).ready(function() {
             var flipbook = $("#flipbook");
             var globalMarqueeContainer = $('#global-marquee-container');
+            var marqueeTextElement = globalMarqueeContainer.find('.marquee-text'); // Lấy phần tử span
             var marqueeContent = "📖 Mỗi ngày đọc 10 trang sách, ta làm giàu sức khỏe cho chính mình! 📚"; // Nội dung marquee chung
 
             flipbook.turn({
@@ -68,19 +69,18 @@
                 elevation: 50
             });
 
-            // Hàm để cập nhật hiển thị marquee
+            
+// Hàm để cập nhật hiển thị dòng chữ chạy
             function updateMarqueeVisibility(pageNumber) {
-                // Kiểm tra xem trang hiện tại có phải là trang nội dung không
-                // Trang tiêu đề đầu tiên là 1, trang cảm ơn là 6 (tổng 4 trang nội dung + 2 trang bìa)
+                // Trang tiêu đề đầu tiên là 1, trang cảm ơn là 6.
                 // Các trang nội dung là 2, 3, 4, 5
                 if (pageNumber >= 2 && pageNumber <= 5) { // Điều chỉnh số trang tùy theo tổng số trang nội dung của bạn
-                    if (globalMarqueeContainer.is(':empty')) { // Chỉ thêm marquee nếu nó chưa tồn tại
-                        globalMarqueeContainer.html('<marquee class="page-marquee" behavior="scroll" direction="left" scrollamount="3">' + marqueeContent + '</marquee>');
-                    }
-                    globalMarqueeContainer.show();
+                    marqueeTextElement.text(marqueeContent); // Đặt nội dung chữ
+                    globalMarqueeContainer.show(); // Hiển thị container
+                    // KHÔNG cần reset animation ở đây nữa vì nó nằm ngoài #flipbook
                 } else {
-                    // Ẩn và xóa marquee nếu không phải trang nội dung
-                    globalMarqueeContainer.hide().empty();
+                    globalMarqueeContainer.hide(); // Ẩn container
+                    marqueeTextElement.text(''); // Xóa nội dung để dừng animation khi ẩn
                 }
             }
 
@@ -91,6 +91,7 @@
 
             // Gọi hàm khi sách được tải lần đầu để kiểm tra trang hiện tại
             updateMarqueeVisibility(flipbook.turn('page'));
+
 
             $('#nextBtn').click(function() {
                 $("#flipbook").turn('next');
@@ -108,6 +109,8 @@
                     flipbook.turn('next');
                 }
             });
+
+
 
 // --- Javascript cho phần điều khiển nhạc ---
             const backgroundMusic = document.getElementById('background-music');
@@ -161,6 +164,8 @@
             //     console.log("Tự động phát nhạc bị chặn:", error);
             //     // Có thể thông báo cho người dùng click nút play
             // });
+
+
         });
     </script>
 
