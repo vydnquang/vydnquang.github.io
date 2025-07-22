@@ -249,12 +249,12 @@ border: 1px solid #ffc400;
 
 /* --- STYLE CHUNG CHO DÒNG CHỮ CHẠY (CSS ANIMATION) --- */
 #global-marquee-container {
-position: fixed; /* Đặt vị trí cố định trên viewport */
-    top: calc(50% - 300px); /* Căn giữa theo chiều dọc của body, rồi trừ đi một nửa chiều cao của flipbook (600px/2 = 300px) */
+position: absolute; /* Đặt vị trí cố định trên viewport */
+    top: 20px; /* Căn giữa theo chiều dọc của body, rồi trừ đi một nửa chiều cao của flipbook (600px/2 = 300px) */
      
     left: 50%; /* Căn giữa theo chiều ngang của flipbook-container */
     transform: translateX(-50%); /* Dịch sang trái 50% để căn giữa */
-    width: 400px; /* Chiều rộng bằng với #flipbook */
+    width: 100%; /* Chiều rộng bằng với #flipbook */
     height: 30px; /* Đặt chiều cao cố định cho container marquee */
     background-color: none; 
     color: #ff00a6; 
