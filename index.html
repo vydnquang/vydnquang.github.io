@@ -3,441 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sách Ảnh Nhatquang</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #d9e3bf;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            line-height: 1.5;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .book {
-            width: 400px; /* Chiều rộng của cuốn sách */
-            height: 600px; /* Chiều cao của cuốn sách */
-            position: relative; 
-            perspective: 1500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 10;
-            overflow: hidden; 
-            /* Độ trễ = thời gian lật, để overflow quay lại sau khi lật xong */
-            transition: overflow 0s linear 2s; /* Thời gian khớp với transition của .page */
-        }
-
-        /* THÊM CLASS NÀY VÀO CSS */
-        .book.no-overflow {
-            overflow: visible;
-            transition: none; /* Vô hiệu hóa transition khi đang visible */
-        }
-
-        .page {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: #dedede;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2em;
-            padding: 20px;
-            box-sizing: border-box;
-            transform-origin: center left;
-            /* CHỈ GIỮ TRANSFORM TRONG TRANSITION, bỏ z-index */
-            transition: transform 0.8s ease-in-out; 
-            backface-visibility: hidden;
-            overflow: hidden;
-            border: 3px solid #996c03; /* Màu viền mặc định */
-        }
-
-        .page img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .page-number {
-            position: absolute;
-            bottom: 30px; /* Điều chỉnh cho đồng bộ hơn */
-            right: 20px;
-            font-size: 0.8em;
-            color: #ff9900;
-        }
-
-        .page.flipped {
-            transform: rotateY(-90deg);
-            /* BỎ Z-INDEX VÀ TRANSITION CỦA Z-INDEX KHỎI ĐÂY */
-            transition: transform 0.8s ease-in-out; 
-        }
-
-        .cover-front {
-            background-color: #dedede;
-            color: orange;
-            flex-direction: column;
-            text-align: center;
-            z-index: 100; /* Z-index ban đầu cao cho bìa */
-            border: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;  
-            border: 20px solid transparent;
-            border-image: url('data/golden-border.png') 450 fill round;
-            background-clip: padding-box;
-            background-origin: padding-box;
-            padding: 40px;
-        }
-
-        .cover-front h3 {
-            font-family: 'Pacifico', cursive;
-            font-size: 0.8em;
-            margin-bottom: 180px;
-            color: #003399;
-        }
-
-        .cover-front p {
-            margin-top: 5px; 
-            line-height: 0.1;
-            font-size: 20px; 
-            color: orange; 
-        }
-
-        .cover-back {
-            background-color: #dedede;
-            color: #003399;
-            flex-direction: column;
-            text-align: center;
-            z-index: 9999; /* Z-index rất cao, nhưng sẽ được JS ghi đè */
-            transform: rotateY(0deg); /* Đảm bảo trạng thái ban đầu */
-            opacity: 0;
-            pointer-events: none;
-            border: none;
-            display: flex;
-            justify-content:center;
-            align-items: center;
-            border: 20px solid transparent;
-            border-image: url('data/golden-border.png') 450 fill round;
-            background-clip: padding-box;
-            background-origin: padding-box;
-            padding: 40px;
-        }
-
-        .cover-back.show {
-            opacity: 1;
-            pointer-events: auto;
-            /* z-index sẽ được quản lý trong JS */
-        }
-
-        .cover-back h2 {
-            font-size: 1em;
-            color: #003399;
-            text-shadow: 0 0 5px rgba(0,0,0,0.2);
-            line-height: 1.2;
-            font-family: 'Great Vibes', cursive;
-        }
-
-        .cover-back p {
-            margin-top: 40px; 
-            line-height: 0.1;
-            font-size: 20px;
-            color: orange;
-        }
-
-        .navigation-buttons {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            padding: 0 10px;
-            box-sizing: border-box;
-            pointer-events: none;
-            z-index: 1001;
-        }
-
-        button {
-            padding: 12px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #dba800;
-            color: white;
-            border: 1px solid #2e7eff;
-            border-radius: 8px;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-            pointer-events: auto;
-            opacity: 0.4;
-        }
-        
-        button:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
-            opacity: 1;
-        }
-
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
-        }
-
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-            opacity: 0.4;
-        }
-
-        /* CSS CHO MARQUEE CỐ ĐỊNH TRÊN BOOK */
-        #bookMarquee {
-            position: absolute;
-            top: 5px; 
-            width: 98%; 
-            opacity: 0.7;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            text-align: center;
-            font-family: 'Great Vibes', cursive;
-            font-size: 25px; 
-            font-weight: bold;
-            color: #000599; 
-            z-index: 1000; 
-            white-space: nowrap;
-            overflow: hidden;
-            background-color: none; 
-            padding: 5px 0; 
-            box-sizing: border-box;
-            display: none;
-        }
-
-        .page-marquee marquee {
-            display: inline-block;
-            width: 100%;
-        }
-
-        /* CSS MỚI CHO NÚT ĐIỀU KHIỂN NHẠC */
-        #musicToggleBtn {
-            position: fixed; /* Quan trọng: định vị theo viewport (màn hình hiển thị) */
-            bottom: 50%; /* Cách đáy màn hình 20px */
-            right: 46.5%; /* Cách mép phải màn hình 20px */
-            padding: 8px 15px; 
-            font-size: 14px; 
-            background-color: #00aaff; 
-            border: 1px solid #007bbd;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-            z-index: 9999; /* Đảm bảo nút nằm trên tất cả các phần tử khác */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-        }
-
-        #musicToggleBtn:hover {
-            background-color: #007bbd;
-        }
-    </style>
+    <title>Sách ảnh Nhatquang</title>
+    <link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="book">
-        <div id="bookMarquee" class="page-marquee">
-            <marquee behavior="scroll" direction="left" scrollamount="4">
-                Mỗi ngày đọc 10 trang sách, nhận thêm sức khỏe về cho mình!
-            </marquee>
+    <div id="flipbook-container">
+        
+        <button id="prevBtn">Trang trước</button>
+        <button id="nextBtn">Trang sau</button>
+
+<div id="audio-controls">
+            <audio id="background-music" loop>
+                <source src="data/nhac-docsach.mp3" type="audio/mpeg">
+                Trình duyệt của bạn không hỗ trợ thẻ audio.
+            </audio>
+            <button id="playPauseBtn">▶</button>
+            <button id="muteUnmuteBtn">🔇</button>
+            <input type="range" id="volumeSlider" min="0" max="100" value="40">
         </div>
 
-        <div class="page cover-front">
-            <h3>NHỮNG PHƯƠNG THỨC PHỤC HỒI SỨC KHỎE THEO TỰ NHIÊN</h3>
-            <p>Tác giả: Nishi Katsuzo</p>
-            <p>Dịch giả: TS. Trương Thị Thảo</p>
-        </div>
-        <div class="page">
-            <img src="images/trang01.jpg" alt="Trang 1">
-            <div class="page-number">1</div>
-        </div>
-        <div class="page">
-            <img src="images/trang02.jpg" alt="Trang 2">
-            <div class="page-number">2</div>
-        </div>
-        <div class="page">
-            <img src="images/trang03.jpg" alt="Trang 3">
-            <div class="page-number">3</div>
-        </div>
-        <div class="page">
-            <img src="images/trang04.jpg" alt="Trang 4">
-            <div class="page-number">4</div>
-        </div>
-        <div class="page cover-back">
-            <h2>Cảm ơn bạn đã đọc!</h2>
-            <p>Mời đón đọc các kỳ tiếp theo</p>
+<div id="global-marquee-container" class="marquee-container"></div>
+
+        <div id="flipbook">
+            <div class="page title-page">
+                <h1 class="book-title">NHỮNG PHƯƠNG THỨC PHỤC HỒI SỨC KHỎE THEO TỰ NHIÊN</h1>
+                <p class="book-author">Tác giả: Nishi Kasuzo<br>Dịch giả: TS. Trương Thị Thảo</br></p>
+                <img src="pages/g-border.png" alt="Khung trang trí" class="page-frame">
+            </div>
+
+            
+            <div class="page" style="background-image:url(pages/page1.jpg);"></div>
+            <div class="page" style="background-image:url(pages/page2.jpg);"></div>
+            <div class="page" style="background-image:url(pages/page3.jpg);"></div>
+            <div class="page" style="background-image:url(pages/page4.jpg);"></div>
+            
+
+	    <div class="page title-page final-page">
+                <h1 class="book-title">Cảm ơn bạn đã đọc!</h1>
+                <p class="book-author">Mời đón đọc các trang tiếp theo vào kỳ sau</p>
+                <img src="pages/g-border.png" alt="Khung trang trí" class="page-frame">
+            </div>
+
         </div>
 
-        <div class="navigation-buttons">
-            <button id="prevBtn">Trang trước</button>
-            <button id="nextBtn">Trang sau</button>
-        </div>
     </div>
 
-    <audio id="backgroundMusic" loop autoplay>
-        <source src="data/nhac-docsach.mp3" type="audio/mpeg">
-        Trình duyệt của bạn không hỗ trợ thẻ audio.
-    </audio>
-    <button id="musicToggleBtn">Dừng nhạc</button>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/turn.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const pages = document.querySelectorAll('.page');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const bookMarquee = document.getElementById('bookMarquee'); 
-        const totalContentPages = pages.length - 2;
-        let currentPageIndex = 0; 
+        $(document).ready(function() {
+            var flipbook = $("#flipbook");
+            var globalMarqueeContainer = $('#global-marquee-container');
+            var marqueeContent = "📖 Mỗi ngày đọc 10 trang sách, ta làm giàu sức khỏe cho chính mình! 📚"; // Nội dung marquee chung
 
-        // --- Biến và sự kiện cho nhạc nền ---
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        const musicToggleBtn = document.getElementById('musicToggleBtn');
-        let isMusicPlaying = true; 
+            flipbook.turn({
+                width: 400,
+                height: 600,
+                autoCenter: true,
+                acceleration: true,
+                display: 'single',
+                elevation: 50
+            });
 
-        backgroundMusic.volume = 0.2; 
-
-        backgroundMusic.play().then(() => {
-            isMusicPlaying = true;
-            musicToggleBtn.textContent = 'Dừng nhạc';
-        }).catch(error => {
-            console.log("Autoplay bị chặn bởi trình duyệt. Vui lòng bấm nút để phát nhạc.");
-            isMusicPlaying = false;
-            musicToggleBtn.textContent = 'Phát nhạc';
-        });
-
-        musicToggleBtn.addEventListener('click', () => {
-            if (isMusicPlaying) {
-                backgroundMusic.pause();
-                musicToggleBtn.textContent = 'Phát nhạc';
-            } else {
-                backgroundMusic.play();
-                musicToggleBtn.textContent = 'Dừng nhạc';
-            }
-            isMusicPlaying = !isMusicPlaying; 
-        });
-        // --- Kết thúc Biến và sự kiện cho nhạc nền ---
-
-        const pageBorderColors = [
-            '#FF5733', 
-            '#33FF57', 
-            '#3357FF', 
-            '#FF33F5', 
-            '#FFFF33', 
-            '#33FFFF' 
-        ];
-
-        function applyPageBorderColors() {
-            for (let i = 1; i < pages.length - 1; i++) {
-                const page = pages[i];
-                const colorIndex = i - 1;
-                if (pageBorderColors[colorIndex]) {
-                    page.style.borderColor = pageBorderColors[colorIndex];
+            // Hàm để cập nhật hiển thị marquee
+            function updateMarqueeVisibility(pageNumber) {
+                // Kiểm tra xem trang hiện tại có phải là trang nội dung không
+                // Trang tiêu đề đầu tiên là 1, trang cảm ơn là 6 (tổng 4 trang nội dung + 2 trang bìa)
+                // Các trang nội dung là 2, 3, 4, 5
+                if (pageNumber >= 2 && pageNumber <= 5) { // Điều chỉnh số trang tùy theo tổng số trang nội dung của bạn
+                    if (globalMarqueeContainer.is(':empty')) { // Chỉ thêm marquee nếu nó chưa tồn tại
+                        globalMarqueeContainer.html('<marquee class="page-marquee" behavior="scroll" direction="left" scrollamount="3">' + marqueeContent + '</marquee>');
+                    }
+                    globalMarqueeContainer.show();
+                } else {
+                    // Ẩn và xóa marquee nếu không phải trang nội dung
+                    globalMarqueeContainer.hide().empty();
                 }
             }
-        }
-        applyPageBorderColors();
 
+            // Gọi hàm khi trang sách được lật
+            flipbook.bind('turned', function(event, page, view) {
+                updateMarqueeVisibility(page);
+            });
 
-        function updateBook() {
-            const bookElement = document.querySelector('.book');
-            bookElement.classList.add('no-overflow'); 
+            // Gọi hàm khi sách được tải lần đầu để kiểm tra trang hiện tại
+            updateMarqueeVisibility(flipbook.turn('page'));
 
-            pages.forEach((page, index) => {
-                page.classList.remove('flipped'); // Luôn xóa lớp flipped trước
+            $('#nextBtn').click(function() {
+                $("#flipbook").turn('next');
+            });
 
-                // Cài đặt z-index mặc định cho tất cả các trang
-                // Các trang chưa lật có z-index cao hơn các trang đã lật
-                // Z-index giảm dần từ trái sang phải trên các trang chưa lật
-                // và tăng dần từ trái sang phải trên các trang đã lật.
-                if (index < currentPageIndex) {
-                    // Các trang đã lật qua (nằm bên trái)
-                    page.classList.add('flipped');
-                    // Đảm bảo z-index của các trang đã lật thấp hơn trang hiện tại
-                    // Nhưng vẫn đủ để chúng chồng lên nhau đúng thứ tự.
-                    page.style.zIndex = index; // Z-index thấp nhất
-                } else {
-                    // Các trang chưa lật (bao gồm cả trang hiện tại và các trang sắp tới)
-                    // Z-index cao hơn, giảm dần từ trái sang phải
-                    page.style.zIndex = pages.length - index; 
+            $('#prevBtn').click(function() {
+                $("#flipbook").turn('previous');
+            });
+
+            $(document).keydown(function(e){
+                var flipbook = $("#flipbook");
+                if (e.keyCode == 37){ // Mũi tên trái
+                    flipbook.turn('previous');
+                } else if (e.keyCode == 39){ // Mũi tên phải
+                    flipbook.turn('next');
                 }
             });
 
-            // Sau khi vòng lặp pages.forEach, chúng ta sẽ điều chỉnh z-index của trang đang lật
-            const currentPage = pages[currentPageIndex];
-            if (currentPage) {
-                // Đặt z-index của trang hiện tại (trang đang lật hoặc đang hiển thị) cao nhất tuyệt đối
-                currentPage.style.zIndex = pages.length + 20; // Giá trị rất cao
-            }
+// --- Javascript cho phần điều khiển nhạc ---
+            const backgroundMusic = document.getElementById('background-music');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const muteUnmuteBtn = document.getElementById('muteUnmuteBtn');
+            const volumeSlider = document.getElementById('volumeSlider');
 
+            // Đặt âm lượng ban đầu 20%
+            backgroundMusic.volume = 0.2; 
+            volumeSlider.value = 40; // Cập nhật thanh trượt
 
-            const backCover = document.querySelector('.cover-back');
-            if (currentPageIndex === pages.length - 1) { 
-                backCover.classList.add('show');
-                backCover.style.zIndex = pages.length + 25; // Cao hơn cả trang hiện tại
-            } else {
-                backCover.classList.remove('show');
-            }
+            // Sự kiện nút Play/Pause
+            playPauseBtn.addEventListener('click', () => {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    playPauseBtn.textContent = '⏸';
+                } else {
+                    backgroundMusic.pause();
+                    playPauseBtn.textContent = '▶';
+                }
+            });
 
-            prevBtn.disabled = currentPageIndex === 0;
-            nextBtn.disabled = currentPageIndex >= pages.length - 1;
+            // Sự kiện nút Tắt/Bật tiếng
+            muteUnmuteBtn.addEventListener('click', () => {
+                if (backgroundMusic.muted) {
+                    backgroundMusic.muted = false;
+                    muteUnmuteBtn.textContent = '🔇';
+                    volumeSlider.value = backgroundMusic.volume * 100; // Đặt lại thanh trượt về âm lượng hiện tại
+                } else {
+                    backgroundMusic.muted = true;
+                    muteUnmuteBtn.textContent = '🔊';
+                    volumeSlider.value = 0; // Đặt thanh trượt về 0 khi tắt tiếng
+                }
+            });
 
-            if (currentPageIndex > 0 && currentPageIndex < pages.length - 1) {
-                bookMarquee.style.display = 'block'; 
-            } else {
-                bookMarquee.style.display = 'none'; 
-            }
+            // Sự kiện thanh trượt âm lượng
+            volumeSlider.addEventListener('input', () => {
+                backgroundMusic.volume = volumeSlider.value / 100;
+                // Nếu đang tắt tiếng mà người dùng chỉnh âm lượng, thì bật tiếng lại
+                if (backgroundMusic.muted && backgroundMusic.volume > 0) {
+                    backgroundMusic.muted = false;
+                    muteUnmuteBtn.textContent = '🔇';
+                } else if (backgroundMusic.volume === 0) {
+                    backgroundMusic.muted = true;
+                    muteUnmuteBtn.textContent = '🔊';
+                }
+            });
 
-            if (currentPageIndex === 0) {
-                prevBtn.textContent = 'Trang đầu';
-                nextBtn.textContent = `Trang 1/${totalContentPages}`;
-            } else if (currentPageIndex === pages.length - 1) {
-                prevBtn.textContent = `Trang ${totalContentPages}/${totalContentPages}`;
-                nextBtn.textContent = 'Trang cuối';
-            } else {
-                const actualPageNumber = currentPageIndex; 
-                prevBtn.textContent = `Trang ${actualPageNumber - 1}/${totalContentPages}`;
-                nextBtn.textContent = `Trang ${actualPageNumber + 1}/${totalContentPages}`;
-            }
-
-            if (currentPageIndex === 1) {
-                prevBtn.textContent = 'Bìa trước';
-            }
-            
-            setTimeout(() => {
-                bookElement.classList.remove('no-overflow');
-            }, 800); 
-        }
-
-        nextBtn.addEventListener('click', () => {
-            if (currentPageIndex < pages.length - 1) {
-                currentPageIndex++;
-                updateBook();
-            }
+            // Tự động phát nhạc khi tải trang (có thể bị chặn bởi trình duyệt, tốt nhất nên click)
+            // backgroundMusic.play().catch(error => {
+            //     console.log("Tự động phát nhạc bị chặn:", error);
+            //     // Có thể thông báo cho người dùng click nút play
+            // });
         });
+    </script>
 
-        prevBtn.addEventListener('click', () => {
-            if (currentPageIndex > 0) {
-                currentPageIndex--;
-                updateBook();
-            }
-        });
-
-        updateBook(); 
-    });
-</script>
-    
 </body>
 </html>
