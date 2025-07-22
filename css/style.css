@@ -1,0 +1,270 @@
+/* --- Cập nhật trong css/style.css --- */
+
+/* General Body Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #ece9e6, #ffffff);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Đảm bảo #flipbook-container là phần tử cha để định vị tuyệt đối */
+#flipbook-container {
+    display: flex; /* Giữ flexbox để căn giữa cuốn sách */
+    justify-content: center;
+    align-items: center;
+    position: relative; /* RẤT QUAN TRỌNG: Thiết lập ngữ cảnh định vị cho các nút con */
+    width: 400px; /* Bằng với width của #flipbook khi ở chế độ single */
+    height: 600px; /* Bằng với height của #flipbook */
+    margin: 0 auto;
+}
+
+/* Style chung cho nút điều hướng */
+#prevBtn, #nextBtn {
+    position: absolute; /* NỔI LÊN trên sách */
+    top: 50%; /* Đặt nút ở giữa theo chiều dọc */
+    transform: translateY(-50%); /* Dịch chuyển ngược lại 50% chiều cao của nút để căn giữa chính xác */
+    
+    padding: 15px 20px;
+    font-size: 13px;
+white-space: nowrap;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #bdd3ff; /* Nền hơi trong suốt */
+opacity: 0.6;
+    color: #092969;
+    border: none;
+border: 1px solid #ffc400;
+    border-radius: 8px; /* Làm nút tròn */
+    width: 90px; /* Chiều rộng cố định cho nút tròn */
+    height: 35px; /* Chiều cao cố định cho nút tròn */
+    display: flex; /* Dùng flex để căn giữa ký tự mũi tên */
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* Bóng đổ cho nút */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    z-index: 10; /* Đảm bảo nút nằm trên sách */
+}
+
+#prevBtn:hover, #nextBtn:hover {
+    background-color: orange;
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* Định vị nút TRANG TRƯỚC (bên trái) */
+#prevBtn {
+    left: 10px; /* Khoảng cách từ lề trái của khung sách */
+}
+
+/* Định vị nút TRANG TIẾP (bên phải) */
+#nextBtn {
+    right: 10px; /* Khoảng cách từ lề phải của khung sách */
+}
+
+/* Flipbook Styles */
+#flipbook {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #fff;
+    /* width và height sẽ được Turn.js thiết lập dựa trên JS config */
+    /* Tuy nhiên, đảm bảo nó khớp với kích thước của flipbook-container để nút được định vị đúng */
+    width: 400px; /* Đảm bảo trùng với width trong JS config */
+    height: 600px; /* Đảm bảo trùng với height trong JS config */
+}
+
+/* Common styles for all pages (hard covers and content pages) */
+#flipbook .hard,
+#flipbook .page {
+    box-sizing: border-box;
+    padding: 0px; 
+    border: none; 
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 100% 100%;
+}
+
+/* Specific styles for Hard Covers */
+#flipbook .hard {
+    background: linear-gradient(to bottom, #4a4a4a, #2c2c2c); 
+    color: white;
+    font-weight: bold;
+    font-size: 2.5em;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Specific styles for Content Pages */
+#flipbook .page {
+    background-color: #fefefe;
+}
+
+/* Ẩn các nút điều hướng mặc định của Turn.js (nếu có) */
+.turn-page-wrapper {
+    outline: none !important;
+}
+/* --- STYLE MỚI CHO TRANG TIÊU ĐỀ --- */
+.title-page {
+    background-color: #455b7a; /* Nền trắng cho trang tiêu đề */
+    display: flex;
+    flex-direction: column; /* Sắp xếp nội dung theo chiều dọc */
+    justify-content: center; /* Căn giữa nội dung theo chiều dọc */
+    align-items: center; /* Căn giữa nội dung theo chiều ngang */
+    text-align: center;
+    padding: 20px; /* Khoảng đệm cho nội dung */
+    position: relative; /* Để ảnh khung có thể định vị tuyệt đối bên trong */
+    overflow: hidden; /* Đảm bảo ảnh khung không tràn ra ngoài */
+}
+
+.title-page .book-title {
+    font-size: 1.5em;
+font-family: 'Pacifico', cursive;
+    color: #003399;
+    margin-bottom: none;
+margin-top: -100px;
+padding: 30px;
+    z-index: 2; /* Đảm bảo chữ nằm trên ảnh khung */
+    position: relative; /* Để z-index có tác dụng */
+}
+
+.title-page .book-author {
+    font-size: 1.2em;
+    color: orange;
+    margin-botom: 20px;
+padding: 50px;
+    z-index: 2; /* Đảm bảo chữ nằm trên ảnh khung */
+    position: relative; /* Để z-index có tác dụng */
+}
+
+.title-page .page-frame {
+    position: absolute; /* Đặt ảnh khung nổi lên trên */
+    top: 0;
+    left: 0;
+    width: 100%; /* Kéo dãn ảnh khung ra toàn bộ trang */
+    height: 100%;
+    object-fit: fill; /* Đảm bảo ảnh lấp đầy mà không bị biến dạng quá nhiều */
+    z-index: 1; /* Đảm bảo ảnh khung nằm dưới chữ */
+    pointer-events: none; /* Quan trọng: Cho phép click/kéo xuyên qua ảnh khung để lật trang */
+}
+/* --- STYLE RIÊNG CHO TRANG CẢM ƠN (dùng class .final-page) --- */
+.final-page .book-title {
+    /* Điều chỉnh margin-top cho tiêu đề trang cuối cùng */
+    margin-top: 0px; /* Ví dụ: Đặt lại về vị trí mặc định (hoặc điều chỉnh theo ý muốn) */
+    font-size: 2em; /* Có thể tăng kích thước font cho tiêu đề trang cuối */
+font-family: 'Great Vibes', cursive;
+}
+
+.final-page .book-author {
+    /* Điều chỉnh margin-top cho tác giả trang cuối cùng */
+    margin-top: 10px; /* Ví dụ: Đẩy xuống ít hơn so với trang đầu */
+    font-size: 20px; /* Có thể giảm kích thước font cho tác giả trang cuối */
+}
+
+/* Bạn cũng có thể điều chỉnh padding-top / padding-bottom của .final-page nếu muốn dịch chuyển toàn bộ khối chữ */
+.final-page {
+    /* Ví dụ: Nếu muốn toàn bộ khối chữ trên trang cuối dịch lên cao hơn */
+    /* padding-top: 50px; */ 
+    /* Hoặc dịch xuống thấp hơn */
+    /* padding-top: 150px; */
+}
+/* --- STYLE MỚI CHO THANH ĐIỀU KHIỂN NHẠC --- */
+#audio-controls {
+    position: absolute;
+    bottom: 20px; /* Cách đáy container 20px */
+    left: 50%;
+    transform: translateX(-50%); /* Căn giữa theo chiều ngang */
+    background-color: none;
+opacity: 0.5;
+    padding: 7px 9px;
+border: 1px solid #ffc400;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa các phần tử */
+    z-index: 15; /* Đảm bảo nằm trên mọi thứ */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+#audio-controls button {
+    background-color: #28a745; /* Màu xanh lá cho nút play */
+    color: none;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+#audio-controls button:hover {
+    background-color: #218838;
+}
+
+#audio-controls #muteUnmuteBtn {
+    background-color: #dc3545; /* Màu đỏ cho nút mute */
+}
+
+#audio-controls #muteUnmuteBtn:hover {
+    background-color: #c82333;
+}
+
+#audio-controls #volumeSlider {
+    width: 100px; /* Chiều rộng thanh trượt */
+    -webkit-appearance: none; /* Loại bỏ style mặc định của trình duyệt */
+    height: 5px;
+    background: orange;
+    outline: none;
+    opacity: 0.8;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    border-radius: 5px;
+}
+
+#audio-controls #volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+#audio-controls #volumeSlider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+/* --- STYLE CHUNG CHO MARQUEE (bao gồm cả container) --- */
+/* Đảm bảo container này đủ lớn để chứa marquee, và nằm trên cùng */
+#global-marquee-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: none; 
+    color: #ff00a6; 
+    padding: 5px 0; 
+    text-align: center;
+    font-size: 1em; 
+    z-index: 5; 
+    overflow: hidden; 
+    white-space: nowrap; 
+    display: none; /* Mặc định ẩn, sẽ được hiển thị bằng JS */
+}
+
+#global-marquee-container .page-marquee {
+    display: block; 
+    width: 100%; 
+    line-height: 1.2; 
+}
