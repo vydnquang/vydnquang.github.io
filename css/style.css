@@ -245,26 +245,42 @@ border: 1px solid #ffc400;
     background: #4CAF50;
     cursor: pointer;
 }
-/* --- STYLE CHUNG CHO MARQUEE (bao gồm cả container) --- */
-/* Đảm bảo container này đủ lớn để chứa marquee, và nằm trên cùng */
+
+
+/* --- STYLE CHUNG CHO DÒNG CHỮ CHẠY (CSS ANIMATION) --- */
 #global-marquee-container {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+    /* Đặt marquee khớp với vị trí của #flipbook */
+    top: 0; 
+    left: 50%; /* Căn giữa theo chiều ngang của flipbook-container */
+    transform: translateX(-50%); /* Dịch sang trái 50% để căn giữa */
+    width: 400px; /* Chiều rộng bằng với #flipbook */
+    height: 30px; /* Đặt chiều cao cố định cho container marquee */
     background-color: none; 
     color: #ff00a6; 
     padding: 5px 0; 
     text-align: center;
     font-size: 1em; 
     z-index: 5; 
-    overflow: hidden; 
-    white-space: nowrap; 
+    overflow: hidden; /* Quan trọng để ẩn phần chữ tràn ra */
+    white-space: nowrap; /* Đảm bảo chữ nằm trên một dòng */
     display: none; /* Mặc định ẩn, sẽ được hiển thị bằng JS */
 }
 
-#global-marquee-container .page-marquee {
-    display: block; 
-    width: 100%; 
-    line-height: 1.2; 
+/* Element chứa văn bản thực sự và sẽ được animate */
+.marquee-text {
+    display: inline-block; /* Quan trọng để animation transform hoạt động */
+    padding-left: 100%; /* Bắt đầu từ ngoài cùng bên phải */
+    white-space: nowrap; /* Đảm bảo chữ không bị ngắt dòng */
+    box-sizing: border-box; /* Tính toán kích thước padding/border đúng */
+    animation-name: marquee-animation;
+    animation-duration: 15s; /* Thời gian chạy một vòng. Điều chỉnh tốc độ tại đây */
+    animation-iteration-count: infinite; /* Lặp vô hạn */
+    animation-timing-function: linear; /* Tốc độ đều */
+}
+
+/* Định nghĩa animation chạy chữ */
+@keyframes marquee-animation {
+    0% { transform: translateX(0%); } /* Bắt đầu từ vị trí ban đầu (sau padding-left 100%) */
+    100% { transform: translateX(-100%); } /* Di chuyển sang trái bằng đúng chiều rộng của nó */
 }
