@@ -1,32 +1,59 @@
-/* style.css */
+/* codeks/khangsinh.css */
+
+/* Các quy tắc CSS hiện có của bạn sẽ ở đây */
+/* ... (giữ nguyên các đoạn code CSS đã có trước đó) ... */
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 20px;
-    background-color: #e0f2f7; /* Light blue background */
+    padding: 0; /* Đặt padding về 0 để header/footer chiếm toàn bộ chiều rộng */
+    background-color: #e0f2f7;
     color: #333;
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Align to top */
+    flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
     min-height: 100vh;
 }
-.container {
+
+header {
+    background-color: #FFA500; /* Màu cam */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0; /* Loại bỏ margin mặc định của h1 trong header */
+    font-size: 2.5em;
+    color: white; /* Đảm bảo màu chữ là trắng */
+}
+
+main.container {
     background-color: #ffffff;
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     max-width: 650px;
     width: 100%;
-    margin-top: 50px;
+    margin: 50px auto; /* Canh giữa và tạo khoảng cách trên dưới */
     box-sizing: border-box;
+    flex-grow: 1; /* Cho phép main chiếm không gian còn lại */
 }
-h1 {
+
+footer {
+    background-color: #FFD700; /* Màu vàng */
+    color: #333;
+    padding: 15px 0;
     text-align: center;
-    color: #007bff;
-    margin-bottom: 30px;
-    font-size: 2.2em;
-    font-weight: 600;
+    font-size: 0.9em;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: auto; /* Đẩy footer xuống cuối trang nếu nội dung ít */
 }
+
+/* Các quy tắc CSS khác của bạn (input-group, button, result-box, error-message, media queries) */
+/* ... (giữ nguyên các đoạn code CSS đã có trước đó) ... */
+
+/* Ví dụ: Các quy tắc cho input-group, button, result-box, error-message, media queries */
 .input-group {
     display: flex;
     justify-content: space-between;
@@ -34,9 +61,9 @@ h1 {
     gap: 20px;
 }
 .input-group input[type="text"] {
-    flex: 1; /* Allows inputs to grow and share space */
+    flex: 1;
     padding: 12px 15px;
-    border: 1px solid #cce5ff; /* Light blue border */
+    border: 1px solid #cce5ff;
     border-radius: 6px;
     font-size: 1.1em;
     outline: none;
@@ -50,7 +77,7 @@ button {
     display: block;
     width: 100%;
     padding: 14px 25px;
-    background-color: #28a745; /* Green button */
+    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 6px;
@@ -60,7 +87,7 @@ button {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 button:hover {
-    background-color: #218838; /* Darker green on hover */
+    background-color: #218838;
     transform: translateY(-2px);
 }
 button:active {
@@ -70,7 +97,7 @@ button:active {
 .result-box {
     margin-top: 35px;
     padding: 20px;
-    border: 1px solid #b3e0ff; /* Light blue border */
+    border: 1px solid #b3e0ff;
     border-radius: 8px;
     min-height: 70px;
     display: flex;
@@ -78,40 +105,40 @@ button:active {
     justify-content: center;
     font-size: 1.4em;
     font-weight: bold;
-    color: #007bff; /* Default info color */
-    background-color: #e6f7ff; /* Light blue background */
+    color: #007bff;
+    background-color: #e6f7ff;
     text-align: center;
     line-height: 1.5;
 }
 
 /* Specific result styles */
 .result-box.synergistic-positive {
-    color: #005600; /* Darker green */
+    color: #005600;
     background-color: #d4edda;
     border-color: #28a745;
 }
 .result-box.additive-positive {
-    color: #155724; /* Standard green */
+    color: #155724;
     background-color: #d4edda;
     border-color: #28a745;
 }
 .result-box.antagonistic {
-    color: #dc3545; /* Red */
+    color: #dc3545;
     background-color: #f8d7da;
     border-color: #dc3545;
 }
 .result-box.caution {
-    color: #ffc107; /* Orange */
+    color: #ffc107;
     background-color: #fff3cd;
     border-color: #ffc107;
 }
 .result-box.neutral {
-    color: #6c757d; /* Gray */
+    color: #6c757d;
     background-color: #e2e6ea;
     border-color: #6c757d;
 }
 .result-box.unknown {
-    color: #6c757d; /* Gray for unknown */
+    color: #6c757d;
     background-color: #e9ecef;
     border-color: #6c757d;
 }
