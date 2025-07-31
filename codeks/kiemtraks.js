@@ -3,7 +3,6 @@
 import { getAntibioticGroup, getCombinationRule, antibioticGroups, antibioticToGroupMap } from './dataks.js';
 
 // Di chuyển khai báo allAntibiotics ra ngoài DOMContentLoaded
-// để nó có thể được truy cập bởi setupAutocomplete
 const allAntibiotics = Object.values(antibioticGroups).flat().map(a => a.toLowerCase());
 allAntibiotics.sort(); // Sắp xếp danh sách kháng sinh theo ABC
 
@@ -15,11 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const suggestionsA = document.getElementById('suggestionsA');
     const suggestionsB = document.getElementById('suggestionsB');
 
-    // Thiết lập autocomplete cho từng ô nhập liệu
     setupAutocomplete(antibioticAInput, suggestionsA);
     setupAutocomplete(antibioticBInput, suggestionsB);
 
-    // Đóng danh sách đề xuất khi click ra ngoài
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.autocomplete-container')) {
             suggestionsA.style.display = 'none';
@@ -40,7 +37,6 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
         }
         currentFocus = -1;
 
-        // Bây giờ allAntibiotics đã được định nghĩa ở phạm vi này
         const matchingAntibiotics = allAntibiotics.filter(antibiotic =>
             antibiotic.startsWith(inputValue) || antibiotic.includes(inputValue)
         );
@@ -64,8 +60,6 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
         suggestionsListElement.style.display = 'block';
     });
 
-    // ... (Phần còn lại của hàm setupAutocomplete và các hàm khác giữ nguyên) ...
-
     inputElement.addEventListener('keydown', function(e) {
         let items = suggestionsListElement.getElementsByTagName('div');
         if (e.keyCode == 40) { // Mũi tên xuống
@@ -75,13 +69,11 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
             currentFocus--;
             addActive(items);
         } else if (e.keyCode == 13) { // Enter
-            e.preventDefault(); // Ngăn submit form (nếu có)
+            e.preventDefault();
             if (currentFocus > -1) {
                 if (items[currentFocus]) {
-                    items[currentFocus].click(); // Giả lập click vào mục đang active
+                    items[currentFocus].click();
                 }
-            } else {
-                // Nếu không có mục nào được chọn, cứ để hàm checkCombination chạy
             }
         }
     });
@@ -114,27 +106,37 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
     }
 }
 
-
-// --- Hàm checkCombination (giữ nguyên) ---
+// --- Hàm checkCombination ---
 function checkCombination() {
     const antibioticA = document.getElementById('antibioticA').value.trim().toLowerCase();
     const antibioticB = document.getElementById('antibioticB').value.trim().toLowerCase();
     const resultBox = document.getElementById('result');
     const errorMessage = document.getElementById('errorMessage');
 
+    // Reset trạng thái trước đó
     resultBox.textContent = 'Kết quả sẽ hiển thị ở đây';
-    resultBox.className = 'result-box';
+    resultBox.className = 'result-box'; // Reset các lớp CSS
     errorMessage.textContent = '';
 
+    // Đóng tất cả các danh sách đề xuất khi nút được nhấn
     document.querySelectorAll('.suggestions-list').forEach(list => {
         list.style.display = 'none';
         list.innerHTML = '';
     });
 
+    // --- Bổ sung kiểm tra nhập liệu giống nhau tại đây ---
     if (!antibioticA || !antibioticB) {
         errorMessage.textContent = 'Vui lòng nhập cả hai tên kháng sinh.';
         return;
     }
+
+    if (antibioticA === antibioticB) {
+        errorMessage.textContent = 'Bạn đã nhập 2 tên kháng sinh giống nhau.';
+        resultBox.textContent = 'Không cần phối hợp (Kháng sinh đã trùng lặp)';
+        resultBox.classList.add('neutral'); // Hoặc một class cảnh báo khác nếu bạn muốn style riêng
+        return; // Dừng hàm tại đây
+    }
+    // --- Kết thúc phần bổ sung ---
 
     const groupA = getAntibioticGroup(antibioticA);
     const groupB = getAntibioticGroup(antibioticB);
@@ -155,9 +157,9 @@ function checkCombination() {
         let missingAntibiotic = '';
         if (!groupA && !groupB) missingAntibiotic = `"${antibioticA}" và "${antibioticB}"`;
         else if (!groupA) missingAntibiotic = `"${antibioticA}"`;
-        else missingAntibiotic = `"${antiboticB}"`; // Lỗi chính tả nhỏ đã sửa ở đây trong các lần trước
+        else missingAntibiotic = `"${antibioticB}"`;
 
-        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibbiotic}. Vui lòng kiểm tra lại tên hoặc thêm vào dữ liệu.`;
+        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibiotic}. Vui lòng kiểm tra lại tên hoặc thêm vào dữ liệu.`;
         resultClass = 'unknown';
         resultBox.classList.add(resultClass);
         resultBox.textContent = 'Không xác định (thiếu dữ liệu)';
