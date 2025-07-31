@@ -1,5 +1,51 @@
 /* codeks/khangsinh.css */
 
+/* Thêm các quy tắc CSS sau vào file khangsinh.css của bạn */
+
+.autocomplete-container {
+    position: relative; /* Quan trọng: để danh sách đề xuất định vị tương đối */
+    flex: 1; /* Để nó giãn ra cùng với input-group */
+}
+
+.suggestions-list {
+    position: absolute; /* Định vị tuyệt đối so với container */
+    z-index: 100; /* Đảm bảo nó nằm trên các phần tử khác */
+    max-height: 200px; /* Giới hạn chiều cao và thêm thanh cuộn */
+    overflow-y: auto;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-top: none; /* Không có viền trên để nối với input */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    list-style: none; /* Loại bỏ dấu chấm mặc định của ul/li nếu dùng ul */
+    padding: 0;
+    margin-top: -1px; /* Dịch lên 1px để che viền dưới của input */
+    display: none; /* Mặc định ẩn, chỉ hiển thị khi có đề xuất */
+    border-radius: 0 0 6px 6px; /* Bo tròn góc dưới */
+}
+
+.suggestions-list div { /* Nếu dùng div cho item */
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1.1em;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestions-list div:last-child {
+    border-bottom: none; /* Không có viền dưới cho item cuối cùng */
+}
+
+.suggestions-list div:hover,
+.suggestions-list div.active { /* active cho trạng thái được chọn bằng bàn phím */
+    background-color: #f0f0f0;
+    color: #007bff;
+}
+
+/* Ẩn danh sách gợi ý khi không có kết quả hoặc không focus */
+.suggestions-list:empty {
+    display: none !important;
+}
+
 /* Các quy tắc CSS hiện có của bạn sẽ ở đây */
 /* ... (giữ nguyên các đoạn code CSS đã có trước đó) ... */
 
@@ -175,50 +221,4 @@ button:active {
         min-height: 60px;
         padding: 15px;
     }
-}
-
-/* Thêm các quy tắc CSS sau vào file khangsinh.css của bạn */
-
-.autocomplete-container {
-    position: relative; /* Quan trọng: để danh sách đề xuất định vị tương đối */
-    flex: 1; /* Để nó giãn ra cùng với input-group */
-}
-
-.suggestions-list {
-    position: absolute; /* Định vị tuyệt đối so với container */
-    z-index: 100; /* Đảm bảo nó nằm trên các phần tử khác */
-    max-height: 200px; /* Giới hạn chiều cao và thêm thanh cuộn */
-    overflow-y: auto;
-    width: 100%;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-top: none; /* Không có viền trên để nối với input */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    list-style: none; /* Loại bỏ dấu chấm mặc định của ul/li nếu dùng ul */
-    padding: 0;
-    margin-top: -1px; /* Dịch lên 1px để che viền dưới của input */
-    display: none; /* Mặc định ẩn, chỉ hiển thị khi có đề xuất */
-    border-radius: 0 0 6px 6px; /* Bo tròn góc dưới */
-}
-
-.suggestions-list div { /* Nếu dùng div cho item */
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 1.1em;
-    border-bottom: 1px solid #eee;
-}
-
-.suggestions-list div:last-child {
-    border-bottom: none; /* Không có viền dưới cho item cuối cùng */
-}
-
-.suggestions-list div:hover,
-.suggestions-list div.active { /* active cho trạng thái được chọn bằng bàn phím */
-    background-color: #f0f0f0;
-    color: #007bff;
-}
-
-/* Ẩn danh sách gợi ý khi không có kết quả hoặc không focus */
-.suggestions-list:empty {
-    display: none !important;
 }
