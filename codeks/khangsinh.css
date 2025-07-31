@@ -1,7 +1,7 @@
 /* codeks/khangsinh.css */
 
 /* Thêm các quy tắc CSS sau vào file khangsinh.css của bạn */
-
+/* code css về hiển thị đề xuất tên kháng sinh */
 .autocomplete-container {
     position: relative; /* Quan trọng: để danh sách đề xuất định vị tương đối */
     flex: 1; /* Để nó giãn ra cùng với input-group */
@@ -44,6 +44,39 @@
 /* Ẩn danh sách gợi ý khi không có kết quả hoặc không focus */
 .suggestions-list:empty {
     display: none !important;
+}
+
+/* Thêm các quy tắc CSS sau cho phần chỉ dẫn chung */
+.general-guidance {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #007bff; /* Viền màu xanh dương */
+    border-radius: 8px;
+    background-color: #e6f7ff; /* Nền màu xanh nhạt */
+    color: #333;
+    font-size: 0.95em;
+    line-height: 1.6;
+}
+
+.general-guidance h3 {
+    text-align: center;
+    color: #0056b3; /* Màu xanh đậm hơn */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.general-guidance ol {
+    padding-left: 25px; /* Thụt lề cho danh sách */
+    margin: 0;
+}
+
+.general-guidance li {
+    margin-bottom: 10px;
+}
+
+.general-guidance li:last-child {
+    margin-bottom: 0;
 }
 
 /* Các quy tắc CSS hiện có của bạn sẽ ở đây */
