@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phần mềm phối hợp Kháng sinh thông minh</title>
     <link rel="stylesheet" href="codeks/khangsinh.css">
-</head>
+    </head>
 <body>
     <header>
         <h1>Kiểm Tra Phối Hợp Kháng Sinh</h1>
@@ -13,8 +13,10 @@
 
     <main class="container">
         <div class="input-group">
-            <input type="text" id="antibioticA" placeholder="Nhập tên kháng sinh A">
-            <input type="text" id="antibioticB" placeholder="Nhập tên kháng sinh B">
+            <div class="autocomplete-container"> <input type="text" id="antibioticA" placeholder="Nhập tên kháng sinh A">
+                <div id="suggestionsA" class="suggestions-list"></div> </div>
+            <div class="autocomplete-container"> <input type="text" id="antibioticB" placeholder="Nhập tên kháng sinh B">
+                <div id="suggestionsB" class="suggestions-list"></div> </div>
         </div>
 
         <button id="checkCombinationBtn">Kiểm tra !</button>
