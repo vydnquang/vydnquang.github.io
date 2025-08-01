@@ -1,147 +1,13 @@
 /* codeks/khangsinh.css */
 
-/* Thêm các quy tắc CSS sau vào file khangsinh.css của bạn */
-/* /////////////// CODE HIỂN THỊ ĐỀ XUẤT TÊN KHÁNG SINH //////////////// */
-.autocomplete-container {
-    position: relative; /* Quan trọng: để danh sách đề xuất định vị tương đối */
-    flex: 1; /* Cho phép mỗi container tự co giãn */
-    min-width: 280px; /* Đảm bảo đủ rộng trên màn hình nhỏ */
-}
-
-/* CSS cho ô nhập liệu dạng viên thuốc con nhộng */
-.autocomplete-container input {
-    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
-    padding: 12px 25px; /* Tăng padding để tạo không gian bên trong */
-    border: none; /* Bỏ viền mặc định */
-    border-radius: 30px; /* Độ cong mạnh để tạo hình con nhộng */
-    background: linear-gradient(to right, #ffffff 0%, #f0f0f0 100%); /* Nền gradient nhẹ */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), /* Đổ bóng nhẹ phía dưới */
-                inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Đổ bóng phía trong để tạo chiều sâu */
-    font-size: 1.1em;
-    color: #333;
-    transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
-    box-sizing: border-box; /* Quan trọng để padding không làm tăng kích thước tổng thể */
-
-    /* Tạo đường chia đôi viên thuốc (có thể tùy chỉnh) */
-    position: relative; /* Cần thiết cho pseudo-element */
-    overflow: hidden; /* Đảm bảo đường chia không tràn ra ngoài */
-}
-
-/* Pseudo-element để tạo đường chia đôi viên thuốc */
-.autocomplete-container input::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 2px; /* Độ dày của đường chia */
-    height: 80%; /* Chiều dài của đường chia */
-    background-color: rgba(0, 0, 0, 0.1); /* Màu của đường chia */
-    transform: translate(-50%, -50%); /* Căn giữa đường chia */
-    border-radius: 1px; /* Bo tròn nhẹ đường chia */
-    pointer-events: none; /* Đảm bảo không cản trở tương tác */
-}
-
-
-.autocomplete-container input:focus {
-    outline: none; /* Bỏ viền outline mặc định khi focus */
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2), /* Bóng lớn hơn khi focus */
-                inset 0 1px 3px rgba(0, 0, 0, 0.1),
-                0 0 0 3px rgba(0, 123, 255, 0.3); /* Vòng sáng xanh khi focus */
-}
-
-.suggestions-list {
-    position: absolute; /* Định vị tuyệt đối so với container */
-    z-index: 100; /* Đảm bảo nó nằm trên các phần tử khác */
-    max-height: 200px; /* Giới hạn chiều cao và thêm thanh cuộn */
-    overflow-y: auto;
-    width: 100%;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-top: none; /* Không có viền trên để nối với input */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    list-style: none; /* Loại bỏ dấu chấm mặc định của ul/li nếu dùng ul */
-    padding: 0;
-    margin-top: -1px; /* Dịch lên 1px để che viền dưới của input */
-    display: none; /* Mặc định ẩn, chỉ hiển thị khi có đề xuất */
-    border-radius: 8px; /* Bo tròn nhẹ hơn so với input */
-}
-
-.suggestions-list div { /* Nếu dùng div cho item */
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 1.1em;
-    border-bottom: 1px solid #eee;
-}
-
-.suggestions-list div:last-child {
-    border-bottom: none; /* Không có viền dưới cho item cuối cùng */
-}
-
-.suggestions-list div:hover,
-.suggestions-list div.active { /* active cho trạng thái được chọn bằng bàn phím */
-    background-color: #f0f0f0;
-    color: #007bff;
-}
-
-/* Ẩn danh sách gợi ý khi không có kết quả hoặc không focus */
-.suggestions-list:empty {
-    display: none !important;
-}
-
-/* Thêm các quy tắc CSS sau cho phần chỉ dẫn chung */
-.general-guidance {
-    margin-top: 30px;
-    padding: 20px;
-    border: 1px solid #007bff; /* Viền màu xanh dương */
-    border-radius: 8px;
-    background-color: #e6f7ff; /* Nền màu xanh nhạt */
-    color: #333;
-    font-size: 0.95em;
-    line-height: 1.6;
-}
-
-/* Thêm các quy tắc CSS sau cho icon cảnh báo */
-.general-guidance h3 {
-    text-align: center;
-    color: #f04800; /* màu cam */
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.3em;
-    display: flex; /* Sử dụng flexbox để căn chỉnh icon và text */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    justify-content: center; /* Căn giữa theo chiều ngang */
-}
-
-.warning-icon {
-    color: #dc3545; /* Màu đỏ */
-    margin-right: 8px; /* Khoảng cách giữa icon và chữ */
-    font-size: 1.2em; /* Tăng kích thước icon một chút so với text */
-}
-
-.general-guidance ol {
-    padding-left: 25px; /* Thụt lề cho danh sách */
-    margin: 0;
-}
-
-.general-guidance li {
-    margin-bottom: 10px;
-}
-
-.general-guidance li:last-child {
-    margin-bottom: 0;
-}
-
-/* Các quy tắc CSS hiện có của bạn sẽ ở đây */
-/* ... (giữ nguyên các đoạn code CSS đã có trước đó) ... */
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 0; /* Đặt padding về 0 để header/footer chiếm toàn bộ chiều rộng */
-    background-color: #e0f2f7;
+    padding: 0;
+    background-color: #e0f2f7; /* Nền xanh nhạt tổng thể */
     color: #333;
     display: flex;
-    flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
+    flex-direction: column;
     min-height: 100vh;
 }
 
@@ -154,10 +20,10 @@ header {
 }
 
 header h1 {
-    margin: 0; /* Loại bỏ margin mặc định của h1 trong header */
+    margin: 0;
     font-family: 'Pacifico', cursive;
     font-size: 2.5em;
-    color: white; /* Đảm bảo màu chữ là trắng */
+    color: white;
 }
 
 main.container {
@@ -167,52 +33,117 @@ main.container {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     max-width: 650px;
     width: 100%;
-    margin: 50px auto; /* Canh giữa và tạo khoảng cách trên dưới */
+    margin: 50px auto;
     box-sizing: border-box;
-    flex-grow: 1; /* Cho phép main chiếm không gian còn lại */
+    flex-grow: 1;
 }
 
-footer {
-    background-color: #FFD700; /* Màu vàng */
-    color: blue;
-    padding: 15px 0;
-    text-align: center;
-    font-size: 0.9em;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    margin-top: auto; /* Đẩy footer xuống cuối trang nếu nội dung ít */
-}
-
-/* Các quy tắc CSS khác của bạn (input-group, button, result-box, error-message, media queries) */
-/* ... (giữ nguyên các đoạn code CSS đã có trước đó) ... */
-
-/* Ví dụ: Các quy tắc cho input-group, button, result-box, error-message, media queries */
 .input-group {
     display: flex;
-    flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: center;
     margin-bottom: 25px;
     gap: 20px; /* Khoảng cách giữa các ô input */
-    justify-content: center;
     align-items: center;
 }
-.input-group input[type="text"] {
+
+.autocomplete-container {
+    position: relative;
     flex: 1;
-    padding: 12px 15px;
-    border: 1px solid #cce5ff;
-    border-radius: 6px;
+    min-width: 280px;
+}
+
+/* CSS cho ô nhập liệu dạng viên thuốc con nhộng */
+.autocomplete-container input {
+    width: 100%;
+    height: 45px; /* Chiều cao cố định */
+    padding: 0 25px; /* Padding ngang để text không sát mép */
+    border: none;
+    border-radius: 22.5px; /* Bo tròn tối đa = một nửa chiều cao */
+
+    /* Nền gradient 2 màu để mô phỏng 2 nửa viên thuốc */
+    background: linear-gradient(to right, #e0f7fa 0%, #bbdefb 100%);
+    /* Bạn có thể thử các cặp màu khác: */
+    /* background: linear-gradient(to right, #fce4ec 0%, #f8bbd0 100%); /* Hồng */
+    /* background: linear-gradient(to right, #e8f5e9 0%, #c8e6c9 100%); /* Xanh lá */
+
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), /* Đổ bóng phía ngoài */
+                inset 0 1px 2px rgba(0, 0, 0, 0.08); /* Đổ bóng phía trong */
     font-size: 1.1em;
+    color: #333;
+    transition: all 0.3s ease;
+    box-sizing: border-box; /* Quan trọng */
+    position: relative;
+    overflow: hidden; /* Quan trọng cho pseudo-element */
+    text-align: left; /* Căn lề trái cho text */
+}
+
+/* Pseudo-element để tạo đường chia đôi viên thuốc */
+.autocomplete-container input::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px; /* Độ dày của đường chia */
+    background-color: rgba(0, 0, 0, 0.15); /* Màu của đường chia */
+    transform: translateX(-50%); /* Căn giữa */
+    pointer-events: none; /* Đảm bảo không cản trở tương tác */
+    z-index: 1; /* Nằm trên background */
+    border-radius: 1px; /* Bo tròn nhẹ đầu đường chia */
+}
+
+.autocomplete-container input:focus {
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25),
+                inset 0 1px 3px rgba(0, 0, 0, 0.1),
+                0 0 0 4px rgba(0, 123, 255, 0.3); /* Vòng sáng xanh khi focus */
 }
-.input-group input[type="text"]:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+
+
+.suggestions-list {
+    position: absolute;
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    list-style: none;
+    padding: 0;
+    margin-top: -1px;
+    display: none;
+    border-radius: 8px;
 }
+
+.suggestions-list div {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1.1em;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestions-list div:last-child {
+    border-bottom: none;
+}
+
+.suggestions-list div:hover,
+.suggestions-list div.active {
+    background-color: #f0f0f0;
+    color: #007bff;
+}
+
+.suggestions-list:empty {
+    display: none !important;
+}
+
 button {
     display: block;
     width: 100%;
     padding: 14px 25px;
-    background-color: #28a745;
+    background-color: #28a745; /* Màu xanh lá cây */
     color: white;
     border: none;
     border-radius: 6px;
@@ -286,6 +217,66 @@ button:active {
     font-size: 1em;
 }
 
+.general-guidance {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    background-color: #e6f7ff;
+    color: #333;
+    font-size: 0.95em;
+    line-height: 1.6;
+}
+
+.general-guidance h3 {
+    text-align: center;
+    color: #f04800; /* Màu cam cho tiêu đề */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.warning-icon {
+    color: #dc3545; /* Màu đỏ cho icon */
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+.general-guidance ol {
+    padding-left: 25px;
+    margin: 0;
+}
+
+.general-guidance li {
+    margin-bottom: 10px;
+}
+
+.general-guidance li:last-child {
+    margin-bottom: 0;
+}
+
+footer {
+    background-color: #FFD700; /* Màu vàng */
+    color: blue;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 0.9em;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: auto;
+}
+
+footer a {
+    color: blue; /* Đảm bảo màu link trong footer */
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .container {
@@ -296,10 +287,15 @@ button:active {
         flex-direction: column;
         gap: 15px;
     }
-    .input-group input[type="text"] {
+    .input-group .autocomplete-container { /* Cần điều chỉnh cho container trên mobile */
         width: 100%;
+        min-width: unset; /* Bỏ min-width để nó co giãn tốt hơn */
     }
-    h1 {
+    .autocomplete-container input {
+        height: 40px; /* Điều chỉnh chiều cao nhỏ hơn trên mobile */
+        border-radius: 20px; /* Tương ứng với chiều cao mới */
+    }
+    header h1 {
         font-size: 1.8em;
     }
     button {
@@ -309,5 +305,11 @@ button:active {
         font-size: 1.2em;
         min-height: 60px;
         padding: 15px;
+    }
+    .general-guidance h3 {
+        font-size: 1.1em;
+    }
+    .general-guidance li {
+        font-size: 0.85em;
     }
 }
