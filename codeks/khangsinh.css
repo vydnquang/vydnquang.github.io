@@ -4,7 +4,49 @@
 /* /////////////// CODE HIỂN THỊ ĐỀ XUẤT TÊN KHÁNG SINH //////////////// */
 .autocomplete-container {
     position: relative; /* Quan trọng: để danh sách đề xuất định vị tương đối */
-    flex: 1; /* Để nó giãn ra cùng với input-group */
+    flex: 1; /* Cho phép mỗi container tự co giãn */
+    min-width: 280px; /* Đảm bảo đủ rộng trên màn hình nhỏ */
+}
+
+/* CSS cho ô nhập liệu dạng viên thuốc con nhộng */
+.autocomplete-container input {
+    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
+    padding: 12px 25px; /* Tăng padding để tạo không gian bên trong */
+    border: none; /* Bỏ viền mặc định */
+    border-radius: 30px; /* Độ cong mạnh để tạo hình con nhộng */
+    background: linear-gradient(to right, #ffffff 0%, #f0f0f0 100%); /* Nền gradient nhẹ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), /* Đổ bóng nhẹ phía dưới */
+                inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Đổ bóng phía trong để tạo chiều sâu */
+    font-size: 1.1em;
+    color: #333;
+    transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+    box-sizing: border-box; /* Quan trọng để padding không làm tăng kích thước tổng thể */
+
+    /* Tạo đường chia đôi viên thuốc (có thể tùy chỉnh) */
+    position: relative; /* Cần thiết cho pseudo-element */
+    overflow: hidden; /* Đảm bảo đường chia không tràn ra ngoài */
+}
+
+/* Pseudo-element để tạo đường chia đôi viên thuốc */
+.autocomplete-container input::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px; /* Độ dày của đường chia */
+    height: 80%; /* Chiều dài của đường chia */
+    background-color: rgba(0, 0, 0, 0.1); /* Màu của đường chia */
+    transform: translate(-50%, -50%); /* Căn giữa đường chia */
+    border-radius: 1px; /* Bo tròn nhẹ đường chia */
+    pointer-events: none; /* Đảm bảo không cản trở tương tác */
+}
+
+
+.autocomplete-container input:focus {
+    outline: none; /* Bỏ viền outline mặc định khi focus */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2), /* Bóng lớn hơn khi focus */
+                inset 0 1px 3px rgba(0, 0, 0, 0.1),
+                0 0 0 3px rgba(0, 123, 255, 0.3); /* Vòng sáng xanh khi focus */
 }
 
 .suggestions-list {
@@ -16,12 +58,12 @@
     background-color: white;
     border: 1px solid #ddd;
     border-top: none; /* Không có viền trên để nối với input */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     list-style: none; /* Loại bỏ dấu chấm mặc định của ul/li nếu dùng ul */
     padding: 0;
     margin-top: -1px; /* Dịch lên 1px để che viền dưới của input */
     display: none; /* Mặc định ẩn, chỉ hiển thị khi có đề xuất */
-    border-radius: 0 0 6px 6px; /* Bo tròn góc dưới */
+    border-radius: 8px; /* Bo tròn nhẹ hơn so với input */
 }
 
 .suggestions-list div { /* Nếu dùng div cho item */
@@ -146,9 +188,12 @@ footer {
 /* Ví dụ: Các quy tắc cho input-group, button, result-box, error-message, media queries */
 .input-group {
     display: flex;
+    flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
     justify-content: space-between;
     margin-bottom: 25px;
-    gap: 20px;
+    gap: 20px; /* Khoảng cách giữa các ô input */
+    justify-content: center;
+    align-items: center;
 }
 .input-group input[type="text"] {
     flex: 1;
