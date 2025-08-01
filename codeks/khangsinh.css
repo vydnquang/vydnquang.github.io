@@ -61,7 +61,7 @@
 /* Thêm các quy tắc CSS sau cho icon cảnh báo */
 .general-guidance h3 {
     text-align: center;
-    color: #0095f2;
+    color: #f04800; /* màu cam */
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.3em;
