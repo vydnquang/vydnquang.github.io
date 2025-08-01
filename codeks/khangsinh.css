@@ -72,12 +72,12 @@ text-align: left; /* Căn lề trái cho text */
 
 /* Tạo hiệu ứng gradient phức tạp hơn */
 background: linear-gradient(to right,
-    #00964b 20%,         /* Bắt đầu xanh dương nhạt */
-    #00964b 80%,        /* Duy trì xanh dương nhạt đến giữa */
+    #00964b 0%,         /* Bắt đầu xanh dương nhạt */
+    #00964b 50%,        /* Duy trì xanh dương nhạt đến giữa */
     transparent 50%,    /* Chuyển sang trong suốt ở giữa */
     transparent calc(50% + 2px), /* Duy trì trong suốt qua đường chia */
-    #ffc926 calc(80% + 2px), /* Bắt đầu vàng nhạt sau đường chia */
-    #ffc926 20%);       /* Kết thúc vàng nhạt */
+    #ffc926 calc(50% + 2px), /* Bắt đầu vàng nhạt sau đường chia */
+    #ffc926 100%);       /* Kết thúc vàng nhạt */
 }
 
 /* Tạo gradient nhạt dần ra ngoài cho mỗi nửa */
