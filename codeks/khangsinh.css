@@ -72,12 +72,12 @@ text-align: left; /* Căn lề trái cho text */
 
 /* Tạo hiệu ứng gradient phức tạp hơn */
 background: linear-gradient(to right,
-    #ffc926 0%,         /* Bắt đầu xanh dương nhạt */
-    #ffc926 50%,        /* Duy trì xanh dương nhạt đến giữa */
+    #ffeea1 0%,         /* Bắt đầu vàng nhạt */
+    #ffeea1 50%,        /* Duy trì vàng nhạt đến giữa */
     transparent 50%,    /* Chuyển sang trong suốt ở giữa */
     transparent calc(50% + 3px), /* Duy trì trong suốt qua đường chia */
-    #69ff96 calc(50% + 3px), /* Bắt đầu vàng nhạt sau đường chia */
-    #69ff96 100%);       /* Kết thúc vàng nhạt */
+    #69ff96 calc(50% + 3px), /* Bắt đầu xanh nhạt sau đường chia */
+    #69ff96 100%);       /* Kết thúc xanh nhạt */
 }
 
 /* Tạo gradient nhạt dần ra ngoài cho mỗi nửa */
@@ -88,7 +88,7 @@ top: 0;
 left: 0;
 width: 50%;
 height: 100%;
-background: linear-gradient(to left, transparent 0%, #ffc926 100%); /* Xanh nhạt dần ra ngoài trái */
+background: linear-gradient(to left, transparent 0%, #ffeea1 100%); /* vàng nhạt dần ra ngoài trái */
 z-index: 1;
 pointer-events: none;
 border-radius: 22.5px 0 0 22.5px; /* Bo tròn nửa trái */
@@ -101,7 +101,7 @@ top: 0;
 right: 0;
 width: 50%;
 height: 100%;
-background: linear-gradient(to right, transparent 0%, #69ff96 100%); /* Vàng nhạt dần ra ngoài phải */
+background: linear-gradient(to right, transparent 0%, #69ff96 100%); /* xanh nhạt dần ra ngoài phải */
 z-index: 1;
 pointer-events: none;
 border-radius: 0 22.5px 22.5px 0; /* Bo tròn nửa phải */
