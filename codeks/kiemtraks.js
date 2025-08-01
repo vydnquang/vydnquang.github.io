@@ -199,7 +199,7 @@ function checkCombination() {
     // --- 5. Kiểm tra nếu không tìm thấy thông tin nhóm cho một trong hai kháng sinh ---
     if (!groupA || !groupB) {
         let missingAntibiotic = '';
-        if (!groupA && !groupB) missingAntibiotic = `"${antibioticA}" và "${antiboticB}"`;
+        if (!groupA && !groupB) missingAntibiotic = `"${antibioticA}" và "${antibioticB}"`;
         else if (!groupA) missingAntibiotic = `"${antibioticA}"`;
         else missingAntibiotic = `"${antibioticB}"`;
 
