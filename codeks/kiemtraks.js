@@ -1,12 +1,12 @@
 // codeks/kiemtraks.js
 
-// Import dữ liệu từ dataks.js (nằm cùng thư mục)
+// Import dữ liệu từ dataks.js
 import { getAntibioticGroup, getCombinationRule, antibioticGroups, antibioticToGroupMap } from './dataks.js';
 
 // Di chuyển khai báo allAntibiotics ra ngoài DOMContentLoaded
 // để nó có thể được truy cập bởi setupAutocomplete và các hàm khác
-const allAntibiotics = Object.values(antibioticGroups).flat().map(a => a.toLowerCase());
-allAntibiotics.sort(); // Sắp xếp danh sách kháng sinh theo ABC để hiển thị đẹp hơn
+// Lấy tất cả các kháng sinh từ các nhóm và chuyển về chữ thường để đồng bộ với data
+const allAntibiotics = Array.from(antibioticToGroupMap.keys()).sort(); // Lấy trực tiếp từ Map.keys() để đảm bảo chỉ có các kháng sinh đã được map
 
 document.addEventListener('DOMContentLoaded', () => {
     // Gắn sự kiện cho nút "Kiểm tra kết hợp"
@@ -51,11 +51,16 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
             antibiotic.startsWith(inputValue) || antibiotic.includes(inputValue)
         );
 
-        if (matchingAntibiotics.length === 0) {
+        // Giới hạn số lượng đề xuất để tránh danh sách quá dài (ví dụ 10-15)
+        const displayLimit = 15;
+        const antibioticsToDisplay = matchingAntibiotics.slice(0, displayLimit);
+
+
+        if (antibioticsToDisplay.length === 0) {
             return false;
         }
 
-        matchingAntibiotics.forEach(antibiotic => {
+        antibioticsToDisplay.forEach(antibiotic => {
             const suggestionItem = document.createElement('div');
             // In đậm phần khớp với chuỗi tìm kiếm
             const matchIndex = antibiotic.indexOf(inputValue);
@@ -64,10 +69,9 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
                                            "<strong>" + antibiotic.substring(matchIndex, matchIndex + inputValue.length) + "</strong>" +
                                            antibiotic.substring(matchIndex + inputValue.length);
             } else {
-                // Trường hợp không tìm thấy match (chỉ xảy ra nếu logic filter khác)
+                // Trường hợp này lý thuyết không xảy ra nếu filter đúng, nhưng là fallback tốt
                 suggestionItem.textContent = antibiotic;
             }
-
 
             suggestionItem.addEventListener('click', function() {
                 inputElement.value = antibiotic; // Điền giá trị vào input
@@ -99,8 +103,8 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
                 }
             } else {
                 // Nếu không có mục nào được chọn nhưng Enter được nhấn,
-                // có thể kích hoạt nút kiểm tra nếu muốn
-                // document.getElementById('checkCombinationBtn').click();
+                // kích hoạt nút kiểm tra
+                document.getElementById('checkCombinationBtn').click();
             }
         }
     });
@@ -122,20 +126,6 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
     }
 }
 
-// Hàm này không còn cần thiết vì đã tích hợp logic đóng danh sách vào setupAutocomplete
-// function closeAllSuggestions(elmnt) {
-//     const lists = document.querySelectorAll('.suggestions-list');
-//     lists.forEach(list => {
-//         if (elmnt !== list) {
-//             list.style.display = 'none';
-//             list.innerHTML = '';
-//         }
-//     });
-//     // Đã được xử lý bên trong input event listener
-//     // elmnt.style.display = 'none';
-//     // elmnt.innerHTML = '';
-// }
-
 
 // --- Hàm checkCombination: Logic kiểm tra và hiển thị kết quả ---
 function checkCombination() {
@@ -146,7 +136,7 @@ function checkCombination() {
 
     // Reset trạng thái trước đó
     resultBox.textContent = 'Kết quả sẽ hiển thị ở đây';
-    resultBox.className = 'result-box'; // Reset các lớp CSS
+    resultBox.className = 'result-box'; // Reset các lớp CSS (quan trọng để xóa các class màu)
     errorMessage.textContent = '';
 
     // Đóng tất cả các danh sách đề xuất khi nút được nhấn
@@ -164,54 +154,76 @@ function checkCombination() {
     // --- 2. Kiểm tra nhập liệu giống nhau ---
     if (antibioticA === antibioticB) {
         errorMessage.textContent = 'Bạn đã nhập 2 tên kháng sinh giống nhau.';
-        resultBox.textContent = 'Không cần phối hợp (Kháng sinh đã trùng lặp)';
-        resultBox.classList.add('neutral'); // Sử dụng class 'neutral'
+        resultBox.textContent = 'Không cần phối hợp (kháng sinh đã trùng lặp).';
+        resultBox.classList.add('neutral');
         return;
     }
 
-    // Lấy nhóm của từng kháng sinh
-    const groupA = getAntibioticGroup(antibioticA);
-    const groupB = getAntibioticGroup(antibioticB);
-
-    // --- 3. Kiểm tra kháng sinh cùng nhóm ---
-    // Chỉ kiểm tra nếu cả hai kháng sinh đều được tìm thấy nhóm
-    if (groupA && groupB && groupA === groupB) {
-        errorMessage.textContent = 'Không nên phối hợp hai kháng sinh cùng nhóm, trừ khi có chỉ định đặc biệt từ bác sĩ. Việc phối hợp này có thể làm giảm hiệu quả điều trị, tăng nguy cơ kháng thuốc và tác dụng phụ.';
-        resultBox.textContent = 'CẢNH BÁO: KHÁNG SINH CÙNG NHÓM';
-        resultBox.classList.add('caution'); // Sử dụng class 'caution'
-        return;
-    }
-
-    // Khởi tạo các biến cho kết quả
+    // --- 3. Xử lý các trường hợp tương tác đặc biệt (ƯU TIÊN CAO NHẤT, dựa trên TÊN kháng sinh cụ thể) ---
+    // Sắp xếp để đảm bảo key nhất quán bất kể thứ tự nhập A và B
+    const specificInteractionKey = [antibioticA, antibioticB].sort().join('-');
     let resultText = '';
     let resultClass = '';
 
-    // --- 4. Xử lý các trường hợp tương tác đặc biệt (ưu tiên cao nhất) ---
-    const specificInteractionKey = [antibioticA, antibioticB].sort().join('-');
-    if (specificInteractionKey === 'ceftriaxone-calcium') {
-        resultText = 'ĐỐI KHÁNG (Ceftriaxone và Calcium không được trộn lẫn trong cùng dịch truyền)';
+    // Ví dụ về tương tác cụ thể: Ceftriaxone và Calcium
+    if (specificInteractionKey === 'calcium-ceftriaxone') {
+        resultText = 'ĐỐI KHÁNG NGHIÊM TRỌNG (Calcium và Ceftriaxone không được trộn lẫn trong cùng dịch truyền. Có thể gây kết tủa nguy hiểm tính mạng, đặc biệt ở trẻ sơ sinh.)';
         resultClass = 'antagonistic';
         resultBox.textContent = resultText;
         resultBox.classList.add(resultClass);
         return;
     }
-
-    // --- 5. Kiểm tra nếu không tìm thấy thông tin nhóm cho một trong hai kháng sinh ---
-    if (!groupA || !groupB) {
-        let missingAntibiotic = '';
-        if (!groupA && !groupB) missingAntibiotic = `"${antibioticA}" và "${antibioticB}"`;
-        else if (!groupA) missingAntibiotic = `"${antibioticA}"`;
-        else missingAntibiotic = `"${antibioticB}"`;
-
-        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibiotic}. Có thể do nhập sai tên hoặc cơ sở dữ liệu chưa cập nhật kháng sinh mới.`;
-        resultClass = 'unknown'; // Kết quả không xác định vì thiếu dữ liệu
+    // Tương tác cụ thể: Clindamycin và Erythromycin
+    if (specificInteractionKey === 'clindamycin-erythromycin') {
+        resultText = 'ĐỐI KHÁNG (Clindamycin và Erythromycin có thể đối kháng do cùng vị trí tác động trên ribosome. KHÔNG NÊN PHỐI HỢP.)';
+        resultClass = 'antagonistic';
+        resultBox.textContent = resultText;
         resultBox.classList.add(resultClass);
-        resultBox.textContent = 'Không xác định được tên kháng sinh bạn vừa nhập';
+        return;
+    }
+    // Tương tác cụ thể: Chloramphenicol và Penicillins (kiểm tra theo tên và nhóm)
+    // Lưu ý: Đảm bảo "chloramphenicol" nằm trong nhóm "phenicols" trong dataks.js
+    const isAChloramphenicol = antibioticA === 'chloramphenicol';
+    const isBChloramphenicol = antibioticB === 'chloramphenicol';
+    const isAPenicillinGroup = antibioticToGroupMap.get(antibioticA) === 'penicillins';
+    const isBPenicillinGroup = antibioticToGroupMap.get(antibioticB) === 'penicillins';
+
+    if ((isAChloramphenicol && isBPenicillinGroup) || (isBChloramphenicol && isAPenicillinGroup)) {
+        resultText = 'ĐỐI KHÁNG (Chloramphenicol có thể cản trở tác dụng diệt khuẩn của Penicillins. KHÔNG NÊN PHỐI HỢP.)';
+        resultClass = 'antagonistic';
+        resultBox.textContent = resultText;
+        resultBox.classList.add(resultClass);
+        return;
+    }
+    // THÊM CÁC QUY TẮC CỤ THỂ KHÁC TẠI ĐÂY NẾU CẦN (ví dụ: Metronidazole-Alcohol, Sulfonamides-Methotrexate...)
+
+
+    // --- 4. Kiểm tra nếu không tìm thấy thông tin cho một trong hai kháng sinh trong database ---
+    // Lấy nhóm của từng kháng sinh từ Map
+    const groupA = antibioticToGroupMap.get(antibioticA);
+    const groupB = antibioticToGroupMap.get(antibioticB);
+
+    if (!groupA || !groupB) {
+        let missingAntibioticNames = [];
+        if (!groupA) missingAntibioticNames.push(`"${antibioticA}"`);
+        if (!groupB) missingAntibioticNames.push(`"${antibioticB}"`);
+
+        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibioticNames.join(' và ')}. Vui lòng kiểm tra lại tên hoặc cập nhật cơ sở dữ liệu.`;
+        resultBox.textContent = 'Không xác định (Kháng sinh không có trong danh sách)';
+        resultBox.classList.add('unknown');
+        return;
+    }
+
+    // --- 5. Kiểm tra kháng sinh cùng nhóm (sau khi đã xử lý các trường hợp đặc biệt và xác định được nhóm) ---
+    if (groupA === groupB) {
+        errorMessage.textContent = 'Không nên phối hợp hai kháng sinh cùng nhóm, trừ khi có chỉ định đặc biệt từ bác sĩ. Việc phối hợp này có thể làm giảm hiệu quả điều trị, tăng nguy cơ kháng thuốc và tác dụng phụ.';
+        resultBox.textContent = `CẢNH BÁO: KHÁNG SINH CÙNG NHÓM (${groupA})`;
+        resultBox.classList.add('caution');
         return;
     }
 
     // --- 6. Áp dụng quy tắc kết hợp giữa các nhóm ---
-    const rule = getCombinationRule(groupA, groupB);
+    const rule = getCombinationRule(groupA, groupB); // Hàm này đã xử lý việc sắp xếp tên nhóm
 
     switch (rule) {
         case 'synergistic':
@@ -235,7 +247,7 @@ function checkCombination() {
             resultClass = 'neutral';
             break;
         default:
-            resultText = 'Không xác định (quy tắc chưa được định nghĩa)';
+            resultText = 'Không xác định (quy tắc chưa được định nghĩa trong cơ sở dữ liệu)';
             resultClass = 'unknown';
             break;
     }
