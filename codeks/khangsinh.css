@@ -1,7 +1,7 @@
 /* codeks/khangsinh.css */
 
 /* Thêm các quy tắc CSS sau vào file khangsinh.css của bạn */
-/* code css về hiển thị đề xuất tên kháng sinh */
+/* /////////////// CODE HIỂN THỊ ĐỀ XUẤT TÊN KHÁNG SINH //////////////// */
 .autocomplete-container {
     position: relative; /* Quan trọng: để danh sách đề xuất định vị tương đối */
     flex: 1; /* Để nó giãn ra cùng với input-group */
@@ -60,7 +60,7 @@
 
 .general-guidance h3 {
     text-align: center;
-    color: #0056b3; /* Màu xanh đậm hơn */
+    color: red; /* Màu đỏ */
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.3em;
@@ -103,6 +103,7 @@ header {
 
 header h1 {
     margin: 0; /* Loại bỏ margin mặc định của h1 trong header */
+    font-family: 'Pacifico', cursive;
     font-size: 2.5em;
     color: white; /* Đảm bảo màu chữ là trắng */
 }
@@ -121,7 +122,7 @@ main.container {
 
 footer {
     background-color: #FFD700; /* Màu vàng */
-    color: #333;
+    color: blue;
     padding: 15px 0;
     text-align: center;
     font-size: 0.9em;
