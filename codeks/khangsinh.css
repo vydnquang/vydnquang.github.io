@@ -168,7 +168,10 @@ inset 0 1px 3px rgba(0, 0, 0, 0.1),
 }
 
 button {
-    display: block;
+    display: flex; /* Sử dụng flexbox để căn chỉnh nội dung */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    gap: 8px; /* Khoảng cách giữa icon và chữ */
     width: 100%;
     padding: 14px 25px;
     background-color: #28a745; /* Màu xanh lá cây */
@@ -179,6 +182,11 @@ button {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.search-icon {
+    color: #FFA500; /* Màu cam cho icon */
+    font-size: 1.1em; /* Tùy chỉnh kích thước icon */
+    /* margin-right đã được thay bằng gap trên button */
 }
 button:hover {
     background-color: #218838;
@@ -339,5 +347,16 @@ footer a:hover {
     }
     .general-guidance li {
         font-size: 0.85em;
+    }
+}
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    /* ... (Các quy tắc media query đã có) ... */
+    button {
+        font-size: 1.1em;
+        padding: 12px 20px; /* Điều chỉnh padding cho nút trên mobile */
+    }
+    .search-icon {
+        font-size: 1em; /* Điều chỉnh kích thước icon trên mobile */
     }
 }
