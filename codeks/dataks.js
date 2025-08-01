@@ -6,7 +6,7 @@ export const antibioticGroups = {
         'penicillin g', 'propicillin', 'penicillin v', 'penicillin g procaine',
         'benzathine penicillin g', 'benethamine penicillin', 'penicillin m', 'oxacillin',
         'cloxacillin', 'dicloxacillin', 'methicillin', 'nafcillin',
-        'flucloxacillin', 'ampicillin', ''amoxycillin', 'pivampicillin',
+        'flucloxacillin', 'ampicillin', 'amoxycillin', 'pivampicillin',
         'hetacillin', 'bacampicillin', 'metampicillin', 'talampicillin',
         'epicillin', 'sulbenicillin', 'temocillin', 'carbenicilin',
         'ticarcilin', 'carindacillin', 'mecillinam (amdinocillin)', 'mezlocillin',
@@ -46,8 +46,8 @@ export const antibioticGroups = {
     'peptides': [
         'daptomycin', 'gramicidin', 'gramicidin s', 'teixobactin',
         'vancomycin', 'oritavancin', 'telavancin', 'teicoplanin',
-        'dalbavancin', 'ramoplanin', 'bleomycin', 'polymycine a-b',
-        'colistin', 'bacitracin', 'tyrothricin', 'surfactin'
+        'dalbavancin', 'ramoplanin', 'bleomycin', 'polymyxin b',
+        'colistin', 'bacitracin', 'tyrothricin', 'surfactin',
         'amphomycin', 'tyrocidine'
         // TẤT CẢ KHÁNG SINH CỦA NHÓM peptide
     ],
@@ -84,9 +84,9 @@ export const antibioticGroups = {
         'lincomycin', 'clindamycin', 'pirlimycin', 'iboxamycin'
         // TẤT CẢ KHÁNG SINH CỦA NHÓM lincosamides
     ],
-    'phenicol': [
-        'chloramphenicol', 'thiamphenicol', 'flophenicol', 'azidamfenicol'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM phenicol
+    'phenicols': [
+        'chloramphenicol', 'thiamphenicol', 'florfenicol', 'azidamfenicol'
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM phenicols
     ],
     'quinolones': [
         'nalidixic acid', 'axit pipemidic', 'oxolinic acid', 'piromidic acid',
@@ -145,47 +145,83 @@ export const antibioticGroups = {
         'salinomycin', 'monensin', 'lasalocid'
         // TẤT CẢ KHÁNG SINH CỦA NHÓM ionophore
     ],
-    'pleuromutilin': [
+    'pleuromutilins': [
         'lefamulin', 'retapamulin', 'tiamulin', 'valnemulin', 'azamulin'
         // TẤT CẢ KHÁNG SINH CỦA NHÓM pleuromutilin
     ],
-    'streptogramin': [
+    'streptogramins': [
         'pristinamycin', 'quinupristin', 'dalfopristin', 'virginiamycin'
         // TẤT CẢ KHÁNG SINH CỦA NHÓM Streptogramin
     ],
-
-
-    'other': [
-        'clindamycin', 'metronidazole', 'linezolid', 'daptomycin',
-        'rifampin', 'chloramphenicol', 'fosfomycin', 'colistin', 'trimethoprim'
+    'aminocoumarins': [
+        'novobiocin', 'coumermycin a1', 'clorobiocin'
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM aminocoumarin
+    ],
+    'anti-tuberculosis_anti-leprosy': [
+        'dapsone', 'promin', 'capreomycin', 'ethambutol', 'ethionamide', 'clofazimine', 'isoniazid'
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM trị lao, trị phong
+    ],
+    'minerals': [
+        'calcium', 'magnesium', 'iron', 'zinc'
+    ],
+    'other/new': [
+        'fusidic acid', 'anthracimycin', 'anthramycin', 'lugdunin',
+        'nitazoxanide (alinia)', 'halicin', 'mupirocin', 'platensimycin',
+        'malacidin', 'trimethoprim', 'iclaprim', 'lariocidin',
+        'zosurabalpin', 'cefepime-taniborbactam', 'darobactin', 'orlynvah',
+        'cefepime-enmetazobactam', 'cresomycin'
     ]
     // ... Thêm các nhóm và kháng sinh khác của bạn vào đây
 };
 
 // Ánh xạ từng kháng sinh về nhóm của nó (để tra cứu nhanh)
-export const antibioticToGroupMap = {};
+// Sử dụng Map thay vì Object cho hiệu suất tốt hơn
+export const antibioticToGroupMap = new Map();
 for (const group in antibioticGroups) {
     antibioticGroups[group].forEach(antibiotic => {
-        antibioticToGroupMap[antibiotic.toLowerCase()] = group;
+        antibioticToGroupMap.set(antibiotic.toLowerCase(), group);
     });
 }
 
 // Quy tắc tương tác giữa các NHÓM kháng sinh
 // Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁC từ các nguồn y khoa.
 export const combinationRules = {
-    // Ví dụ về các cặp tương tác
+    // Các quy tắc đã có
     'penicillins-aminoglycosides': 'synergistic', // Hiệp lực
     'penicillins-tetracyclines': 'antagonistic', // Đối kháng
-    'clindamycin-erythromycin': 'antagonistic', // Tương tác cụ thể không theo nhóm rõ rệt
-    'chloramphenicol-penicillins': 'antagonistic', // Tương tác cụ thể
-    'trimethoprim-sulfonamides': 'synergistic',
-    'cephalosporins-aminoglycosides': 'additive',  // Phụ gia
-    'carbapenems-glycopeptides': 'additive',
-    // ... Thêm tất cả các quy tắc kết hợp nhóm kháng sinh của bạn
-    // Đảm bảo tên nhóm được sắp xếp theo bảng chữ cái để khớp với logic getCombinationRule
-    // Ví dụ: 'aminoglycosides-penicillins' thay vì 'penicillins-aminoglycosides'
-    // (trong getCombinationRule đã có logic sắp xếp)
+    // Lưu ý: Các tương tác cụ thể giữa 2 kháng sinh không theo nhóm cần được xử lý riêng trong kiemtraks.js
+    // Ví dụ: clindamycin-erythromycin hay chloramphenicol-penicillins
+    // Hiện tại bạn đã có logic đó cho ceftriaxone-calcium.
+    'sulfonamides-trimethoprim': 'synergistic',
+    'cephalosporins-aminoglycosides': 'additive',
+    'carbapenems-aminoglycosides': 'synergistic',
+    'cephalosporins-peptides': 'additive',
+    'quinolones-aminoglycosides': 'synergistic',
+    'lincosamides-macrolides': 'antagonistic',
+    'phenicols-macrolides': 'antagonistic',
+    'phenicols-penicillins': 'antagonistic',
+
+    // --- CÁC QUY TẮC MỚI CẦN BỔ SUNG DỰA TRÊN CÁC NHÓM BẠN ĐÃ THÊM ---
+    // Đây chỉ là VÍ DỤ. Bạn cần điền DỮ LIỆU CHÍNH XÁC TỪ NGUỒN Y TẾ.
+    'beta-lactames-aminoglycosides': 'synergistic',
+    'beta-lactames-beta-lactamase': 'synergistic',
+    'beta-lactames-quinolones': 'additive',
+    'peptides-aminoglycosides': 'additive',
+    'peptides-quinolones': 'additive',
+    'macrolides-quinolones': 'additive',
+    'sulfonamides-quinolones': 'additive',
+    'nitroimidazoles-quinolones': 'synergistic',
+    'nitrofurans-quinolones': 'additive',
+    'phosphonics-aminoglycosides': 'synergistic',
+    'ionophores-other/new': 'neutral',
+    'pleuromutilins-macrolides': 'caution',
+    'streptogramins-macrolides': 'caution',
+    'aminocoumarins-rifamycins': 'synergistic',
+    'anti-tuberculosis_anti-leprosy-quinolones': 'additive',
+    'other/new-other/new': 'neutral',
+    // ... bạn cần tiếp tục bổ sung các cặp nhóm khác cho đầy đủ
 };
+
 
 // Hàm giúp lấy quy tắc tương tác giữa hai nhóm
 export function getCombinationRule(groupA, groupB) {
@@ -201,5 +237,5 @@ export function getCombinationRule(groupA, groupB) {
 
 // Hàm lấy nhóm của một kháng sinh
 export function getAntibioticGroup(antibioticName) {
-    return antibioticToGroupMap[antibioticName.toLowerCase()] || null;
+    return antibioticToGroupMap.get(antibioticName.toLowerCase()) || null;
 }
