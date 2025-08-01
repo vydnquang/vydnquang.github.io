@@ -58,12 +58,22 @@
     line-height: 1.6;
 }
 
+/* Thêm các quy tắc CSS sau cho icon cảnh báo */
 .general-guidance h3 {
     text-align: center;
-    color: red; /* Màu đỏ */
+    color: #0095f2;
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.3em;
+    display: flex; /* Sử dụng flexbox để căn chỉnh icon và text */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+}
+
+.warning-icon {
+    color: #dc3545; /* Màu đỏ */
+    margin-right: 8px; /* Khoảng cách giữa icon và chữ */
+    font-size: 1.2em; /* Tăng kích thước icon một chút so với text */
 }
 
 .general-guidance ol {
