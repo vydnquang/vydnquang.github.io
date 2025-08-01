@@ -24,6 +24,12 @@ header h1 {
     font-family: 'Pacifico', cursive;
     font-size: 2.5em;
     color: white;
+    /* Các thuộc tính mới để giữ tiêu đề trên một dòng */
+    white-space: nowrap; /* Ngăn không cho văn bản ngắt dòng */
+    overflow: hidden;    /* Ẩn phần văn bản tràn ra ngoài */
+    text-overflow: ellipsis; /* Hiển thị dấu '...' cho phần văn bản bị ẩn */
+    padding: 0 10px; /* Thêm padding ngang để chữ không sát mép khi tràn */
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
 }
 
 main.container {
@@ -358,5 +364,9 @@ footer a:hover {
     }
     .search-icon {
         font-size: 1em; /* Điều chỉnh kích thước icon trên mobile */
+    }
+    header h1 {
+        font-size: 1.8em; /* Giảm kích thước font trên màn hình nhỏ */
+        /* Giữ nguyên white-space, overflow, text-overflow */
     }
 }
