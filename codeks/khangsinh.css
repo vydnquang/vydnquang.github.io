@@ -22,7 +22,7 @@ header {
 header h1 {
     margin: 0;
     font-family: 'Pacifico', cursive;
-    font-size: 2.5em;
+    font-size: 2em;
     color: white;
     /* Các thuộc tính mới để giữ tiêu đề trên một dòng */
     white-space: nowrap; /* Ngăn không cho văn bản ngắt dòng */
@@ -366,7 +366,7 @@ footer a:hover {
         font-size: 1em; /* Điều chỉnh kích thước icon trên mobile */
     }
     header h1 {
-        font-size: 1.8em; /* Giảm kích thước font trên màn hình nhỏ */
+        font-size: 1em; /* Giảm kích thước font trên màn hình nhỏ */
         /* Giữ nguyên white-space, overflow, text-overflow */
     }
 }
