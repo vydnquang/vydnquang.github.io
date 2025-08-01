@@ -53,51 +53,79 @@ main.container {
     min-width: 280px;
 }
 
-/* CSS cho ô nhập liệu dạng viên thuốc con nhộng */
+/* CSS cho ô nhập liệu dạng viên thuốc con nhộng (ĐÃ CẬP NHẬT) */
 .autocomplete-container input {
-    width: 100%;
-    height: 45px; /* Chiều cao cố định */
-    padding: 0 25px; /* Padding ngang để text không sát mép */
-    border: none;
-    border-radius: 22.5px; /* Bo tròn tối đa = một nửa chiều cao */
+width: 100%;
+height: 45px; /* Chiều cao cố định */
+padding: 0 25px; /* Padding ngang */
+border: none;
+border-radius: 22.5px; /* Bo tròn tối đa */
+box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15),
+inset 0 1px 2px rgba(0, 0, 0, 0.08);
+font-size: 1.1em;
+color: #333;
+transition: all 0.3s ease;
+box-sizing: border-box;
+position: relative;
+overflow: hidden;
+text-align: left; /* Căn lề trái cho text */
 
-    /* Nền gradient 2 màu để mô phỏng 2 nửa viên thuốc */
-    background: linear-gradient(to right, #e0f7fa 0%, #bbdefb 100%);
-    /* Bạn có thể thử các cặp màu khác: */
-    /* background: linear-gradient(to right, #fce4ec 0%, #f8bbd0 100%); /* Hồng */
-    /* background: linear-gradient(to right, #e8f5e9 0%, #c8e6c9 100%); /* Xanh lá */
-
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), /* Đổ bóng phía ngoài */
-                inset 0 1px 2px rgba(0, 0, 0, 0.08); /* Đổ bóng phía trong */
-    font-size: 1.1em;
-    color: #333;
-    transition: all 0.3s ease;
-    box-sizing: border-box; /* Quan trọng */
-    position: relative;
-    overflow: hidden; /* Quan trọng cho pseudo-element */
-    text-align: left; /* Căn lề trái cho text */
+/* Tạo hiệu ứng gradient phức tạp hơn */
+background: linear-gradient(to right,
+    #e0f7fa 0%,         /* Bắt đầu xanh dương nhạt */
+    #e0f7fa 50%,        /* Duy trì xanh dương nhạt đến giữa */
+    transparent 50%,    /* Chuyển sang trong suốt ở giữa */
+    transparent calc(50% + 2px), /* Duy trì trong suốt qua đường chia */
+    #fffde7 calc(50% + 2px), /* Bắt đầu vàng nhạt sau đường chia */
+    #fffde7 100%);       /* Kết thúc vàng nhạt */
 }
 
-/* Pseudo-element để tạo đường chia đôi viên thuốc */
+/* Tạo gradient nhạt dần ra ngoài cho mỗi nửa */
+.autocomplete-container input::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 50%;
+height: 100%;
+background: linear-gradient(to left, transparent 0%, #e0f7fa 100%); /* Xanh nhạt dần ra ngoài trái */
+z-index: 1;
+pointer-events: none;
+border-radius: 22.5px 0 0 22.5px; /* Bo tròn nửa trái */
+}
+
 .autocomplete-container input::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 2px; /* Độ dày của đường chia */
-    background-color: rgba(0, 0, 0, 0.15); /* Màu của đường chia */
-    transform: translateX(-50%); /* Căn giữa */
-    pointer-events: none; /* Đảm bảo không cản trở tương tác */
-    z-index: 1; /* Nằm trên background */
-    border-radius: 1px; /* Bo tròn nhẹ đầu đường chia */
+content: '';
+position: absolute;
+top: 0;
+right: 0;
+width: 50%;
+height: 100%;
+background: linear-gradient(to right, transparent 0%, #fffde7 100%); /* Vàng nhạt dần ra ngoài phải */
+z-index: 1;
+pointer-events: none;
+border-radius: 0 22.5px 22.5px 0; /* Bo tròn nửa phải */
+}
+
+/* Đường chia đôi rõ ràng */
+.autocomplete-container input::after {
+content: '';
+position: absolute;
+top: 0;
+bottom: 0;
+left: 50%;
+width: 2px; /* Độ dày của đường chia */
+background-color: rgba(0, 0, 0, 0.2); /* Màu đậm hơn cho đường chia */
+transform: translateX(-50%);
+pointer-events: none;
+z-index: 2; /* Đảm bảo nằm trên cả hai lớp gradient */
 }
 
 .autocomplete-container input:focus {
-    outline: none;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25),
-                inset 0 1px 3px rgba(0, 0, 0, 0.1),
-                0 0 0 4px rgba(0, 123, 255, 0.3); /* Vòng sáng xanh khi focus */
+outline: none;
+box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25),
+inset 0 1px 3px rgba(0, 0, 0, 0.1),
+0 0 0 4px rgba(0, 123, 255, 0.3);
 }
 
 
