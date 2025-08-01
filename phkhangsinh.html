@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phần mềm phối hợp Kháng sinh thông minh</title>
     <link rel="stylesheet" href="https://vydnquang.github.io/codeks/khangsinh.css">
-    </head>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
+</head>
 <body>
     <header>
         <h1>Kiểm Tra Phối Hợp Kháng Sinh</h1>
@@ -13,10 +14,14 @@
 
     <main class="container">
         <div class="input-group">
-            <div class="autocomplete-container"> <input type="text" id="antibioticA" placeholder="Nhập tên kháng sinh A">
-                <div id="suggestionsA" class="suggestions-list"></div> </div>
-            <div class="autocomplete-container"> <input type="text" id="antibioticB" placeholder="Nhập tên kháng sinh B">
-                <div id="suggestionsB" class="suggestions-list"></div> </div>
+            <div class="autocomplete-container">
+                <input type="text" id="antibioticA" placeholder="Nhập tên kháng sinh A">
+                <div id="suggestionsA" class="suggestions-list"></div>
+            </div>
+            <div class="autocomplete-container">
+                <input type="text" id="antibioticB" placeholder="Nhập tên kháng sinh B">
+                <div id="suggestionsB" class="suggestions-list"></div>
+            </div>
         </div>
 
         <button id="checkCombinationBtn">Kiểm tra !</button>
@@ -25,10 +30,21 @@
             Kết quả sẽ hiển thị ở đây
         </div>
         <div class="error-message" id="errorMessage"></div>
-    </main>
+
+        <div class="general-guidance" id="generalGuidance">
+            <h3>Chỉ dẫn quan trọng:</h3>
+            <ol>
+                <li>Việc phối hợp kháng sinh cần phải dựa trên lâm sàng từng ca bệnh cụ thể.</li>
+                <li>Cần cân nhắc giữa lợi và hại khi phối hợp kháng sinh, vì "thuốc là con dao 2 lưỡi", chỉ nên phối hợp khi thực sự cần thiết.</li>
+                <li>Hãy tìm đến một loại kháng sinh mới, có tác dụng tương đương với 2 loại kháng sinh muốn kết hợp, ít kháng thuốc, ít tác dụng phụ.</li>
+                <li>Luôn luôn điều chỉnh liều lượng cho phù hợp, chứ không cứng nhắc 1 liều cho cả một quá trình điều trị.</li>
+                <li>Tất cả các kết quả trên chỉ mang tính tham khảo, bác sĩ phải kiểm chứng lại kết quả đưa ra trước khi thực hiện.</li>
+            </ol>
+        </div>
+        </main>
 
     <footer>
-        <p>Copyright © 2025 by BSTY. An Nhơn Pet</p>
+        <p>Copyright © 2025 by BSTY. <a href="https://www.facebook.com/annhonpet" target="_blank">An Nhơn Pet</a></p>
     </footer>
 
     <script type="module" src="https://vydnquang.github.io/codeks/kiemtraks.js"></script>
