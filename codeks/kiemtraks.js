@@ -203,10 +203,10 @@ function checkCombination() {
         else if (!groupA) missingAntibiotic = `"${antibioticA}"`;
         else missingAntibiotic = `"${antibioticB}"`;
 
-        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibiotic}. Vui lòng kiểm tra lại tên hoặc thêm vào dữ liệu.`;
+        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibiotic}. Có thể do nhập sai tên hoặc cơ sở dữ liệu chưa cập nhật kháng sinh mới.`;
         resultClass = 'unknown'; // Kết quả không xác định vì thiếu dữ liệu
         resultBox.classList.add(resultClass);
-        resultBox.textContent = 'Không xác định (thiếu dữ liệu)';
+        resultBox.textContent = 'Không xác định được tên kháng sinh bạn vừa nhập';
         return;
     }
 
