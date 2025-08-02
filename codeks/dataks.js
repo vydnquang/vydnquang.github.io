@@ -33,9 +33,9 @@ export const antibioticGroups = {
         'cefaparole', 'cefmatilen', 'cefsumide'
         // TẤT CẢ KHÁNG SINH CỦA NHÓM cephalosporin
     ],
-    'beta-lactames': [
-        'thienamycin', 'aztreonam', 'tigemonam', 'carumonam', 'nocardicin a'
-        // TẤT CẢ KHÁNG SINH KHÁC CỦA NHÓM beta-lactam
+    'monobactams': [
+        'aztreonam', 'tigemonam', 'carumonam', 'nocardicin a'
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM monobactam
     ],
     'beta-lactamase': [
         'clavulanic acid', 'sulbactam', 'tazobactam', 'vaborbactam',
@@ -106,7 +106,7 @@ export const antibioticGroups = {
     'carbapenems': [
         'imipenem', 'meropenem', 'ertapenem', 'doripenem',
         'biapenem', 'panipenem', 'faropenem', 'ritipenem',
-        'sulopenem'
+        'sulopenem', 'thienamycin'
         // TẤT CẢ KHÁNG SINH CỦA NHÓM carbapenem
     ],
     'sulfonamides': [
@@ -187,29 +187,125 @@ for (const group in antibioticGroups) {
 // Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁC từ các nguồn y khoa.
 export const combinationRules = {
     // Các quy tắc đã có
+    // Các quy tắc của nhóm penicillins
     'penicillins-aminoglycosides': 'synergistic', // Hiệp lực
+    'penicillins-peptides': 'synergistic', // Hiệp lực
+    'penicillins-quinolones': 'synergistic', // Hiệp lực
     'penicillins-tetracyclines': 'antagonistic', // Đối kháng
-    // Lưu ý: Các tương tác cụ thể giữa 2 kháng sinh không theo nhóm cần được xử lý riêng trong kiemtraks.js
-    // Ví dụ: clindamycin-erythromycin hay chloramphenicol-penicillins
-    // Hiện tại bạn đã có logic đó cho ceftriaxone-calcium.
+    'penicillins-phenicols': 'antagonistic', // Đối kháng
+    'penicillins-macrolides': 'antagonistic', // Đối kháng
+    'penicillins-lincosamides': 'antagonistic', // Đối kháng
+    'penicillins-pleuromutilins': 'antagonistic', // Đối kháng
+    'penicillins-sulfonamides': 'antagonistic', // Đối kháng
+    'penicillins-trimethoprim': 'antagonistic', // Đối kháng
+
+    // Các quy tắc của nhóm cephalosporins
+    'cephalosporins-aminoglycosides': 'synergistic', // Hiệp lực, có tài liệu là 'additive'
+    'cephalosporins-peptides': 'synergistic', // Hiệp lực, có tài liệu là 'additive'
+    'cephalosporins-quinolones': 'synergistic', // Hiệp lực
+    'cephalosporins-tetracyclines': 'antagonistic', // Đối kháng
+    'cephalosporins-phenicols': 'antagonistic', // Đối kháng
+    'cephalosporins-macrolides': 'antagonistic', // Đối kháng
+    'cephalosporins-lincosamides': 'antagonistic', // Đối kháng
+    'cephalosporins-pleuromutilins': 'antagonistic', // Đối kháng
+    'cephalosporins-sulfonamides': 'antagonistic', // Đối kháng
+    'cephalosporins-trimethoprim': 'antagonistic', // Đối kháng
+
+    // Các quy tắc của nhóm monobactams
+    'monobactams-aminoglycosides': 'synergistic', // Hiệp lực
+    'monobactams-peptides': 'synergistic', // Hiệp lực
+    'monobactams-quinolones': 'synergistic', // Hiệp lực
+    'monobactams-tetracyclines': 'antagonistic', // Đối kháng
+    'monobactams-phenicols': 'antagonistic', // Đối kháng
+    'monobactams-macrolides': 'antagonistic', // Đối kháng
+    'monobactams-lincosamides': 'antagonistic', // Đối kháng
+    'monobactams-pleuromutilins': 'antagonistic', // Đối kháng
+    'monobactams-sulfonamides': 'antagonistic', // Đối kháng
+    'monobactams-trimethoprim': 'antagonistic', // Đối kháng
+    
+    // Các quy tắc của nhóm carbapenems
+    'carbapenems-aminoglycosides': 'synergistic', // Hiệp lực
+    'carbapenems-peptides': 'synergistic', // Hiệp lực
+    'carbapenems-quinolones': 'synergistic', // Hiệp lực
+    'carbapenems-tetracyclines': 'antagonistic', // Đối kháng
+    'carbapenems-phenicols': 'antagonistic', // Đối kháng
+    'carbapenems-macrolides': 'antagonistic', // Đối kháng
+    'carbapenems-lincosamides': 'antagonistic', // Đối kháng
+    'carbapenems-pleuromutilins': 'antagonistic', // Đối kháng
+    'carbapenems-sulfonamides': 'antagonistic', // Đối kháng
+    'carbapenems-trimethoprim': 'antagonistic', // Đối kháng
+
+    // Các quy tắc của nhóm beta-lactamase
+    'beta-lactamase-penicillins': 'additive',
+    'beta-lactamase-cephalosporins': 'additive',
+
+    // Các quy tắc của nhóm aminoglycosides
+    'aminoglycosides-tetracyclines': 'synergistic', // Hiệp lực
+    'aminoglycosides-phenicols': 'synergistic', // Hiệp lực
+    'aminoglycosides-macrolides': 'synergistic', // Hiệp lực
+    'aminoglycosides-lincosamides': 'synergistic', // Hiệp lực
+    'aminoglycosides-pleuromutilins': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của nhóm peptid
+    'peptides-tetracyclines': 'synergistic', // Hiệp lực
+    'peptides-phenicols': 'synergistic', // Hiệp lực
+    'peptides-macrolides': 'synergistic', // Hiệp lực
+    'peptides-lincosamides': 'synergistic', // Hiệp lực
+    'peptides-pleuromutilins': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của nhóm quinolon
+    'quinolones-tetracyclines': 'synergistic', // Hiệp lực
+    'quinolones-phenicols': 'synergistic', // Hiệp lực
+    'quinolones-macrolides': 'synergistic', // Hiệp lực
+    'quinolones-lincosamides': 'synergistic', // Hiệp lực
+    'quinolones-pleuromutilins': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của nhóm tetracyclines
+    'tetracyclines-sulfonamides': 'synergistic', // Hiệp lực
+    'tetracyclines-trimethoprim': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của nhóm phenicols
+    'phenicols-sulfonamides': 'synergistic', // Hiệp lực
+    'phenicols-trimethoprim': 'synergistic', // Hiệp lực 
+
+    // Các quy tắc của nhóm macrolides
+    'macrolides-sulfonamides': 'synergistic', // Hiệp lực
+    'macrolides-trimethoprim': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của nhóm lincosamides
+    'lincosamides-sulfonamides': 'synergistic', // Hiệp lực
+    'lincosamides-trimethoprim': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của nhóm pleuromutilins
+    'pleuromutilins-sulfonamides': 'synergistic', // Hiệp lực
+    'pleuromutilins-trimethoprim': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của các nhóm chưa phân loại
     'sulfonamides-trimethoprim': 'synergistic',
-    'cephalosporins-aminoglycosides': 'additive',
-    'carbapenems-aminoglycosides': 'synergistic',
-    'cephalosporins-peptides': 'additive',
-    'quinolones-aminoglycosides': 'synergistic',
+    'quinolones-aminoglycosides': 'synergistic', // Có tài liệu ghi hết sức thận trọng 'caution'
     'lincosamides-macrolides': 'antagonistic',
     'phenicols-macrolides': 'antagonistic',
-    'phenicols-penicillins': 'antagonistic',
 
     // --- CÁC QUY TẮC MỚI CẦN BỔ SUNG DỰA TRÊN CÁC NHÓM BẠN ĐÃ THÊM ---
     // Đây chỉ là VÍ DỤ. Bạn cần điền DỮ LIỆU CHÍNH XÁC TỪ NGUỒN Y TẾ.
-    'beta-lactames-aminoglycosides': 'synergistic',
     'beta-lactames-beta-lactamase': 'synergistic',
+    'beta-lactames-metroimidazol': 'additive',
     'beta-lactames-quinolones': 'additive',
-    'peptides-aminoglycosides': 'additive',
-    'peptides-quinolones': 'additive',
+    'peptides-aminoglycosides': 'additive', // Có tài liệu ghi 'caution', hết sức thận trọng
+    'peptides-quinolones': 'additive', // Đôi khi là 'caution' vì độc tính
     'macrolides-quinolones': 'additive',
     'sulfonamides-quinolones': 'additive',
+    'phenicols-tetracyclines': 'caution', // Không khuyến cáo vì tác dụng phụ nghiêm trọng
+    'macrolides-tetracyclines': 'caution', // Không khuyến cáo vì tác dụng phụ nghiêm trọng
+    'lincosamides-tetracyclines': 'antagonistic', // Không khuyến cáo vì tác dụng đối kháng
+    'pleuromutilins-tetracyclines': 'antagonistic', // Không khuyến cáo vì tác dụng đối kháng
+    'pleuromutilins-phenicols': 'antagonistic', // Không khuyến cáo vì tác dụng đối kháng
+    'lincosamides-phenicols': 'caution', // Không khuyến cáo, cân nhắc
+    'lincosamides-pleuromutilins': 'caution', // Không khuyến cáo, cân nhắc
+    'penicillins-cephalosporins': 'antagonistic', // Cẩn trọng
+    'penicillins-carbapenems': 'antagonistic', // Cẩn trọng
+    'penicillins-monobactams ': 'antagonistic', // Cẩn trọng
+
     'nitroimidazoles-quinolones': 'synergistic',
     'nitrofurans-quinolones': 'additive',
     'phosphonics-aminoglycosides': 'synergistic',
@@ -220,6 +316,10 @@ export const combinationRules = {
     'anti-tuberculosis_anti-leprosy-quinolones': 'additive',
     'other/new-other/new': 'neutral',
     // ... bạn cần tiếp tục bổ sung các cặp nhóm khác cho đầy đủ
+
+    // Lưu ý: Các tương tác cụ thể giữa 2 kháng sinh không theo nhóm cần được xử lý riêng trong kiemtraks.js
+    // Ví dụ: clindamycin-erythromycin hay chloramphenicol-penicillins
+    // Hiện tại bạn đã có logic đó cho ceftriaxone-calcium.
 };
 
 
