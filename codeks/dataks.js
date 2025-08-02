@@ -304,7 +304,10 @@ export const combinationRules = {
     'lincosamides-pleuromutilins': 'caution', // Không khuyến cáo, cân nhắc
     'penicillins-cephalosporins': 'antagonistic', // Cẩn trọng
     'penicillins-carbapenems': 'antagonistic', // Cẩn trọng
-    'penicillins-monobactams ': 'antagonistic', // Cẩn trọng
+    'penicillins-monobactams': 'antagonistic', // Cẩn trọng
+    'cephalosporins-monobactams': 'antagonistic', // Cẩn trọng
+    'cephalosporins-carbapenems': 'antagonistic', // Cẩn trọng
+    'monobactams-carbapenems': 'antagonistic', // Cấm, gây dị ứng
 
     'nitroimidazoles-quinolones': 'synergistic',
     'nitrofurans-quinolones': 'additive',
