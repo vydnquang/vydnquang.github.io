@@ -375,6 +375,21 @@ footer a:hover {
     text-decoration: underline;
 }
 
+/* Thêm hiệu ứng cho icon loading */
+.loading-icon {
+    margin-right: 8px; /* Khoảng cách giữa icon và chữ */
+    color: #007bff; /* Màu sắc cho icon, ví dụ màu xanh dương */
+    font-size: 0.9em; /* Kích thước icon, nhỏ hơn một chút so với chữ */
+    vertical-align: middle; /* Căn chỉnh icon với chữ */
+    animation: spin 2s linear infinite; /* Áp dụng animation quay */
+}
+
+/* Định nghĩa keyframes cho animation quay */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .container {
@@ -422,6 +437,7 @@ footer a:hover {
         font-size: 0.85em;
     }
 }
+
 
 
 
