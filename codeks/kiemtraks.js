@@ -208,7 +208,7 @@ function checkCombination() {
         if (!groupA) missingAntibioticNames.push(`"${antibioticA}"`);
         if (!groupB) missingAntibioticNames.push(`"${antibioticB}"`);
 
-        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibioticNames.join(' và ')}. Vui lòng kiểm tra lại tên hoặc cập nhật cơ sở dữ liệu.`;
+        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibioticNames.join(' và ')}. Có thể do bạn nhập sai tên hoặc dữ liệu của chúng tôi không có loại kháng sinh này.`;
         resultBox.textContent = 'Không xác định (Kháng sinh không có trong danh sách)';
         resultBox.classList.add('unknown');
         return;
@@ -255,3 +255,4 @@ function checkCombination() {
     resultBox.textContent = resultText;
     resultBox.classList.add(resultClass);
 }
+
