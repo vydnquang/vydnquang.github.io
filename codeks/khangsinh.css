@@ -149,7 +149,7 @@ main.container {
     bottom: 0;
     left: 50%;
     width: 2px; /* Độ dày của đường chia */
-    background-color: rgba(0, 0, 0, 0.2); /* Màu đậm hơn cho đường chia */
+    background-color: #dbdbdb; /* Màu đậm hơn cho đường chia */
     transform: translateX(-50%);
     pointer-events: none;
     z-index: 2; /* Đảm bảo nằm trên cả hai lớp gradient */
@@ -162,27 +162,27 @@ main.container {
 
 /* Viên thuốc A (Màu vàng nhạt - xanh lá cây nhạt) */
 #pillA::before {
-    background: linear-gradient(to left, transparent 0%, #ffe082 100%); /* Màu vàng nhạt 1 */
+    background: linear-gradient(to right, transparent 0%, #ffeea1 100%); /* Màu vàng nhạt 1 */
 }
 
 #pillA::after {
-    background: linear-gradient(to right, transparent 0%, #c8fcd6 100%); /* Màu xanh lá cây nhạt 1 */
+    background: linear-gradient(to left, transparent 0%, #bfffd2 100%); /* Màu xanh lá cây nhạt 1 */
 }
 #pillA .divider {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: #dbdbdb;
 }
 
 
 /* Viên thuốc B (Màu hồng nhạt - tím nhạt) */
 #pillB::before {
-    background: linear-gradient(to left, transparent 0%, #ffccbc 100%); /* Màu hồng nhạt 2 */
+    background: linear-gradient(to right, transparent 0%, #709dff 100%); /* Màu biển nhạt 2 */
 }
 
 #pillB::after {
-    background: linear-gradient(to right, transparent 0%, #e0c8fc 100%); /* Màu tím nhạt 2 */
+    background: linear-gradient(to left, transparent 0%, #ffc8a6 100%); /* Màu cam nhạt 2 */
 }
 #pillB .divider {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: #dbdbdb;
 }
 
 
@@ -401,7 +401,7 @@ footer a:hover {
     }
 
     header h1 {
-        font-size: 1.8em;
+        font-size: 1.5em;
     }
     button {
         font-size: 1.1em;
@@ -422,3 +422,4 @@ footer a:hover {
         font-size: 0.85em;
     }
 }
+
