@@ -1,4 +1,4 @@
-/* codeks/khangsinh.css */
+/* khangsinh.css */
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,6 +32,13 @@ header h1 {
     box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
 }
 
+/* Kiểu dáng cho thông tin cập nhật số lượng KS */
+.update-info {
+    font-size: 0.9em;
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
 main.container {
     background-color: #ffffff;
     padding: 40px;
@@ -59,81 +66,129 @@ main.container {
     min-width: 280px;
 }
 
-/* CSS cho ô nhập liệu dạng viên thuốc con nhộng (ĐÃ CẬP NHẬT) */
-.autocomplete-container input {
-width: 100%;
-height: 45px; /* Chiều cao cố định */
-padding: 0 25px; /* Padding ngang */
-border: none;
-border-radius: 22.5px; /* Bo tròn tối đa */
-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15),
-inset 0 1px 2px rgba(0, 0, 0, 0.08);
-font-size: 1.1em;
-color: #333;
-transition: all 0.3s ease;
-box-sizing: border-box;
-position: relative;
-overflow: hidden;
-text-align: left; /* Căn lề trái cho text */
-
-/* Tạo hiệu ứng gradient phức tạp hơn */
-background: linear-gradient(to right,
-    #ffeea1 0%,         /* Bắt đầu vàng nhạt */
-    #ffeea1 50%,        /* Duy trì vàng nhạt đến giữa */
-    transparent 50%,    /* Chuyển sang trong suốt ở giữa */
-    transparent calc(50% + 3px), /* Duy trì trong suốt qua đường chia */
-    #bfffd2 calc(50% + 3px), /* Bắt đầu xanh nhạt sau đường chia */
-    #bfffd2 100%);       /* Kết thúc xanh nhạt */
+/* ------------------------------------------------------------------ */
+/* --- CẬP NHẬT: KIỂU DÁNG VIÊN THUỐC CON NHỘNG TRÊN .pill-visual --- */
+/* ------------------------------------------------------------------ */
+.pill-visual {
+    position: relative;
+    width: 100%;
+    height: 45px; /* Chiều cao cố định */
+    border-radius: 22.5px; /* Bo tròn tối đa */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15),
+                inset 0 1px 2px rgba(0, 0, 0, 0.08);
+    overflow: hidden; /* Quan trọng để cắt bớt các gradient con */
+    display: flex; /* Để input bên trong căn giữa */
+    align-items: center; /* Căn giữa input */
 }
 
-/* Tạo gradient nhạt dần ra ngoài cho mỗi nửa */
-.autocomplete-container input::before {
-content: '';
-position: absolute;
-top: 0;
-left: 0;
-width: 50%;
-height: 100%;
-background: linear-gradient(to left, transparent 0%, #ffeea1 100%); /* vàng nhạt dần ra ngoài trái */
-z-index: 1;
-pointer-events: none;
-border-radius: 22.5px 0 0 22.5px; /* Bo tròn nửa trái */
+/* Input bên trong .pill-visual */
+.pill-visual input {
+    width: 100%;
+    height: 100%; /* Chiếm toàn bộ chiều cao của .pill-visual */
+    padding: 0 25px; /* Padding ngang */
+    border: none;
+    background-color: transparent; /* Quan trọng: làm nền trong suốt */
+    font-size: 1.1em;
+    color: #333;
+    outline: none;
+    box-sizing: border-box;
+    z-index: 3; /* Đảm bảo input nằm trên các lớp màu */
+    position: relative; /* Để z-index hoạt động */
 }
 
-.autocomplete-container input::after {
-content: '';
-position: absolute;
-top: 0;
-right: 0;
-width: 50%;
-height: 100%;
-background: linear-gradient(to right, transparent 0%, #bfffd2 100%); /* xanh nhạt dần ra ngoài phải */
-z-index: 1;
-pointer-events: none;
-border-radius: 0 22.5px 22.5px 0; /* Bo tròn nửa phải */
+/* Focus state cho input, áp dụng bóng cho pill-visual */
+.pill-visual:has(input:focus) { /* Sử dụng :has() nếu trình duyệt hỗ trợ, nếu không dùng JS */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25),
+                inset 0 1px 3px rgba(0, 0, 0, 0.1),
+                0 0 0 4px rgba(0, 123, 255, 0.3);
+}
+/* Fallback nếu :has không được hỗ trợ rộng rãi hoặc bạn muốn kiểm soát rõ hơn bằng JS */
+/* Bạn có thể thêm class 'focused' bằng JS khi input focus/blur */
+/*
+.pill-visual.focused {
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25),
+                inset 0 1px 3px rgba(0, 0, 0, 0.1),
+                0 0 0 4px rgba(0, 123, 255, 0.3);
+}
+*/
+
+
+/* Pseudo-elements cho hiệu ứng chia đôi (áp dụng cho .pill-visual) */
+.pill-visual::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    /* Màu nền mặc định, sẽ được ghi đè bằng ID */
+    background: linear-gradient(to left, transparent 0%, #ffeea1 100%);
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 22.5px 0 0 22.5px;
 }
 
-/* Đường chia đôi rõ ràng */
-.autocomplete-container input::after {
-content: '';
-position: absolute;
-top: 0;
-bottom: 0;
-left: 50%;
-width: 2px; /* Độ dày của đường chia */
-background-color: rgba(0, 0, 0, 0.2); /* Màu đậm hơn cho đường chia */
-transform: translateX(-50%);
-pointer-events: none;
-z-index: 2; /* Đảm bảo nằm trên cả hai lớp gradient */
+.pill-visual::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    /* Màu nền mặc định, sẽ được ghi đè bằng ID */
+    background: linear-gradient(to right, transparent 0%, #bfffd2 100%);
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 0 22.5px 22.5px 0;
 }
 
-.autocomplete-container input:focus {
-outline: none;
-box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25),
-inset 0 1px 3px rgba(0, 0, 0, 0.1),
-0 0 0 4px rgba(0, 123, 255, 0.3);
+/* Đường chia đôi rõ ràng (áp dụng cho .pill-visual) */
+.pill-visual .divider { /* Thêm một div .divider bên trong .pill-visual trong HTML */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px; /* Độ dày của đường chia */
+    background-color: rgba(0, 0, 0, 0.2); /* Màu đậm hơn cho đường chia */
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 2; /* Đảm bảo nằm trên cả hai lớp gradient */
 }
 
+
+/* ------------------------------------------------------------------ */
+/* ----------- MÀU SẮC RIÊNG BIỆT CHO TỪNG VIÊN THUỐC ----------- */
+/* ------------------------------------------------------------------ */
+
+/* Viên thuốc A (Màu vàng nhạt - xanh lá cây nhạt) */
+#pillA::before {
+    background: linear-gradient(to left, transparent 0%, #ffe082 100%); /* Màu vàng nhạt 1 */
+}
+
+#pillA::after {
+    background: linear-gradient(to right, transparent 0%, #c8fcd6 100%); /* Màu xanh lá cây nhạt 1 */
+}
+#pillA .divider {
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+
+/* Viên thuốc B (Màu hồng nhạt - tím nhạt) */
+#pillB::before {
+    background: linear-gradient(to left, transparent 0%, #ffccbc 100%); /* Màu hồng nhạt 2 */
+}
+
+#pillB::after {
+    background: linear-gradient(to right, transparent 0%, #e0c8fc 100%); /* Màu tím nhạt 2 */
+}
+#pillB .divider {
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+
+/* ------------------------------------------------------------------ */
+/* --- CÁC QUY TẮC CSS KHÁC (GIỮ NGUYÊN HOẶC ĐIỀU CHỈNH NHỎ) --- */
+/* ------------------------------------------------------------------ */
 
 .suggestions-list {
     position: absolute;
@@ -147,9 +202,11 @@ inset 0 1px 3px rgba(0, 0, 0, 0.1),
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     list-style: none;
     padding: 0;
-    margin-top: -1px;
+    margin-top: -1px; /* Để khớp với đường biên của input */
     display: none;
     border-radius: 8px;
+    top: 100%; /* Quan trọng để đặt đúng vị trí dưới input */
+    left: 0;
 }
 
 .suggestions-list div {
@@ -174,10 +231,10 @@ inset 0 1px 3px rgba(0, 0, 0, 0.1),
 }
 
 button {
-    display: flex; /* Sử dụng flexbox để căn chỉnh nội dung */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    justify-content: center; /* Căn giữa theo chiều ngang */
-    gap: 8px; /* Khoảng cách giữa icon và chữ */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
     padding: 14px 25px;
     background-color: #28a745; /* Màu xanh lá cây */
@@ -191,8 +248,7 @@ button {
 }
 .search-icon {
     color: #FFA500; /* Màu cam cho icon */
-    font-size: 1.1em; /* Tùy chỉnh kích thước icon */
-    /* margin-right đã được thay bằng gap trên button */
+    font-size: 1.1em;
 }
 button:hover {
     background-color: #218838;
@@ -219,7 +275,7 @@ button:active {
     line-height: 1.5;
 }
 
-/* Specific result styles */
+/* Specific result styles (giữ nguyên) */
 .result-box.synergistic-positive {
     color: #005600;
     background-color: #d4edda;
@@ -329,19 +385,30 @@ footer a:hover {
         flex-direction: column;
         gap: 15px;
     }
-    .input-group .autocomplete-container { /* Cần điều chỉnh cho container trên mobile */
+    .autocomplete-container {
         width: 100%;
-        min-width: unset; /* Bỏ min-width để nó co giãn tốt hơn */
+        min-width: unset;
     }
-    .autocomplete-container input {
-        height: 40px; /* Điều chỉnh chiều cao nhỏ hơn trên mobile */
-        border-radius: 20px; /* Tương ứng với chiều cao mới */
+    .pill-visual, .pill-visual input { /* Điều chỉnh cho chiều cao trên mobile */
+        height: 40px;
+        border-radius: 20px;
     }
+    .pill-visual::before, .pill-visual::after {
+        border-radius: 20px 0 0 20px; /* Cập nhật bo tròn cho pseudo-elements */
+    }
+    .pill-visual::after { /* Cần kiểm tra lại nếu có 2 ::after */
+        border-radius: 0 20px 20px 0;
+    }
+
     header h1 {
         font-size: 1.8em;
     }
     button {
         font-size: 1.1em;
+        padding: 12px 20px;
+    }
+    .search-icon {
+        font-size: 1em;
     }
     .result-box {
         font-size: 1.2em;
@@ -353,20 +420,5 @@ footer a:hover {
     }
     .general-guidance li {
         font-size: 0.85em;
-    }
-}
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    /* ... (Các quy tắc media query đã có) ... */
-    button {
-        font-size: 1.1em;
-        padding: 12px 20px; /* Điều chỉnh padding cho nút trên mobile */
-    }
-    .search-icon {
-        font-size: 1em; /* Điều chỉnh kích thước icon trên mobile */
-    }
-    header h1 {
-        font-size: 1.5em; /* Giảm kích thước font trên màn hình nhỏ */
-        /* Giữ nguyên white-space, overflow, text-overflow */
     }
 }
