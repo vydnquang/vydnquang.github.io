@@ -11,47 +11,79 @@
 <body>
     <header>
         <h1>Kiểm Tra Phối Hợp Kháng Sinh</h1>
-<br>(Dữ liệu cập nhật đến 8/2025: 374 loại kháng sinh)</br>
+<p class="update-info">(Cập nhật đến 8/2025: <span id="antibioticCount">200</span> loại kháng sinh)</p>
     </header>
 
-    <main class="container">
-        <div class="input-group">
-            <div class="autocomplete-container">
+<main class="container">
+    <div class="input-group">
+        <div class="autocomplete-container">
+            <div class="pill-visual" id="pillA">
                 <input type="text" id="antibioticA" placeholder="Nhập tên kháng sinh 1">
-                <div id="suggestionsA" class="suggestions-list"></div>
+                <div class="divider"></div>
             </div>
-            <div class="autocomplete-container">
+            <div id="suggestionsA" class="suggestions-list"></div>
+        </div>
+        <div class="autocomplete-container">
+            <div class="pill-visual" id="pillB">
                 <input type="text" id="antibioticB" placeholder="Nhập tên kháng sinh 2">
-                <div id="suggestionsB" class="suggestions-list"></div>
+                <div class="divider"></div>
             </div>
+            <div id="suggestionsB" class="suggestions-list"></div>
         </div>
+    </div>
 
-        <button id="checkCombinationBtn">
-            <i class="fas fa-search search-icon"></i> Kiểm tra !
-        </button>
+    <button id="checkCombinationBtn">
+        <i class="fas fa-search search-icon"></i> Kiểm tra !
+    </button>
 
-        <div class="result-box" id="result">
-            Kết quả sẽ hiển thị ở đây
-        </div>
-        <div class="error-message" id="errorMessage"></div>
+    <div class="result-box" id="result">
+        Kết quả sẽ hiển thị ở đây
+    </div>
+    <div class="error-message" id="errorMessage"></div>
 
-        <div class="general-guidance" id="generalGuidance">
-            <h3><i class="fas fa-exclamation-triangle warning-icon"></i> Chỉ dẫn quan trọng:</h3>
-            <ol>
-                <li>Việc phối hợp kháng sinh cần phải dựa trên lâm sàng từng ca bệnh cụ thể, sau khi thực hiện kháng sinh đồ đầy đủ.</li>
-                <li>Cần cân nhắc giữa lợi và hại khi phối hợp kháng sinh, vì "thuốc là con dao 2 lưỡi", chỉ nên phối hợp khi thực sự cần thiết.</li>
-                <li>Hãy tìm đến một loại kháng sinh mới, có tác dụng tương đương với 2 loại kháng sinh muốn kết hợp, ít kháng thuốc, ít tác dụng phụ.</li>
-                <li>Luôn luôn điều chỉnh liều lượng cho phù hợp, chứ không cứng nhắc 1 liều cho cả một quá trình điều trị.</li>
-                <li>Tất cả các kết quả trên chỉ mang tính tham khảo, bác sĩ phải kiểm chứng lại kết quả đưa ra trước khi thực hiện.</li>
-            </ol>
-        </div>
-    </main>
+    <div class="general-guidance" id="generalGuidance">
+        <h3><i class="fas fa-exclamation-triangle warning-icon"></i> Chỉ dẫn quan trọng:</h3>
+        <ol>
+            <li>Việc phối hợp kháng sinh cần phải dựa trên lâm sàng từng ca bệnh cụ thể, sau khi thực hiện kháng sinh đồ đầy đủ.</li>
+            <li>Cần cân nhắc giữa lợi và hại khi phối hợp kháng sinh, vì "thuốc là con dao 2 lưỡi", chỉ nên phối hợp khi thực sự cần thiết.</li>
+            <li>Hãy tìm đến một loại kháng sinh mới, có tác dụng tương đương với 2 loại kháng sinh muốn kết hợp, ít kháng thuốc, ít tác dụng phụ.</li>
+            <li>Luôn luôn điều chỉnh liều lượng cho phù hợp, chứ không cứng nhắc 1 liều cho cả một quá trình điều trị.</li>
+            <li>Tất cả các kết quả trên chỉ mang tính tham khảo, bác sĩ phải kiểm chứng lại kết quả đưa ra trước khi thực hiện.</li>
+        </ol>
+    </div>
+</main>
 
-    <footer>
-        <p>Copyright © 2025 by BSTY. <a href="https://www.facebook.com/annhonpet">An Nhơn Pet</a></p>
-    </footer>
+<footer>
+    <p>Copyright © 2025 by BSTY. <a href="[https://www.facebook.com/annhonpet](https://www.facebook.com/annhonpet)">An Nhơn Pet</a></p>
+</footer>
 
-    <script type="module" src="https://vydnquang.github.io/codeks/kiemtraks.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const countElement = document.getElementById('antibioticCount');
+        const targetCount = 374;
+        let currentCount = 200;
+        const duration = 50000; // Thời gian chạy (miligiây)
+        const increment = Math.ceil((targetCount - currentCount) / (duration / 1)); // Số lượng tăng mỗi lần (tăng nhanh hơn một chút)
+
+        const updateCount = () => {
+            if (currentCount < targetCount) {
+                currentCount += increment;
+                if (currentCount > targetCount) {
+                    currentCount = targetCount; // Đảm bảo không vượt quá số đích
+                }
+                countElement.textContent = currentCount;
+                requestAnimationFrame(updateCount); // Sử dụng requestAnimationFrame để mượt mà hơn
+            } else {
+                countElement.textContent = targetCount; // Đảm bảo số cuối cùng là chính xác
+            }
+        };
+
+        // Bắt đầu animation
+        updateCount();
+    });
+</script>
+
+<script type="module" src="[https://vydnquang.github.io/codeks/kiemtraks.js](https://vydnquang.github.io/codeks/kiemtraks.js)"></script>    
+
 </body>
 </html>
-
