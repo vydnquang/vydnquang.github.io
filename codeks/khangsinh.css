@@ -162,11 +162,11 @@ main.container {
 
 /* Viên thuốc A (Màu vàng nhạt - xanh lá cây nhạt) */
 #pillA::before {
-    background: linear-gradient(to right, transparent -50%, #ffeea1 100%); /* Màu vàng nhạt 1 */
+    background: linear-gradient(to right, transparent 0%, #ffeea1 100%); /* Màu vàng nhạt 1 */
 }
 
 #pillA::after {
-    background: linear-gradient(to left, transparent -50%, #bfffd2 100%); /* Màu xanh lá cây nhạt 1 */
+    background: linear-gradient(to left, transparent 0%, #bfffd2 100%); /* Màu xanh lá cây nhạt 1 */
 }
 #pillA .divider {
     background-color: #dbdbdb;
@@ -175,11 +175,11 @@ main.container {
 
 /* Viên thuốc B (Màu hồng nhạt - tím nhạt) */
 #pillB::before {
-    background: linear-gradient(to right, transparent -50%, #709dff 100%); /* Màu biển nhạt 2 */
+    background: linear-gradient(to right, transparent 0%, #709dff 100%); /* Màu biển nhạt 2 */
 }
 
 #pillB::after {
-    background: linear-gradient(to left, transparent -50%, #ffc8a6 100%); /* Màu cam nhạt 2 */
+    background: linear-gradient(to left, transparent 0%, #ffc8a6 100%); /* Màu cam nhạt 2 */
 }
 #pillB .divider {
     background-color: #dbdbdb;
@@ -422,6 +422,7 @@ footer a:hover {
         font-size: 0.85em;
     }
 }
+
 
 
 
