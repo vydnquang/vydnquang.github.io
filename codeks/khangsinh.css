@@ -175,7 +175,7 @@ main.container {
 
 /* Viên thuốc B (Màu hồng nhạt - tím nhạt) */
 #pillB::before {
-    background: linear-gradient(to right, transparent 0%, #709dff 100%); /* Màu biển nhạt 2 */
+    background: linear-gradient(to right, transparent 0%, #fd94ff 100%); /* Màu tím nhạt 2 */
 }
 
 #pillB::after {
@@ -437,8 +437,3 @@ footer a:hover {
         font-size: 0.85em;
     }
 }
-
-
-
-
-
