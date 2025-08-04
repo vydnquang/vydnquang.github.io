@@ -12,7 +12,7 @@ body {
 }
 
 header {
-    background-color: #FFA500; /* Màu cam */
+    background-color: #1f93ff; /* Màu xanh */
     color: white;
     padding: 20px 0;
     text-align: center;
@@ -322,7 +322,7 @@ button:active {
     border-radius: 8px;
     background-color: #e6f7ff;
     color: #333;
-    font-size: 0.95em;
+    font-size: 1.1em;
     line-height: 1.6;
 }
 
@@ -378,7 +378,7 @@ footer a:hover {
 /* Thêm hiệu ứng cho icon loading */
 .loading-icon {
     margin-right: 8px; /* Khoảng cách giữa icon và chữ */
-    color: #007bff; /* Màu sắc cho icon, ví dụ màu xanh dương */
+    color: #ff9914; /* Màu sắc cho icon, ví dụ màu cam */
     font-size: 0.9em; /* Kích thước icon, nhỏ hơn một chút so với chữ */
     vertical-align: middle; /* Căn chỉnh icon với chữ */
     animation: spin 2s linear infinite; /* Áp dụng animation quay */
@@ -431,9 +431,9 @@ footer a:hover {
         padding: 15px;
     }
     .general-guidance h3 {
-        font-size: 1.1em;
+        font-size: 1.2em;
     }
     .general-guidance li {
-        font-size: 0.85em;
+        font-size: 1.1em;
     }
 }
