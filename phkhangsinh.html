@@ -12,7 +12,7 @@
     <header>
         <h1>Kiểm Tra Phối Hợp Kháng Sinh</h1>
 <p class="update-info">
-    <i class="fas fa-sync-alt loading-icon"></i> (Dữ liệu cập nhật đến 8/2025: <span id="antibioticCount">200</span> loại kháng sinh)
+    <i class="fas fa-sync-alt loading-icon"></i> (Cập nhật đến 8/2025: <span id="antibioticCount">100</span> loại kháng sinh)
 </p>
     </header>
 
@@ -48,7 +48,7 @@
         <ol>
             <li>Việc phối hợp kháng sinh cần phải dựa trên lâm sàng từng ca bệnh cụ thể, sau khi thực hiện kháng sinh đồ đầy đủ.</li>
             <li>Cần cân nhắc giữa lợi và hại khi phối hợp kháng sinh, vì "thuốc là con dao 2 lưỡi", chỉ nên phối hợp khi thực sự cần thiết.</li>
-            <li>Hãy tìm đến một loại kháng sinh mới, có tác dụng tương đương với 2 loại kháng sinh muốn kết hợp, ít kháng thuốc, ít tác dụng phụ.</li>
+            <li>Hãy sử dụng kháng sinh một cách có trách nhiệm để không làm cho tình trạng kháng kháng sinh ngày càng nghiêm trọng hơn.</li>
             <li>Luôn luôn điều chỉnh liều lượng cho phù hợp, chứ không cứng nhắc 1 liều cho cả một quá trình điều trị.</li>
             <li>Tất cả các kết quả trên chỉ mang tính tham khảo, bác sĩ phải kiểm chứng lại kết quả đưa ra trước khi thực hiện.</li>
         </ol>
@@ -63,7 +63,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const countElement = document.getElementById('antibioticCount');
         const targetCount = 374;
-        let currentCount = 200;
+        let currentCount = 100;
         const duration = 50000; // Thời gian chạy (miligiây)
         const increment = Math.ceil((targetCount - currentCount) / (duration / 1)); // Số lượng tăng mỗi lần (tăng nhanh hơn một chút)
 
@@ -89,4 +89,3 @@
 
 </body>
 </html>
-
