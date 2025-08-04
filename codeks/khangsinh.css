@@ -12,7 +12,7 @@ body {
 }
 
 header {
-    background-color: #1f93ff; /* Màu xanh */
+    background-color: #0070b5; /* Màu xanh */
     color: white;
     padding: 20px 0;
     text-align: center;
@@ -378,7 +378,7 @@ footer a:hover {
 /* Thêm hiệu ứng cho icon loading */
 .loading-icon {
     margin-right: 8px; /* Khoảng cách giữa icon và chữ */
-    color: #ff9914; /* Màu sắc cho icon, ví dụ màu cam */
+    color: #ffe600; /* Màu sắc cho icon, ví dụ màu vàng */
     font-size: 0.9em; /* Kích thước icon, nhỏ hơn một chút so với chữ */
     vertical-align: middle; /* Căn chỉnh icon với chữ */
     animation: spin 2s linear infinite; /* Áp dụng animation quay */
@@ -437,3 +437,4 @@ footer a:hover {
         font-size: 1.1em;
     }
 }
+
