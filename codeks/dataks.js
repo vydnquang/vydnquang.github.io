@@ -164,10 +164,13 @@ export const antibioticGroups = {
     'minerals': [
         'calcium', 'magnesium', 'iron', 'zinc'
     ],
+    'diaminopyrimidine': [
+        'trimethoprim', 'pyrimethamine', 'iclaprim'
+    ],
     'other/new': [
         'fusidic acid', 'anthracimycin', 'anthramycin', 'lugdunin',
         'nitazoxanide (alinia)', 'halicin', 'mupirocin', 'platensimycin',
-        'malacidin', 'trimethoprim', 'iclaprim', 'lariocidin',
+        'malacidin', 'lariocidin',
         'zosurabalpin', 'cefepime-taniborbactam', 'darobactin', 'orlynvah',
         'cefepime-enmetazobactam', 'cresomycin'
     ]
@@ -178,10 +181,15 @@ export const antibioticGroups = {
 // Sử dụng Map thay vì Object cho hiệu suất tốt hơn
 export const antibioticToGroupMap = new Map();
 for (const group in antibioticGroups) {
-    antibioticGroups[group].forEach(antibiotic => {
-        antibioticToGroupMap.set(antibiotic.toLowerCase(), group);
-    });
-}
+ antibioticGroups[group].forEach(antibiotic => {
+    antibioticToGroupMap.set(antibiotic.toLowerCase(), group);
+    // Xử lý các trường hợp trong ngoặc đơn
+    const match = antibiotic.match(/\((.*?)\)/);
+    if (match && match[1]) {
+        antibioticToGroupMap.set(match[1].toLowerCase(), group);
+    }
+});
+
 
 // Quy tắc tương tác giữa các NHÓM kháng sinh
 // Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁC từ các nguồn y khoa.
@@ -197,7 +205,7 @@ export const combinationRules = {
     'penicillins-lincosamides': 'antagonistic', // Đối kháng
     'penicillins-pleuromutilins': 'antagonistic', // Đối kháng
     'penicillins-sulfonamides': 'antagonistic', // Đối kháng
-    'penicillins-trimethoprim': 'antagonistic', // Đối kháng
+    'penicillins-diaminopyrimidine': 'antagonistic', // Đối kháng
 
     // Các quy tắc của nhóm cephalosporins
     'cephalosporins-aminoglycosides': 'synergistic', // Hiệp lực, có tài liệu là 'additive'
@@ -209,7 +217,7 @@ export const combinationRules = {
     'cephalosporins-lincosamides': 'antagonistic', // Đối kháng
     'cephalosporins-pleuromutilins': 'antagonistic', // Đối kháng
     'cephalosporins-sulfonamides': 'antagonistic', // Đối kháng
-    'cephalosporins-trimethoprim': 'antagonistic', // Đối kháng
+    'cephalosporins-diaminopyrimidine': 'antagonistic', // Đối kháng
 
     // Các quy tắc của nhóm monobactams
     'monobactams-aminoglycosides': 'synergistic', // Hiệp lực
@@ -221,7 +229,7 @@ export const combinationRules = {
     'monobactams-lincosamides': 'antagonistic', // Đối kháng
     'monobactams-pleuromutilins': 'antagonistic', // Đối kháng
     'monobactams-sulfonamides': 'antagonistic', // Đối kháng
-    'monobactams-trimethoprim': 'antagonistic', // Đối kháng
+    'monobactams-diaminopyrimidine': 'antagonistic', // Đối kháng
     
     // Các quy tắc của nhóm carbapenems
     'carbapenems-aminoglycosides': 'synergistic', // Hiệp lực
@@ -233,7 +241,7 @@ export const combinationRules = {
     'carbapenems-lincosamides': 'antagonistic', // Đối kháng
     'carbapenems-pleuromutilins': 'antagonistic', // Đối kháng
     'carbapenems-sulfonamides': 'antagonistic', // Đối kháng
-    'carbapenems-trimethoprim': 'antagonistic', // Đối kháng
+    'carbapenems-diaminopyrimidine': 'antagonistic', // Đối kháng
 
     // Các quy tắc của nhóm beta-lactamase
     'beta-lactamase-penicillins': 'additive',
@@ -262,26 +270,26 @@ export const combinationRules = {
 
     // Các quy tắc của nhóm tetracyclines
     'tetracyclines-sulfonamides': 'synergistic', // Hiệp lực
-    'tetracyclines-trimethoprim': 'synergistic', // Hiệp lực
+    'tetracyclines-diaminopyrimidine': 'synergistic', // Hiệp lực
 
     // Các quy tắc của nhóm phenicols
     'phenicols-sulfonamides': 'synergistic', // Hiệp lực
-    'phenicols-trimethoprim': 'synergistic', // Hiệp lực 
+    'phenicols-diaminopyrimidine': 'synergistic', // Hiệp lực 
 
     // Các quy tắc của nhóm macrolides
     'macrolides-sulfonamides': 'synergistic', // Hiệp lực
-    'macrolides-trimethoprim': 'synergistic', // Hiệp lực
+    'macrolides-diaminopyrimidine': 'synergistic', // Hiệp lực
 
     // Các quy tắc của nhóm lincosamides
     'lincosamides-sulfonamides': 'synergistic', // Hiệp lực
-    'lincosamides-trimethoprim': 'synergistic', // Hiệp lực
+    'lincosamides-diaminopyrimidine': 'synergistic', // Hiệp lực
 
     // Các quy tắc của nhóm pleuromutilins
     'pleuromutilins-sulfonamides': 'synergistic', // Hiệp lực
-    'pleuromutilins-trimethoprim': 'synergistic', // Hiệp lực
+    'pleuromutilins-diaminopyrimidine': 'synergistic', // Hiệp lực
 
     // Các quy tắc của các nhóm chưa phân loại
-    'sulfonamides-trimethoprim': 'synergistic',
+    'sulfonamides-diaminopyrimidine': 'synergistic',
     'quinolones-aminoglycosides': 'synergistic', // Có tài liệu ghi hết sức thận trọng 'caution'
     'lincosamides-macrolides': 'antagonistic',
     'phenicols-macrolides': 'antagonistic',
