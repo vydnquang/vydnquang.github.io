@@ -30,7 +30,7 @@ export const antibioticGroups = {
         'cefpirome', 'cefquinome', 'flomoxef', 'ceftobiprole',
         'ceftaroline (ceftaroline fosamil)', 'ceftolozane', 'cefazedone', 'cefroxadine',
         'ceftezol', 'cefazoline', 'loracarbef', 'cefotiam',
-        'cefaparole', 'cefmatilen', 'cefsumide'
+        'cefaparole', 'cefmatilen', 'cefsumide
         // TẤT CẢ KHÁNG SINH CỦA NHÓM cephalosporin
     ],
     'monobactams': [
@@ -181,18 +181,18 @@ export const antibioticGroups = {
 // Sử dụng Map thay vì Object cho hiệu suất tốt hơn
 export const antibioticToGroupMap = new Map();
 for (const group in antibioticGroups) {
- antibioticGroups[group].forEach(antibiotic => {
-    antibioticToGroupMap.set(antibiotic.toLowerCase(), group);
-    // Xử lý các trường hợp trong ngoặc đơn
-    const match = antibiotic.match(/\((.*?)\)/);
-    if (match && match[1]) {
-        antibioticToGroupMap.set(match[1].toLowerCase(), group);
-    }
-});
-
+    antibioticGroups[group].forEach(antibiotic => {
+        antibioticToGroupMap.set(antibiotic.toLowerCase(), group);
+        // Xử lý các trường hợp trong ngoặc đơn
+        const match = antibiotic.match(/\((.*?)\)/);
+        if (match && match[1]) {
+            antibioticToGroupMap.set(match[1].toLowerCase(), group);
+        }
+    });
+} // <--- Dấu đóng ngoặc nhọn này đã bị thiếu trong code của bạn, gây ra lỗi SyntaxError
 
 // Quy tắc tương tác giữa các NHÓM kháng sinh
-// Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁC từ các nguồn y khoa.
+// Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁT từ các nguồn y khoa.
 export const combinationRules = {
     // Các quy tắc đã có
     // Các quy tắc của nhóm penicillins
@@ -230,7 +230,7 @@ export const combinationRules = {
     'monobactams-pleuromutilins': 'antagonistic', // Đối kháng
     'monobactams-sulfonamides': 'antagonistic', // Đối kháng
     'monobactams-diaminopyrimidine': 'antagonistic', // Đối kháng
-    
+
     // Các quy tắc của nhóm carbapenems
     'carbapenems-aminoglycosides': 'synergistic', // Hiệp lực
     'carbapenems-peptides': 'synergistic', // Hiệp lực
@@ -274,7 +274,7 @@ export const combinationRules = {
 
     // Các quy tắc của nhóm phenicols
     'phenicols-sulfonamides': 'synergistic', // Hiệp lực
-    'phenicols-diaminopyrimidine': 'synergistic', // Hiệp lực 
+    'phenicols-diaminopyrimidine': 'synergistic', // Hiệp lực
 
     // Các quy tắc của nhóm macrolides
     'macrolides-sulfonamides': 'synergistic', // Hiệp lực
