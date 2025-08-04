@@ -30,7 +30,7 @@ export const antibioticGroups = {
         'cefpirome', 'cefquinome', 'flomoxef', 'ceftobiprole',
         'ceftaroline (ceftaroline fosamil)', 'ceftolozane', 'cefazedone', 'cefroxadine',
         'ceftezol', 'cefazoline', 'loracarbef', 'cefotiam',
-        'cefaparole', 'cefmatilen', 'cefsumide
+        'cefaparole', 'cefmatilen', 'cefsumide'
         // TẤT CẢ KHÁNG SINH CỦA NHÓM cephalosporin
     ],
     'monobactams': [
@@ -350,3 +350,4 @@ export function getCombinationRule(groupA, groupB) {
 export function getAntibioticGroup(antibioticName) {
     return antibioticToGroupMap.get(antibioticName.toLowerCase()) || null;
 }
+
