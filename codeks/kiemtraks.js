@@ -112,7 +112,6 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
     }
 }
 
-
 function checkCombination() {
     const antibioticA = document.getElementById('antibioticA').value.trim().toLowerCase();
     const antibioticB = document.getElementById('antibioticB').value.trim().toLowerCase();
@@ -135,7 +134,7 @@ function checkCombination() {
 
     if (antibioticA === antibioticB) {
         errorMessage.textContent = 'Bạn đã nhập 2 tên kháng sinh giống nhau.';
-        resultBox.textContent = 'Không cần phối hợp (kháng sinh đã trùng lặp).';
+        resultBox.textContent = 'Không cần phối hợp!';
         resultBox.classList.add('neutral');
         return;
     }
@@ -143,6 +142,8 @@ function checkCombination() {
     const specificInteractionKey = [antibioticA, antibioticB].sort().join('-');
     let resultText = '';
     let resultClass = '';
+
+// LOGIC TƯƠNG TÁC CỦA CÁC CẶP THUỐC CÁ BIỆT
 
     if (specificInteractionKey === 'calcium-ceftriaxone') {
         resultText = 'ĐỐI KHÁNG NGHIÊM TRỌNG (Calcium và Ceftriaxone không được trộn lẫn trong cùng dịch truyền. Có thể gây kết tủa nguy hiểm tính mạng, đặc biệt ở trẻ sơ sinh.)';
@@ -187,14 +188,14 @@ function checkCombination() {
 
     // --- LOGIC MỚI: Xử lý ngoại lệ cho nhóm 'other/new' ---
     if ((groupA === 'other/new' && groupB !== 'other/new') || (groupA !== 'other/new' && groupB === 'other/new')) {
-        errorMessage.textContent = '';
-        resultText = 'THẬN TRỌNG (Sự tương tác khi phối hợp giữa hai nhóm kháng sinh này chưa có nhiều tài liệu nghiên cứu.)';
+        errorMessage.textContent = 'Sự tương tác khi phối hợp giữa hai nhóm kháng sinh này chưa có nhiều tài liệu nghiên cứu.';
+        resultText = 'THẬN TRỌNG (Bạn đang phối hợp giữa kháng sinh của nhóm ${groupA} với nhóm ${groupB}';
         resultBox.textContent = resultText;
         resultBox.classList.add('caution');
         return;
     }
     
-    // Logic cùng nhóm (đã được sửa trong yêu cầu trước)
+    // Logic cùng nhóm (của nhóm other/new)
     if (groupA === groupB) {
         if (groupA === 'other/new') {
             errorMessage.textContent = 'Các kháng sinh thuộc nhóm other/new chưa có nhiều nghiên cứu về các tương tác khi phối hợp với nhau. Bác sĩ nên tìm hiểu thêm !';
@@ -229,7 +230,7 @@ function checkCombination() {
             resultClass = 'caution';
             break;
         case 'neutral':
-            resultText = `TRUNG TÍNH (Nhóm ${groupA} và nhóm ${groupB} không có tương tác đáng kể được biết)`;
+            resultText = `TRUNG TÍNH (Chưa rõ về sự tương tác khi phối hợp nhóm ${groupA} và nhóm ${groupB})`;
             resultClass = 'neutral';
             break;
         default:
