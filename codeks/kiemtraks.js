@@ -189,12 +189,12 @@ function checkCombination() {
     // --- LOGIC MỚI: Xử lý ngoại lệ cho nhóm 'other/new' ---
     if ((groupA === 'other/new' && groupB !== 'other/new') || (groupA !== 'other/new' && groupB === 'other/new')) {
         errorMessage.textContent = 'Sự tương tác khi phối hợp giữa hai nhóm kháng sinh này chưa có nhiều tài liệu nghiên cứu.';
-        resultText = 'THẬN TRỌNG (Bạn đang phối hợp giữa kháng sinh của nhóm ${groupA} với nhóm ${groupB}';
+        resultText = `THẬN TRỌNG (Bạn đang phối hợp giữa kháng sinh của nhóm ${groupA} với nhóm ${groupB}`;
         resultBox.textContent = resultText;
         resultBox.classList.add('caution');
         return;
     }
-    
+   
     // Logic cùng nhóm (của nhóm other/new)
     if (groupA === groupB) {
         if (groupA === 'other/new') {
