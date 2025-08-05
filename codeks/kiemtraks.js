@@ -66,8 +66,8 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
             const matchIndex = antibiotic.indexOf(inputValue);
             if (matchIndex !== -1) {
                 suggestionItem.innerHTML = antibiotic.substring(0, matchIndex) +
-                                           "<strong>" + antibiotic.substring(matchIndex, matchIndex + inputValue.length) + "</strong>" +
-                                           antibiotic.substring(matchIndex + inputValue.length);
+                                                 "<strong>" + antibiotic.substring(matchIndex, matchIndex + inputValue.length) + "</strong>" +
+                                                 antibiotic.substring(matchIndex + inputValue.length);
             } else {
                 // Trường hợp này lý thuyết không xảy ra nếu filter đúng, nhưng là fallback tốt
                 suggestionItem.textContent = antibiotic;
@@ -214,12 +214,19 @@ function checkCombination() {
         return;
     }
 
-    // --- 5. Kiểm tra kháng sinh cùng nhóm (sau khi đã xử lý các trường hợp đặc biệt và xác định được nhóm) ---
+    // --- 5. Logic xử lý ngoại lệ cho nhóm 'other/new' và các trường hợp cùng nhóm khác ---
     if (groupA === groupB) {
-        errorMessage.textContent = 'Không nên phối hợp hai kháng sinh cùng nhóm, trừ khi có chỉ định đặc biệt từ bác sĩ. Việc phối hợp này có thể làm giảm hiệu quả điều trị, tăng nguy cơ kháng thuốc và tác dụng phụ.';
-        resultBox.textContent = `CẢNH BÁO: KHÁNG SINH CÙNG NHÓM (${groupA})`;
-        resultBox.classList.add('caution');
-        return;
+        if (groupA === 'other/new') {
+            errorMessage.textContent = 'Các kháng sinh thuộc nhóm other/new chưa có nhiều nghiên cứu về các tương tác khi phối hợp với nhau. Bác sĩ nên tìm hiểu thêm !';
+            resultBox.textContent = `CHƯA CÓ DỮ LIỆU: KHÁNG SINH MỚI (${groupA})`;
+            resultBox.classList.add('unknown');
+            return;
+        } else {
+            errorMessage.textContent = 'Không nên phối hợp hai kháng sinh cùng nhóm, trừ khi có chỉ định đặc biệt từ bác sĩ. Việc phối hợp này có thể làm giảm hiệu quả điều trị, tăng nguy cơ kháng thuốc và tác dụng phụ.';
+            resultBox.textContent = `CẢNH BÁO: KHÁNG SINH CÙNG NHÓM (${groupA})`;
+            resultBox.classList.add('caution');
+            return;
+        }
     }
 
     // --- 6. Áp dụng quy tắc kết hợp giữa các nhóm ---
@@ -255,4 +262,3 @@ function checkCombination() {
     resultBox.textContent = resultText;
     resultBox.classList.add(resultClass);
 }
-
