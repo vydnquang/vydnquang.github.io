@@ -179,7 +179,7 @@ main.container {
 }
 
 #pillB::after {
-    background: linear-gradient(to left, transparent 0%, #ff4d0d 100%); /* Màu cam nâu */
+    background: linear-gradient(to left, transparent 0%, #ff9873 100%); /* Màu cam nâu */
 }
 #pillB .divider {
     background-color: #dbdbdb;
@@ -437,5 +437,6 @@ footer a:hover {
         font-size: 1.1em;
     }
 }
+
 
 
