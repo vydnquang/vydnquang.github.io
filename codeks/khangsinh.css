@@ -166,7 +166,7 @@ main.container {
 }
 
 #pillA::after {
-    background: linear-gradient(to left, transparent 0%, #bfffd2 100%); /* Màu xanh lá cây nhạt 1 */
+    background: linear-gradient(to left, transparent 0%, #87cbff 100%); /* Màu xanh biển nhạt 1 */
 }
 #pillA .divider {
     background-color: #dbdbdb;
@@ -438,6 +438,7 @@ footer a:hover {
         font-size: 1.1em;
     }
 }
+
 
 
 
