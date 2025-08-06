@@ -175,6 +175,13 @@ function checkCombination() {
         resultBox.classList.add(resultClass);
         return;
     }
+    if (specificInteractionKey === 'doxycycline-tylosin') {
+        resultText = 'HIỆP ĐỒNG (Có thể phối hợp, nhất là trong Thú-Y, việc này sẽ mở rộng phổ kháng khuẩn, tăng hiệu quả điều trị các bệnh hô hấp, tiêu hóa.)';
+        resultClass = 'synergistic-positive';
+        resultBox.textContent = resultText;
+        resultBox.classList.add(resultClass);
+        return;
+    }
     const isAChloramphenicol = antibioticA === 'chloramphenicol';
     const isBChloramphenicol = antibioticB === 'chloramphenicol';
     const isAPenicillinGroup = antibioticToGroupMap.get(antibioticA) === 'penicillins';
@@ -257,7 +264,7 @@ function checkCombination() {
             break;
         case 'neutral':
             errorMessage.textContent = `Việc phối hợp giữa nhóm kháng sinh ${groupA} và nhóm ${groupB} đôi khi không theo quy tắc chung, nhưng có tài liệu nói là được phép cho một số trường hợp điều trị đặc biệt.`;
-            resultText = 'TRUNG TÍNH (Còn tùy vào mục đích của việc phối hợp)';
+            resultText = 'TRUNG TÍNH (Tùy vào mục đích của việc phối hợp)';
             resultClass = 'neutral';
             break;
         default:
