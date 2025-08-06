@@ -127,6 +127,8 @@ function checkCombination() {
         list.innerHTML = '';
     });
 
+// BỘ QUY TẮC BÁO LỖI KHI NHẬP LIỆU
+
     if (!antibioticA || !antibioticB) {
         errorMessage.textContent = 'Vui lòng nhập cả hai tên kháng sinh.';
         return;
@@ -142,6 +144,20 @@ function checkCombination() {
     const specificInteractionKey = [antibioticA, antibioticB].sort().join('-');
     let resultText = '';
     let resultClass = '';
+
+    const groupA = antibioticToGroupMap.get(antibioticA);
+    const groupB = antibioticToGroupMap.get(antibioticB);
+
+    if (!groupA || !groupB) {
+        let missingAntibioticNames = [];
+        if (!groupA) missingAntibioticNames.push(`"${antibioticA}"`);
+        if (!groupB) missingAntibioticNames.push(`"${antibioticB}"`);
+
+        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibioticNames.join(' và ')}. Có thể do bạn nhập sai tên hoặc dữ liệu của chúng tôi không có loại kháng sinh này.`;
+        resultBox.textContent = 'CHƯA CÓ DỮ LIỆU: KHÔNG CÓ TÊN KHÁNG SINH MÀ BẠN ĐÃ NHẬP';
+        resultBox.classList.add('unknown');
+        return;
+    }
 
 // LOGIC TƯƠNG TÁC CỦA CÁC CẶP THUỐC CÁ BIỆT
 
@@ -172,21 +188,9 @@ function checkCombination() {
         return;
     }
 
-    const groupA = antibioticToGroupMap.get(antibioticA);
-    const groupB = antibioticToGroupMap.get(antibioticB);
+// 2 BỘ QUY TẮC PHỐI HỢP CỦA NHÓM OTHER/NEW
 
-    if (!groupA || !groupB) {
-        let missingAntibioticNames = [];
-        if (!groupA) missingAntibioticNames.push(`"${antibioticA}"`);
-        if (!groupB) missingAntibioticNames.push(`"${antibioticB}"`);
-
-        errorMessage.textContent = `Không tìm thấy thông tin nhóm cho kháng sinh ${missingAntibioticNames.join(' và ')}. Có thể do bạn nhập sai tên hoặc dữ liệu của chúng tôi không có loại kháng sinh này.`;
-        resultBox.textContent = 'Không xác định (Kháng sinh không có trong danh sách)';
-        resultBox.classList.add('unknown');
-        return;
-    }
-
-    // --- LOGIC MỚI: Xử lý ngoại lệ cho nhóm 'other/new' ---
+    // --- LOGIC MỚI: Xử lý ngoại lệ cho nhóm 'other/new' khi kết hợp với nhóm khác ---
     if ((groupA === 'other/new' && groupB !== 'other/new') || (groupA !== 'other/new' && groupB === 'other/new')) {
         errorMessage.textContent = 'Sự tương tác khi phối hợp giữa hai nhóm kháng sinh này chưa có nhiều tài liệu nghiên cứu.';
         resultText = `THẬN TRỌNG (Bạn đang phối hợp giữa kháng sinh của nhóm ${groupA} với nhóm ${groupB}`;
@@ -195,7 +199,7 @@ function checkCombination() {
         return;
     }
    
-    // Logic cùng nhóm (của nhóm other/new)
+    // Logic cùng nhóm của nhóm other/new
     if (groupA === groupB) {
         if (groupA === 'other/new') {
             errorMessage.textContent = 'Các kháng sinh thuộc nhóm other/new chưa có nhiều nghiên cứu về các tương tác khi phối hợp với nhau. Bác sĩ nên tìm hiểu thêm !';
@@ -209,6 +213,8 @@ function checkCombination() {
             return;
         }
     }
+
+// BỘ QUY TẮC PHỐI HỢP THƯỜNG QUY
 
     const rule = getCombinationRule(groupA, groupB);
 
@@ -234,7 +240,7 @@ function checkCombination() {
             resultClass = 'neutral';
             break;
         default:
-            resultText = 'Không xác định (quy tắc chưa được định nghĩa trong cơ sở dữ liệu)';
+            resultText = 'KHÔNG XÁC ĐỊNH (Quy tắc chưa được định nghĩa trong cơ sở dữ liệu)';
             resultClass = 'unknown';
             break;
     }
