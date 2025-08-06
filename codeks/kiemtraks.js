@@ -1,4 +1,4 @@
-// codeks/kiemtraks.js
+// TOÀN BỘ CODE CỦA FILE codeks/kiemtraks.js
 
 // Import dữ liệu từ dataks.js
 import { getAntibioticGroup, getCombinationRule, antibioticGroups, antibioticToGroupMap } from './dataks.js';
@@ -189,6 +189,7 @@ function checkCombination() {
     }
 
 // LOGIC MỚI CHO BETA-LACTAMASE
+
     const isABetaLactamase = groupA === 'beta-lactamase';
     const isBBetaLactamase = groupB === 'beta-lactamase';
     const isAPenicillins = groupA === 'penicillins';
@@ -200,7 +201,8 @@ function checkCombination() {
     if ((isABetaLactamase && !isBBetaLactamase && !isBPenicillins && !isBCephalosporins) || 
         (isBBetaLactamase && !isABetaLactamase && !isAPenicillins && !isACephalosporins)) {
         
-        resultText = 'Không có dữ liệu về việc phối hợp giữa nhóm beta-lactamase với hai nhóm này.';
+        let otherGroup = isABetaLactamase ? groupB : groupA;
+        resultText = `Không có dữ liệu về việc phối hợp giữa nhóm beta-lactamase với nhóm ${otherGroup}.`;
         resultBox.textContent = resultText;
         resultBox.classList.add('unknown');
         return;
