@@ -1,4 +1,4 @@
-// codeks/dataks.js
+// TOÀN BỘ CODE CỦA FILE codeks/dataks.js
 
 // Danh sách các nhóm kháng sinh và các kháng sinh thuộc nhóm đó
 export const antibioticGroups = {
@@ -11,7 +11,7 @@ export const antibioticGroups = {
         'epicillin', 'sulbenicillin', 'temocillin', 'carbenicilin',
         'ticarcilin', 'carindacillin', 'mecillinam (amdinocillin)', 'mezlocillin',
         'piperacillin', 'azlocillin', 'pivmecillinam', 'penicillin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM penicillin
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM penicillin - KS diệt khuẩn.
     ],
     'cephalosporins': [
         'cephalexin (cefalexin)', 'cefalotin (cephalothin)', 'cefazolin', 'cefradine',
@@ -31,11 +31,11 @@ export const antibioticGroups = {
         'ceftaroline (ceftaroline fosamil)', 'ceftolozane', 'cefazedone', 'cefroxadine',
         'ceftezol', 'cefazoline', 'loracarbef', 'cefotiam',
         'cefaparole', 'cefmatilen', 'cefsumide'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM cephalosporin
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM cephalosporin - KS diệt khuẩn.
     ],
     'monobactams': [
         'aztreonam', 'tigemonam', 'carumonam', 'nocardicin a'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM monobactam
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM monobactam - KS diệt khuẩn.
     ],
     'beta-lactamase': [
         'clavulanic acid', 'sulbactam', 'tazobactam', 'vaborbactam',
@@ -49,7 +49,7 @@ export const antibioticGroups = {
         'dalbavancin', 'ramoplanin', 'bleomycin', 'polymyxin b',
         'colistin', 'bacitracin', 'tyrothricin', 'surfactin',
         'amphomycin', 'tyrocidine'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM peptide
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM peptide - KS diệt khuẩn.
     ],
     'aminoglycosides': [
         'netilmicin', 'gentamicin', 'streptomycin', 'kanamycin',
@@ -58,7 +58,7 @@ export const antibioticGroups = {
         'framycetin', 'ribostamycin', 'arbekacin', 'bekanamycin',
         'hygromycin b', 'apramycin', 'puromycin', 'nourseothricin',
         'isepamicin', 'verdamicin', 'astromicin', 'spectinomycin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM amino
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM amino - KS diệt khuẩn.
     ],
     'tetracyclines': [
         'chlortetracycline', 'tetracycline', 'oxytetracycline', 'doxycycline',
@@ -66,7 +66,7 @@ export const antibioticGroups = {
         'metacycline', 'rolitetracycline', 'tigecycline', 'eravacycline',
         'sarecycline', 'glycylcycline', 'clomocycline', 'omadacycline',
         'pipacycline', 'penimepicycline'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM tetracyclines
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM tetracyclines - KS kìm khuẩn.
     ],
     'macrolides': [
         'pikromycin', 'erythromycin', 'boromycin', 'dirithromycin',
@@ -78,15 +78,15 @@ export const antibioticGroups = {
         'macbecin', 'herbimycin', 'fidaxomicin', 'rifamycin sv',
         'rifampicin', 'rifabutin', 'rifapentine', 'rifaximin',
         'rifalazil', 'tildipirosin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM macrolides
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM macrolides - KS kìm khuẩn.
     ],
     'lincosamides': [
         'lincomycin', 'clindamycin', 'pirlimycin', 'iboxamycin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM lincosamides
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM lincosamides - KS kìm khuẩn.
     ],
     'phenicols': [
         'chloramphenicol', 'thiamphenicol', 'florfenicol', 'azidamfenicol'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM phenicols
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM phenicols - KS kìm khuẩn.
     ],
     'quinolones': [
         'nalidixic acid', 'axit pipemidic', 'oxolinic acid', 'piromidic acid',
@@ -101,13 +101,13 @@ export const antibioticGroups = {
         'gelmofloxacin', 'cinoxacin', 'nemonoxacin', 'pradofloxacin',
         'enrofloxacin', 'danofloxacin', 'marbofloxacin', 'difloxacin',
         'ibafloxacin', 'orbifloxacin', 'sarafloxacin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM quinolones
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM quinolones - KS diệt khuẩn.
     ],
     'carbapenems': [
         'imipenem', 'meropenem', 'ertapenem', 'doripenem',
         'biapenem', 'panipenem', 'faropenem', 'ritipenem',
         'sulopenem', 'thienamycin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM carbapenem
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM carbapenem - KS diệt khuẩn.
     ],
     'sulfonamides': [
         'sulfamethoxazole', 'sulfaguanidine', 'sulfadimidine', 'sulfamonomethoxine',
@@ -116,46 +116,46 @@ export const antibioticGroups = {
         'sulfisomidine', 'sulfamoxole', 'sulfanitran', 'sulfamethoxypyridazine',
         'sulfametoxydiazine', 'sulfadoxine', 'sulfametopyrazine (sulfalene)', 'mafenid',
         'sulfaclozine (sulfachloropyrazine)', 'sulfachloropyridazine', 'cotrimoxazol'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM sulfonamid
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM sulfonamid - KS kìm khuẩn.
     ],
     'oxazolidones': [
         'cycloserine', 'linezolid', 'posizolid', 'tedizolid (torezolid)',
         'radezolid', 'eperezolid', 'ranbezolid', 'sutezolid'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM oxazolidone
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM oxazolidone - KS kìm khuẩn.
     ],
     'nitroimidazoles': [
         'metronidazole', 'tinidazole', 'ornidazole', 'secnidazole',
         'nimorazole', 'carnidazole', 'misonidazole', 'dimetridazol',
         'ronidazole', 'ipronidazole', 'benznidazole', 'azomycin',
         'fexinidazole'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM nitroimidazol
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM nitroimidazol - KS diệt khuẩn
     ],
     'nitrofurans': [
         'difurazone', 'furazolidone', 'nifuroxazide', 'nifurquinazol',
         'nifurtoinol', 'nifurzide', 'nitrofurazone', 'nitrofurantoin',
         'furaltadone', 'furazidine', 'furylfuramide', 'nifuratel',
         'nifurtimox'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM nitrofuran
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM nitrofuran (kìm khuẩn ở nồng độ thấp, diệt khuẩn ở nồng độ cao)
     ],
     'phosphonics': [
         'fosfomycin', 'fosmidomycin', 'alafosfalin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM phosphonic
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM phosphonic - KS diệt khuẩn.
     ],
     'ionophores': [
         'salinomycin', 'monensin', 'lasalocid'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM ionophore
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM ionophore - KS diệt khuẩn.
     ],
     'pleuromutilins': [
         'lefamulin', 'retapamulin', 'tiamulin', 'valnemulin', 'azamulin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM pleuromutilin
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM pleuromutilin - KS kìm khuẩn.
     ],
     'streptogramins': [
         'pristinamycin', 'quinupristin', 'dalfopristin', 'virginiamycin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM Streptogramin
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM Streptogramin (Gồm 2 thành phần: Streptogramin A và Streptogramin B, đứng riêng thì kìm khuẩn, khi kết hợp lại thì diệt khuẩn)
     ],
     'aminocoumarins': [
         'novobiocin', 'coumermycin a1', 'clorobiocin'
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM aminocoumarin
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM aminocoumarin - KS kìm khuẩn.
     ],
     'anti-tuberculosis_anti-leprosy': [
         'dapsone', 'promin', 'capreomycin', 'ethambutol', 'ethionamide', 'clofazimine', 'isoniazid'
@@ -166,6 +166,7 @@ export const antibioticGroups = {
     ],
     'diaminopyrimidine': [
         'trimethoprim', 'pyrimethamine', 'iclaprim'
+        // TẤT CẢ KHÁNG SINH CỦA NHÓM diamino - KS kìm khuẩn.
     ],
     'other/new': [
         'fusidic acid', 'anthracimycin', 'anthramycin', 'lugdunin',
@@ -181,18 +182,18 @@ export const antibioticGroups = {
 // Sử dụng Map thay vì Object cho hiệu suất tốt hơn
 export const antibioticToGroupMap = new Map();
 for (const group in antibioticGroups) {
-    antibioticGroups[group].forEach(antibiotic => {
-        antibioticToGroupMap.set(antibiotic.toLowerCase(), group);
-        // Xử lý các trường hợp trong ngoặc đơn
-        const match = antibiotic.match(/\((.*?)\)/);
-        if (match && match[1]) {
-            antibioticToGroupMap.set(match[1].toLowerCase(), group);
-        }
-    });
-} // <--- Dấu đóng ngoặc nhọn này đã bị thiếu trong code của bạn, gây ra lỗi SyntaxError
+ antibioticGroups[group].forEach(antibiotic => {
+    antibioticToGroupMap.set(antibiotic.toLowerCase(), group);
+    // Xử lý các trường hợp trong ngoặc đơn
+    const match = antibiotic.match(/\((.*?)\)/);
+    if (match && match[1]) {
+        antibioticToGroupMap.set(match[1].toLowerCase(), group);
+    }
+});
+
 
 // Quy tắc tương tác giữa các NHÓM kháng sinh
-// Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁT từ các nguồn y khoa.
+// Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁC từ các nguồn y khoa.
 export const combinationRules = {
     // Các quy tắc đã có
     // Các quy tắc của nhóm penicillins
@@ -230,7 +231,7 @@ export const combinationRules = {
     'monobactams-pleuromutilins': 'antagonistic', // Đối kháng
     'monobactams-sulfonamides': 'antagonistic', // Đối kháng
     'monobactams-diaminopyrimidine': 'antagonistic', // Đối kháng
-
+    
     // Các quy tắc của nhóm carbapenems
     'carbapenems-aminoglycosides': 'synergistic', // Hiệp lực
     'carbapenems-peptides': 'synergistic', // Hiệp lực
@@ -274,7 +275,7 @@ export const combinationRules = {
 
     // Các quy tắc của nhóm phenicols
     'phenicols-sulfonamides': 'synergistic', // Hiệp lực
-    'phenicols-diaminopyrimidine': 'synergistic', // Hiệp lực
+    'phenicols-diaminopyrimidine': 'synergistic', // Hiệp lực 
 
     // Các quy tắc của nhóm macrolides
     'macrolides-sulfonamides': 'synergistic', // Hiệp lực
@@ -287,6 +288,17 @@ export const combinationRules = {
     // Các quy tắc của nhóm pleuromutilins
     'pleuromutilins-sulfonamides': 'synergistic', // Hiệp lực
     'pleuromutilins-diaminopyrimidine': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của nhóm diaminopyrimidine
+    'diaminopyrimidine-pleuromutilins': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-tetracyclines': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-phenicols': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-macrolides': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-lincosamides': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-penicillins': 'antagonistic',
+    'diaminopyrimidine-cephalosporins': 'antagonistic',
+    'diaminopyrimidine-carbapenems': 'antagonistic',
+    'diaminopyrimidine-monobactams': 'antagonistic',
 
     // Các quy tắc của các nhóm chưa phân loại
     'sulfonamides-diaminopyrimidine': 'synergistic',
@@ -350,4 +362,3 @@ export function getCombinationRule(groupA, groupB) {
 export function getAntibioticGroup(antibioticName) {
     return antibioticToGroupMap.get(antibioticName.toLowerCase()) || null;
 }
-
