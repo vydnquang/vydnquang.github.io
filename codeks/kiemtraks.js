@@ -210,7 +210,7 @@ function checkCombination() {
 
 // 2 BỘ QUY TẮC PHỐI HỢP CỦA NHÓM OTHER/NEW
 
-    // --- LOGIC MỚI: Xử lý ngoại lệ cho nhóm 'other/new' khi kết hợp với nhóm khác ---
+    // Xử lý ngoại lệ cho nhóm 'other/new' khi kết hợp với nhóm khác
     if ((groupA === 'other/new' && groupB !== 'other/new') || (groupA !== 'other/new' && groupB === 'other/new')) {
         errorMessage.textContent = 'Sự tương tác khi phối hợp giữa hai nhóm kháng sinh này chưa có nhiều tài liệu nghiên cứu.';
         resultText = `THẬN TRỌNG (Bạn đang phối hợp giữa kháng sinh của nhóm ${groupA} với nhóm ${groupB})`;
@@ -256,11 +256,13 @@ function checkCombination() {
             resultClass = 'caution';
             break;
         case 'neutral':
-            resultText = `TRUNG TÍNH (Chưa rõ về sự tương tác khi phối hợp nhóm ${groupA} và nhóm ${groupB})`;
+            errorMessage.textContent = `Việc phối hợp giữa nhóm kháng sinh ${groupA} và nhóm ${groupB} đôi khi không theo quy tắc chung, nhưng có tài liệu nói là được phép cho một số trường hợp điều trị đặc biệt.`;
+            resultText = 'TRUNG TÍNH (Còn tùy vào mục đích của việc phối hợp)';
             resultClass = 'neutral';
             break;
         default:
-            resultText = 'Không xác định (quy tắc chưa được định nghĩa trong cơ sở dữ liệu)';
+            errorMessage.textContent = 'Quy tắc chưa được định nghĩa trong cơ sở dữ liệu';
+            resultText = 'KHÔNG XÁC ĐỊNH';
             resultClass = 'unknown';
             break;
     }
