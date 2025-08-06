@@ -173,9 +173,9 @@ main.container {
 }
 
 
-/* Viên thuốc B (Màu tím nhạt - cam nâu) */
+/* Viên thuốc B (Màu vàng xanh - cam nâu) */
 #pillB::before {
-    background: linear-gradient(to right, transparent 0%, #fd94ff 100%); /* Màu tím nhạt 2 */
+    background: linear-gradient(to right, transparent 0%, #afff7a 100%); /* Màu vàng xanh */
 }
 
 #pillB::after {
@@ -324,6 +324,7 @@ button:active {
     color: #333;
     font-size: 1.1em;
     line-height: 1.6;
+    text-align: justify;
 }
 
 .general-guidance h3 {
@@ -437,6 +438,7 @@ footer a:hover {
         font-size: 1.1em;
     }
 }
+
 
 
 
