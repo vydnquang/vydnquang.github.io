@@ -178,6 +178,11 @@ export const antibioticGroups = {
     // ... Thêm các nhóm và kháng sinh khác của bạn vào đây
 };
 
+// Hàm lấy nhóm của một kháng sinh
+export function getAntibioticGroup(antibioticName) {
+    return antibioticToGroupMap.get(antibioticName.toLowerCase()) || null;
+}
+
 // Ánh xạ từng kháng sinh về nhóm của nó (để tra cứu nhanh)
 // Sử dụng Map thay vì Object cho hiệu suất tốt hơn
 export const antibioticToGroupMap = new Map();
@@ -192,11 +197,10 @@ for (const group in antibioticGroups) {
 });
 }
 
-
 // Quy tắc tương tác giữa các NHÓM kháng sinh
 // Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁC từ các nguồn y khoa.
 export const combinationRules = {
-    // Các quy tắc đã có
+
     // Các quy tắc của nhóm penicillins
     'penicillins-aminoglycosides': 'synergistic', // Hiệp lực
     'penicillins-peptides': 'synergistic', // Hiệp lực
@@ -300,16 +304,15 @@ export const combinationRules = {
     'diaminopyrimidine-cephalosporins': 'antagonistic',
     'diaminopyrimidine-carbapenems': 'antagonistic',
     'diaminopyrimidine-monobactams': 'antagonistic',
+    'diaminopyrimidine-sulfonamides': 'synergistic',
 
-    // Các quy tắc của các nhóm chưa phân loại
-    'sulfonamides-diaminopyrimidine': 'synergistic',
+    // Các quy tắc của các nhóm chưa mà chưa có tài liệu nói rõ là có hay không
     'quinolones-aminoglycosides': 'synergistic', // Có tài liệu ghi hết sức thận trọng 'caution'
     'lincosamides-macrolides': 'antagonistic',
     'phenicols-macrolides': 'antagonistic',
 
     // --- CÁC QUY TẮC MỚI CẦN BỔ SUNG DỰA TRÊN CÁC NHÓM BẠN ĐÃ THÊM ---
     // Đây chỉ là VÍ DỤ. Bạn cần điền DỮ LIỆU CHÍNH XÁC TỪ NGUỒN Y TẾ.
-    'beta-lactames-beta-lactamase': 'synergistic',
     'beta-lactames-metroimidazol': 'additive',
     'beta-lactames-quinolones': 'additive',
     'peptides-aminoglycosides': 'additive', // Có tài liệu ghi 'caution', hết sức thận trọng
@@ -357,9 +360,4 @@ export function getCombinationRule(groupA, groupB) {
 
     // Trả về quy tắc nếu tìm thấy, nếu không mặc định là 'neutral'
     return combinationRules[key] || 'neutral';
-}
-
-// Hàm lấy nhóm của một kháng sinh
-export function getAntibioticGroup(antibioticName) {
-    return antibioticToGroupMap.get(antibioticName.toLowerCase()) || null;
 }
