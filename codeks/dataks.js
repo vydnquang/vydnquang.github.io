@@ -115,7 +115,7 @@ export const antibioticGroups = {
         'sulfanilamid', 'sulfonamidochrysoidine', 'sulfacetamid', 'sulfadiazine',
         'sulfisomidine', 'sulfamoxole', 'sulfanitran', 'sulfamethoxypyridazine',
         'sulfametoxydiazine', 'sulfadoxine', 'sulfametopyrazine (sulfalene)', 'mafenid',
-        'sulfaclozine (sulfachloropyrazine)', 'sulfachloropyridazine', 'cotrimoxazol'
+        'sulfaclozine (sulfachloropyrazine)', 'sulfachloropyridazine', 'cotrimoxazol' //Sulfonamides ức chế enzyme dihydropteroate synthase (giai đoạn đầu của tổng hợp acid folic), trong khi diaminopyrimidine ức chế enzyme dihydrofolate reductase (giai đoạn sau)
         // TẤT CẢ KHÁNG SINH CỦA NHÓM sulfonamid - KS kìm khuẩn.
     ],
     'oxazolidones': [
@@ -178,11 +178,6 @@ export const antibioticGroups = {
     // ... Thêm các nhóm và kháng sinh khác của bạn vào đây
 };
 
-// Hàm lấy nhóm của một kháng sinh
-export function getAntibioticGroup(antibioticName) {
-    return antibioticToGroupMap.get(antibioticName.toLowerCase()) || null;
-}
-
 // Ánh xạ từng kháng sinh về nhóm của nó (để tra cứu nhanh)
 // Sử dụng Map thay vì Object cho hiệu suất tốt hơn
 export const antibioticToGroupMap = new Map();
@@ -197,12 +192,17 @@ for (const group in antibioticGroups) {
 });
 }
 
+// Hàm lấy nhóm của một kháng sinh
+export function getAntibioticGroup(antibioticName) {
+    return antibioticToGroupMap.get(antibioticName.toLowerCase()) || null;
+}
+
 // Quy tắc tương tác giữa các NHÓM kháng sinh
 // Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁC từ các nguồn y khoa.
 export const combinationRules = {
 
     // Các quy tắc của nhóm penicillins
-    'penicillins-aminoglycosides': 'synergistic', // Hiệp lực
+    'penicillins-aminoglycosides': 'synergistic', // Hiệp lực hay Hiệp đồng đều ok, trong kết quả sẽ hiện ra chữ HIỆP ĐỒNG
     'penicillins-peptides': 'synergistic', // Hiệp lực
     'penicillins-quinolones': 'synergistic', // Hiệp lực
     'penicillins-tetracyclines': 'antagonistic', // Đối kháng
@@ -250,11 +250,11 @@ export const combinationRules = {
     'carbapenems-diaminopyrimidine': 'antagonistic', // Đối kháng
 
     // Các quy tắc của nhóm beta-lactamase
-    'beta-lactamase-penicillins': 'additive',
-    'beta-lactamase-cephalosporins': 'additive',
+    'beta-lactamase-penicillins': 'additive', // Phụ gia, ý nói là 2 chất này bổ trợ cho nhau, không có beta-lactamase thì peni không phát huy tác dụng
+    'beta-lactamase-cephalosporins': 'additive', // Trong kết quả hiện ra chữ HIỆP LỰC
 
     // Các quy tắc của nhóm aminoglycosides
-    'aminoglycosides-tetracyclines': 'synergistic', // Hiệp lực
+    'aminoglycosides-tetracyclines': 'synergistic', // Hiệp lực. Tài liệu mới lại nói là đối kháng
     'aminoglycosides-phenicols': 'synergistic', // Hiệp lực
     'aminoglycosides-macrolides': 'synergistic', // Hiệp lực
     'aminoglycosides-lincosamides': 'synergistic', // Hiệp lực
@@ -294,17 +294,211 @@ export const combinationRules = {
     'pleuromutilins-sulfonamides': 'synergistic', // Hiệp lực
     'pleuromutilins-diaminopyrimidine': 'synergistic', // Hiệp lực
 
-    // Các quy tắc của nhóm diaminopyrimidine
-    'diaminopyrimidine-pleuromutilins': 'synergistic', // Hiệp lực
-    'diaminopyrimidine-tetracyclines': 'synergistic', // Hiệp lực
-    'diaminopyrimidine-phenicols': 'synergistic', // Hiệp lực
-    'diaminopyrimidine-macrolides': 'synergistic', // Hiệp lực
-    'diaminopyrimidine-lincosamides': 'synergistic', // Hiệp lực
-    'diaminopyrimidine-penicillins': 'antagonistic',
-    'diaminopyrimidine-cephalosporins': 'antagonistic',
-    'diaminopyrimidine-carbapenems': 'antagonistic',
-    'diaminopyrimidine-monobactams': 'antagonistic',
-    'diaminopyrimidine-sulfonamides': 'synergistic',
+    // Các quy tắc của nhóm diaminopyrimidine (ức chế enzyme dihydrofolate reductase, một enzyme quan trọng trong con đường tổng hợp acid folic của vi khuẩn)
+    'diaminopyrimidine-pleuromutilins': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-tetracyclines': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-phenicols': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-macrolides': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-lincosamides': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-penicillins': 'antagonistic', // Có tài liệu ghi là Hiệp đồng hoặc cộng gộp
+    'diaminopyrimidine-cephalosporins': 'antagonistic', // Có tài liệu ghi là Hiệp đồng hoặc cộng gộp
+    'diaminopyrimidine-carbapenems': 'antagonistic', // Có tài liệu ghi là Hiệp đồng hoặc cộng gộp
+    'diaminopyrimidine-monobactams': 'antagonistic', // Có tài liệu ghi là Hiệp đồng hoặc cộng gộp
+    'diaminopyrimidine-sulfonamides': 'synergistic', // Hiệp đồng mạnh mẽ
+    'diaminopyrimidine-peptides': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-aminoglycosides': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-quinolones': 'synergistic', // Hiệp đồng
+
+    // XV. Các quy tắc của nhóm oxazolidones
+    // 15.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 15.1.1 Với thành viên của beta-lactam
+    'oxazolidones-penicillins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-cephalosporins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-monobactams': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-carbapenems': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    // 15.1.2 Với thành viên của peptides
+    'oxazolidones-peptides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    // 15.1.3 Với thành viên của phosphonics
+    'oxazolidones-phosphonics': 'synergistic', // Hiệp đồng
+    // 15.2 Với các kháng sinh ức chế tổng hợp protein khác, lưu ý một vài trường hợp sẽ cạnh tranh vị trí tác động, dẫn đến chồng chéo, đối kháng
+    'oxazolidones-aminoglycosides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-tetracyclines': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-macrolides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-lincosamides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-phenicols': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-streptogramins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-aminocoumarins': 'synergistic', // Hiệp đồng hoặc cộng gộp, do nhóm này ức chế DNA gyrase
+    // 15.3 Với các kháng sinh khác
+    'oxazolidones-quinolones': 'synergistic', // Hiệp đồng hoặc cộng gộp, do quino ức chế DNA
+    'oxazolidones-sulfonamides': 'synergistic', // Hiệp đồng hoặc cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'oxazolidones-diaminopyrimidine': 'synergistic', // Hiệp đồng hoặc cộng gộp, do diamino ức chế tổng hợp acid folic
+    'oxazolidones-nitroimidazoles': 'synergistic', // Cộng gộp, do nitroimi sản sinh chất có hại cho tế bào vi khuẩn
+    'oxazolidones-nitrofurans': 'synergistic', // Cộng gộp, do nitrofu sản sinh chất có hại cho tế bào vi khuẩn
+    'oxazolidones-ionophores': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
+    'oxazolidones-pleuromutilins': 'caution', // Có thể cộng gộp, cũng có thể đối kháng, do cùng cạnh tranh gắn vào tiểu đơn vị 50S của ribosome.
+
+    // XVI. Các quy tắc của nhóm nitroimidazoles
+    // 16.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 16.1.1 Với thành viên của beta-lactam
+    'nitroimidazoles-penicillins': 'synergistic', // Cộng gộp
+    'nitroimidazoles-cephalosporins': 'synergistic', // Cộng gộp
+    'nitroimidazoles-monobactams': 'synergistic', // Cộng gộp
+    'nitroimidazoles-carbapenems': 'synergistic', // Cộng gộp
+    // 16.1.2 Với thành viên của peptides
+    'nitroimidazoles-peptides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    // 16.1.3 Với thành viên của phosphonics
+    'nitroimidazoles-phosphonics': 'synergistic', // Cộng gộp
+    // 16.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'nitroimidazoles-aminoglycosides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-tetracyclines': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-macrolides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-lincosamides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-phenicols': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-pleuromutilins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-streptogramins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-aminocoumarins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 16.3 Với các kháng sinh khác
+    'nitroimidazoles-quinolones': 'synergistic', // Hiệp đồng, do quino ức chế DNA
+    'nitroimidazoles-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'nitroimidazoles-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+    'nitroimidazoles-nitrofurans': 'synergistic', // Cộng gộp, do nitrofu sản sinh chất có hại cho tế bào vi khuẩn
+    'nitroimidazoles-ionophores': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
+
+    // XVII. Các quy tắc của nhóm nitrofurans (chủ yếu trị tiết niệu, ít toàn thân)
+    // 17.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 17.1.1 Với thành viên của beta-lactam
+    'nitrofurans-penicillins': 'synergistic', // Cộng gộp
+    'nitrofurans-cephalosporins': 'synergistic', // Cộng gộp
+    'nitrofurans-monobactams': 'synergistic', // Cộng gộp
+    'nitrofurans-carbapenems': 'synergistic', // Cộng gộp
+    // 17.1.2 Với thành viên của peptides
+    'nitrofurans-peptides': 'synergistic', // Cộng gộp
+    // 17.1.3 Với thành viên của phosphonics
+    'nitrofurans-phosphonics': 'synergistic', // Cộng gộp
+    // 17.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'nitrofurans-aminoglycosides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-tetracyclines': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-macrolides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-lincosamides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-phenicols': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-pleuromutilins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-streptogramins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-aminocoumarins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 17.3 Với các kháng sinh khác
+    'nitrofurans-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase
+    'nitrofurans-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'nitrofurans-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+    'nitrofurans-ionophores': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
+
+    // XVIII. Các quy tắc của nhóm phosphonics
+    // 18.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 18.1.1 Với thành viên của beta-lactam (để trị các nhiễm trùng đa kháng MRSA, VRE)
+    'phosphonics-penicillins': 'synergistic', // Hiệp đồng
+    'phosphonics-cephalosporins': 'synergistic', // Hiệp đồng
+    'phosphonics-monobactams': 'synergistic', // Hiệp đồng
+    'phosphonics-carbapenems': 'synergistic', // Hiệp đồng
+    // 18.1.2 Với thành viên của peptides
+    'phosphonics-peptides': 'synergistic', // Hiệp đồng mạnh mẽ
+    // 18.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'phosphonics-aminoglycosides': 'synergistic', // Hiệp đồng, tạo điều kiện cho aminoglycosides xâm nhập vào tế bào vi khuẩn dễ dàng hơn bằng cách làm suy yếu thành tế bào
+    'phosphonics-tetracyclines': 'synergistic', // Cộng gộp-Additive
+    'phosphonics-macrolides': 'synergistic', // Cộng gộp
+    'phosphonics-lincosamides': 'synergistic', // Cộng gộp
+    'phosphonics-phenicols': 'synergistic', // Cộng gộp
+    'phosphonics-pleuromutilins': 'synergistic', // Cộng gộp
+    'phosphonics-streptogramins': 'synergistic', // Cộng gộp
+    'phosphonics-aminocoumarins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 18.3 Với các kháng sinh khác
+    'phosphonics-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, mở rộng phổ
+    'phosphonics-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'phosphonics-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+    'phosphonics-ionophores': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
+
+    // XIX. Các quy tắc của nhóm ionophores
+    // 19.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 19.1.1 Với thành viên của beta-lactam (hoạt động độc lập, kết hợp có thể tăng hiệu quả)
+    'ionophores-penicillins': 'synergistic', // Cộng gộp
+    'ionophores-cephalosporins': 'synergistic', // Cộng gộp
+    'ionophores-monobactams': 'synergistic', // Cộng gộp
+    'ionophores-carbapenems': 'synergistic', // Cộng gộp
+    // 19.1.2 Với thành viên của peptides
+    'ionophores-peptides': 'synergistic', // Cộng gộp
+    // 19.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'ionophores-aminoglycosides': 'synergistic', // Hiệp đồng, tạo điều kiện cho aminoglycosides xâm nhập vào tế bào vi khuẩn dễ dàng hơn bằng cách làm suy yếu thành tế bào
+    'ionophores-tetracyclines': 'synergistic', // Cộng gộp-Additive
+    'ionophores-macrolides': 'synergistic', // Cộng gộp
+    'ionophores-lincosamides': 'synergistic', // Cộng gộp
+    'ionophores-phenicols': 'synergistic', // Cộng gộp
+    'ionophores-pleuromutilins': 'synergistic', // Cộng gộp
+    'ionophores-streptogramins': 'synergistic', // Cộng gộp
+    'ionophores-aminocoumarins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 19.3 Với các kháng sinh khác
+    'ionophores-quinolones': 'synergistic', // Cộng gộp hoặc Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, mở rộng phổ
+    'ionophores-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'ionophores-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+
+    // XX. Các quy tắc của nhóm pleuromutilins (ức chế tổng hợp protein bằng cách gắn vào tiểu đơn vị 50S của ribosome vi khuẩn, tại vị trí peptidyl transferase)
+    // 20.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 20.1.1 Với thành viên của beta-lactam (hoạt động độc lập, kết hợp có thể tăng hiệu quả)
+    'pleuromutilins-penicillins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'pleuromutilins-cephalosporins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'pleuromutilins-monobactams': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'pleuromutilins-carbapenems': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    // 20.1.2 Với thành viên của peptides
+    'pleuromutilins-peptides': 'synergistic', // Cộng gộp
+    // 20.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'pleuromutilins-aminoglycosides': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'pleuromutilins-tetracyclines': 'synergistic', // Cộng gộp-Additive, vì tetracyclines gắn vào tiểu đơn vị 30S
+    'pleuromutilins-macrolides': 'antagonistic', // Đối kháng, do cạnh tranh vị trí gắn
+    'pleuromutilins-lincosamides': 'antagonistic', // Đối kháng
+    'pleuromutilins-phenicols': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'pleuromutilins-streptogramins': 'antagonistic', // Đối kháng
+    'pleuromutilins-aminocoumarins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 20.3 Với các kháng sinh khác
+    'pleuromutilins-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, mở rộng phổ
+    'pleuromutilins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'pleuromutilins-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+
+    // XXI. Các quy tắc của nhóm streptogramins (Phức hợp 2 thành phần (Streptogramin A và Streptogramin B) hiệp đồng trên tiểu đơn vị 50S của ribosome, ức chế tổng hợp protein của vi khuẩn)
+    // 21.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 21.1.1 Với thành viên của beta-lactam (hoạt động độc lập, kết hợp có thể tăng hiệu quả)
+    'streptogramins-penicillins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'streptogramins-cephalosporins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'streptogramins-monobactams': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'streptogramins-carbapenems': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    // 21.1.2 Với thành viên của peptides
+    'streptogramins-peptides': 'synergistic', // Cộng gộp
+    // 21.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'streptogramins-aminoglycosides': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'streptogramins-tetracyclines': 'synergistic', // Cộng gộp-Additive hoặc Hiệp đồng, vì tetracyclines gắn vào tiểu đơn vị 30S
+    'streptogramins-macrolides': 'antagonistic', // Đối kháng, do cạnh tranh vị trí gắn
+    'streptogramins-lincosamides': 'antagonistic', // Đối kháng, cạnh tranh vị trí gắn
+    'streptogramins-phenicols': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'streptogramins-aminocoumarins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 21.3 Với các kháng sinh khác
+    'streptogramins-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, mở rộng phổ
+    'streptogramins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'streptogramins-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+
+    // XXII. Các quy tắc của nhóm aminocoumarins (ức chế enzyme DNA gyrase và DNA topoisomerase IV, tuy nhiên chú ý độc tính trên gan, thận, nên dùng cho thú y)
+    // 22.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 22.1.1 Với thành viên của beta-lactam (hoạt động độc lập, kết hợp có thể tăng hiệu quả)
+    'aminocoumarins-penicillins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'aminocoumarins-cephalosporins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'aminocoumarins-monobactams': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'aminocoumarins-carbapenems': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    // 22.1.2 Với thành viên của peptides
+    'aminocoumarins-peptides': 'synergistic', // Cộng gộp
+    // 22.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'aminocoumarins-aminoglycosides': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'aminocoumarins-tetracyclines': 'synergistic', // Cộng gộp-Additive hoặc Hiệp đồng, vì tetracyclines gắn vào tiểu đơn vị 30S
+    'aminocoumarins-macrolides': 'antagonistic', // Đối kháng, do cạnh tranh vị trí gắn
+    'aminocoumarins-lincosamides': 'antagonistic', // Đối kháng, cạnh tranh vị trí gắn
+    'aminocoumarins-phenicols': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    // 22.3 Với các kháng sinh khác
+    'aminocoumarins-quinolones': 'synergistic', // Hiệp đồng mạnh mẽ, do quinolones ức chế enzyme DNA gyrase, nhưng ở 2 vị trí khác nhau
+    'aminocoumarins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'aminocoumarins-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
 
     // Các quy tắc của các nhóm chưa mà chưa có tài liệu nói rõ là có hay không
     'quinolones-aminoglycosides': 'synergistic', // Có tài liệu ghi hết sức thận trọng 'caution'
