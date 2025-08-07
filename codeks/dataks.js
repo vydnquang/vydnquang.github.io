@@ -190,6 +190,7 @@ for (const group in antibioticGroups) {
         antibioticToGroupMap.set(match[1].toLowerCase(), group);
     }
 });
+}
 
 
 // Quy tắc tương tác giữa các NHÓM kháng sinh
