@@ -251,12 +251,16 @@ function checkCombination() {
             resultClass = 'synergistic-positive';
             break;
         case 'additive':
-            resultText = `HIỆP LỰC (Nhóm ${groupA} và nhóm ${groupB} có thể bổ trợ)`;
+            resultText = `CỘNG GỘP (Nhóm ${groupA} và nhóm ${groupB} có thể bổ trợ để phát huy tác dụng tối đa)`;
             resultClass = 'additive-positive';
             break;
         case 'antagonistic':
             resultText = `ĐỐI KHÁNG (Không nên kết hợp nhóm ${groupA} và nhóm ${groupB})`;
             resultClass = 'antagonistic';
+            break;
+        case 'competition':
+            resultText = `CẠNH TRANH (Nhóm ${groupA} và nhóm ${groupB} có cùng cơ chế tác dụng, dẫn đến cạnh tranh, có thể làm giảm hiệu quả)`;
+            resultClass = 'caution';
             break;
         case 'caution':
             resultText = `THẬN TRỌNG (Cần cân nhắc khi kết hợp nhóm ${groupA} và nhóm ${groupB})`;
@@ -264,7 +268,7 @@ function checkCombination() {
             break;
         case 'neutral':
             errorMessage.textContent = `Việc phối hợp giữa nhóm kháng sinh ${groupA} và nhóm ${groupB} đôi khi không theo quy tắc chung, nhưng có tài liệu nói là được phép cho một số trường hợp điều trị đặc biệt.`;
-            resultText = 'TRUNG TÍNH (Tùy vào mục đích của việc phối hợp)';
+            resultText = 'TRUNG TÍNH (Có thể được hoặc có thể không, phụ thuộc từng cặp kháng sinh cụ thể)';
             resultClass = 'neutral';
             break;
         default:
