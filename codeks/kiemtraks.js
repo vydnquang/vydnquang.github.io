@@ -1,14 +1,11 @@
-// TOÀN BỘ CODE CỦA FILE codeks/kiemtraks.js
+// TOÀN BỘ CODE CỦA FILE codeks/kiemtraks.js đã được chỉnh sửa
 
 // Import dữ liệu từ dataks.js
 import { getAntibioticGroup, getCombinationRule, antibioticToGroupMap } from './dataks.js';
 
 // Di chuyển khai báo allAntibiotics ra ngoài DOMContentLoaded
-// để nó có thể được truy cập bởi setupAutocomplete và các hàm khác
 const allAntibiotics = Array.from(antibioticToGroupMap.keys()).sort();
 
-// Các quy tắc đặc biệt (specificRules) đã được chuyển từ kiemtraks.js sang dataks.js
-// Giúp code kiemtraks.js gọn gàng hơn.
 const specificRules = {
     'calcium-ceftriaxone': {
         result: 'ĐỐI KHÁNG NGHIÊM TRỌNG (Calcium và Ceftriaxone không được trộn lẫn trong cùng dịch truyền. Có thể gây kết tủa nguy hiểm tính mạng, đặc biệt ở trẻ sơ sinh.)',
@@ -22,9 +19,13 @@ const specificRules = {
         result: 'HIỆP ĐỒNG (Có thể phối hợp, nhất là trong Thú-Y, việc này sẽ mở rộng phổ kháng khuẩn, tăng hiệu quả điều trị các bệnh hô hấp, tiêu hóa.)',
         class: 'synergistic-positive'
     },
+    'chloramphenicol-penicillins': {
+        result: 'ĐỐI KHÁNG (Chloramphenicol có thể cản trở tác dụng diệt khuẩn của Penicillins. KHÔNG NÊN PHỐI HỢP.)',
+        class: 'antagonistic'
+    }
 };
 
-const betaLactamGroups = ['penicillins', 'cephalosporins'];
+const betaLactamGroups = ['penicillins', 'cephalosporins', 'carbapenems', 'monobactams'];
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('checkCombinationBtn').addEventListener('click', checkCombination);
