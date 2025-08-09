@@ -113,8 +113,9 @@ function setupAutocomplete(inputElement, suggestionsListElement) {
 }
 
 function checkCombination() {
-    const antibioticA = document.getElementById('antibioticA').value.trim().toLowerCase();
-    const antibioticB = document.getElementById('antibioticB').value.trim().toLowerCase();
+
+  const antibioticA = document.getElementById('antibioticA').value.trim().toLowerCase().replace(/\s/g, '-');
+  const antibioticB = document.getElementById('antibioticB').value.trim().toLowerCase().replace(/\s/g, '-');
     const resultBox = document.getElementById('result');
     const errorMessage = document.getElementById('errorMessage');
 
