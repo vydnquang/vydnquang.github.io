@@ -528,7 +528,7 @@ export const combinationRules = {
     'penicillins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
     'cephalosporins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
     'cephalosporins-carbapenems': 'competition', // Cạnh tranh vị trí gắn lên PBP
-    'monobactams-carbapenems': 'caution', // Cẩn thận, có thể gây dị ứng chéo nghiêm trọng, hai loại này vẫn là 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'monobactams-carbapenems': 'caution', // Cẩn thận, có thể gây dị ứng chéo nghiêm trọng, hai loại này vẫn là //competition//, cạnh tranh vị trí gắn lên PBP
 
     // Các quy tắc của các nhóm chưa mà chưa có tài liệu nói rõ là có hay không
     'phosphonics-aminoglycosides': 'synergistic',
