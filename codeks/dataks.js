@@ -1,198 +1,165 @@
 // TOÀN BỘ CODE CỦA FILE codeks/dataks.js
 
 // Danh sách nhóm kháng sinh và các kháng sinh thuộc nhóm đó
-export const antibioticToGroupMap = new Map([ // hàm lấy tên nhóm của 1 kháng sinh trong nhóm //
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM penicillins - KS diệt khuẩn.
-// mecillinam còn có tên là amdinocillin
-['penicillin-g', 'penicillins'], ['propicillin', 'penicillins'], ['penicillin-v', 'penicillins'],
-['penicillin-g-procaine', 'penicillins'], ['benzathine-penicillin-g', 'penicillins'], ['benethamine-penicillin', 'penicillins'],
-['penicillin-m', 'penicillins'], ['oxacillin', 'penicillins'], ['cloxacillin', 'penicillins'],
-['dicloxacillin', 'penicillins'], ['methicillin', 'penicillins'], ['nafcillin', 'penicillins'],
-['flucloxacillin', 'penicillins'], ['ampicillin', 'penicillins'], ['amoxycillin', 'penicillins'],
-['pivampicillin', 'penicillins'], ['hetacillin', 'penicillins'], ['bacampicillin', 'penicillins'],
-['metampicillin', 'penicillins'], ['talampicillin', 'penicillins'], ['epicillin', 'penicillins'],
-['sulbenicillin', 'penicillins'], ['temocillin', 'penicillins'], ['carbenicilin', 'penicillins'],
-['ticarcilin', 'penicillins'], ['carindacillin', 'penicillins'], ['mecillinam', 'penicillins'],
-['mezlocillin', 'penicillins'], ['piperacillin', 'penicillins'], ['azlocillin', 'penicillins'],
-['pivmecillinam', 'penicillins'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM cephalosporin - KS diệt khuẩn.
-['cephalexin', 'cephalosporins'], ['cefalotin', 'cephalosporins'], ['cefazolin', 'cephalosporins'],
-['cefradine', 'cephalosporins'], ['cefadroxil', 'cephalosporins'], ['cefaloglycin', 'cephalosporins'],
-['cefalonium', 'cephalosporins'], ['cephaloridin', 'cephalosporins'], ['cefatrizine', 'cephalosporins'],
-['cefazaflur', 'cephalosporins'], ['cefacetrile', 'cephalosporins'], ['cefapirin', 'cephalosporins'],
-['cefaclor', 'cephalosporins'], ['cefoxitine', 'cephalosporins'], ['cefamandole', 'cephalosporins'],
-['cefonicid', 'cephalosporins'], ['cefuroxime', 'cephalosporins'], ['cefprozil', 'cephalosporins'],
-['cefuzonam', 'cephalosporins'], ['ceforanide', 'cephalosporins'], ['cefotetan', 'cephalosporins'],
-['cefmetazole', 'cephalosporins'], ['cefbuperazone', 'cephalosporins'], ['cefminox', 'cephalosporins'],
-['ceftizoxime', 'cephalosporins'], ['ceftiofur', 'cephalosporins'], ['cefotaxime', 'cephalosporins'],
-['ceftriaxone', 'cephalosporins'], ['cefoperazone', 'cephalosporins'], ['cefpiramide', 'cephalosporins'],
-['cefcapene', 'cephalosporins'], ['cefdaloxime', 'cephalosporins'], ['cefdinir', 'cephalosporins'],
-['cefditoren', 'cephalosporins'], ['cefetamet', 'cephalosporins'], ['cefixime', 'cephalosporins'],
-['cefmenoxime', 'cephalosporins'], ['cefodizime', 'cephalosporins'], ['cefovecin', 'cephalosporins'],
-['cefpimizole', 'cephalosporins'], ['cefpodoxime', 'cephalosporins'], ['cefteram', 'cephalosporins'],
-['ceftibuten', 'cephalosporins'], ['ceftiolene', 'cephalosporins'], ['ceftazidime', 'cephalosporins'],
-['latamoxef', 'cephalosporins'], ['cefepime', 'cephalosporins'], ['cefclidin', 'cephalosporins'],
-['cefiderocol', 'cephalosporins'], ['cefluprenam', 'cephalosporins'], ['cefoselis', 'cephalosporins'],
-['cefozopran', 'cephalosporins'], ['cefpirome', 'cephalosporins'], ['cefquinome', 'cephalosporins'],
-['flomoxef', 'cephalosporins'], ['ceftobiprole', 'cephalosporins'], ['ceftaroline', 'cephalosporins'],
-['ceftolozane', 'cephalosporins'], ['cefazedone', 'cephalosporins'], ['cefroxadine', 'cephalosporins'],
-['ceftezol', 'cephalosporins'], ['cefazoline', 'cephalosporins'], ['loracarbef', 'cephalosporins'],
-['cefotiam', 'cephalosporins'], ['cefaparole', 'cephalosporins'], ['cefmatilen', 'cephalosporins'],
-['cefsumide', 'cephalosporins'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM carbapenem - KS diệt khuẩn.
-['imipenem', 'carbapenems'], ['meropenem', 'carbapenems'], ['ertapenem', 'carbapenems'],
-['doripenem', 'carbapenems'], ['biapenem', 'carbapenems'], ['panipenem', 'carbapenems'],
-['faropenem', 'carbapenems'], ['ritipenem', 'carbapenems'], ['sulopenem', 'carbapenems'],
-['thienamycin', 'carbapenems'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM monobactam - KS diệt khuẩn.
-['aztreonam', 'monobactams'], ['tigemonam', 'monobactams'], ['carumonam', 'monobactams'],
-['nocardicin-a', 'monobactams'],
-
-        // TẤT CẢ CÁC CHẤT CỦA NHÓM beta-lactamase
-['clavulanic-acid', 'beta-lactamase'], ['sulbactam', 'beta-lactamase'], ['tazobactam', 'beta-lactamase'],
-['vaborbactam', 'beta-lactamase'], ['enmetazobactam', 'beta-lactamase'], ['relebactam', 'beta-lactamase'],
-['avibactam', 'beta-lactamase'], ['taniborbactam', 'beta-lactamase'], ['durlobactam', 'beta-lactamase'],
-['nacubactam', 'beta-lactamase'], ['xeruborbactam', 'beta-lactamase'], ['zidebactam', 'beta-lactamase'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM peptide - KS diệt khuẩn.
-['daptomycin', 'peptides'], ['gramicidin', 'peptides'], ['gramicidin-s', 'peptides'],
-['teixobactin', 'peptides'], ['vancomycin', 'peptides'], ['oritavancin', 'peptides'],
-['telavancin', 'peptides'], ['teicoplanin', 'peptides'], ['dalbavancin', 'peptides'],
-['ramoplanin', 'peptides'], ['bleomycin', 'peptides'], ['polymyxin-b', 'peptides'],
-['colistin', 'peptides'], ['bacitracin', 'peptides'], ['tyrothricin', 'peptides'],
-['surfactin', 'peptides'], ['amphomycin', 'peptides'], ['tyrocidine', 'peptides'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM amino - KS diệt khuẩn.
-['netilmicin', 'aminoglycosides'], ['gentamicin', 'aminoglycosides'], ['streptomycin', 'aminoglycosides'],
-['kanamycin', 'aminoglycosides'], ['neomycin', 'aminoglycosides'], ['tobramycin', 'aminoglycosides'],
-['amikacin', 'aminoglycosides'], ['dibekacin', 'aminoglycosides'], ['sisomicin', 'aminoglycosides'],
-['plazomicin', 'aminoglycosides'], ['dihydrostreptomycin', 'aminoglycosides'], ['paromomycin', 'aminoglycosides'],
-['framycetin', 'aminoglycosides'], ['ribostamycin', 'aminoglycosides'], ['arbekacin', 'aminoglycosides'],
-['bekanamycin', 'aminoglycosides'], ['hygromycin-b', 'aminoglycosides'], ['apramycin', 'aminoglycosides'],
-['puromycin', 'aminoglycosides'], ['nourseothricin', 'aminoglycosides'], ['isepamicin', 'aminoglycosides'],
-['verdamicin', 'aminoglycosides'], ['astromicin', 'aminoglycosides'], ['spectinomycin', 'aminoglycosides'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM tetracyclines - KS kìm khuẩn.
-['chlortetracycline', 'tetracyclines'], ['tetracycline', 'tetracyclines'], ['oxytetracycline', 'tetracyclines'],
-['doxycycline', 'tetracyclines'], ['minocycline', 'tetracyclines'], ['lymecycline', 'tetracyclines'],
-['demeclocycline', 'tetracyclines'], ['meclocycline', 'tetracyclines'], ['metacycline', 'tetracyclines'],
-['rolitetracycline', 'tetracyclines'], ['tigecycline', 'tetracyclines'], ['eravacycline', 'tetracyclines'],
-['sarecycline', 'tetracyclines'], ['glycylcycline', 'tetracyclines'], ['clomocycline', 'tetracyclines'],
-['omadacycline', 'tetracyclines'], ['pipacycline', 'tetracyclines'], ['penimepicycline', 'tetracyclines'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM macrolides - KS kìm khuẩn.
-['pikromycin', 'macrolides'], ['erythromycin', 'macrolides'], ['boromycin', 'macrolides'],
-['dirithromycin', 'macrolides'], ['flurithromycin', 'macrolides'], ['miocamycin', 'macrolides'],
-['rokitamycin', 'macrolides'], ['josamycin', 'macrolides'], ['spiramycin', 'macrolides'],
-['tylosin', 'macrolides'], ['clarithromycin', 'macrolides'], ['azithromycin', 'macrolides'],
-['tulathromycin', 'macrolides'], ['tilmicosin', 'macrolides'], ['kitasamycin', 'macrolides'],
-['midecamycin', 'macrolides'], ['oleandomycin', 'macrolides'], ['troleandomycin', 'macrolides'],
-['roxithromycin', 'macrolides'], ['telithromycin', 'macrolides'], ['cethromycin', 'macrolides'],
-['solithromycin', 'macrolides'], ['streptovaricin-a-g', 'macrolides'], ['geldanamycin', 'macrolides'],
-['macbecin', 'macrolides'], ['herbimycin', 'macrolides'], ['fidaxomicin', 'macrolides'],
-['rifamycin-sv', 'macrolides'], ['rifampicin', 'macrolides'], ['rifabutin', 'macrolides'],
-['rifapentine', 'macrolides'], ['rifaximin', 'macrolides'], ['rifalazil', 'macrolides'],
-['tildipirosin', 'macrolides'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM lincosamides - KS kìm khuẩn.
-['lincomycin', 'lincosamides'], ['clindamycin', 'lincosamides'], ['pirlimycin', 'lincosamides'],
-['iboxamycin', 'lincosamides'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM phenicols - KS kìm khuẩn.
-['chloramphenicol', 'phenicols'], ['thiamphenicol', 'phenicols'], ['florfenicol', 'phenicols'],
-['azidamfenicol', 'phenicols'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM quinolones - KS diệt khuẩn.
-['nalidixic-acid', 'quinolones'], ['pipemidic-acid', 'quinolones'], ['oxolinic-acid', 'quinolones'],
-['piromidic-acid', 'quinolones'], ['flumequine', 'quinolones'], ['rosoxacin', 'quinolones'],
-['norfloxacin', 'quinolones'], ['ofloxacin', 'quinolones'], ['ciprofloxacin', 'quinolones'],
-['pefloxacin', 'quinolones'], ['fleroxacin', 'quinolones'], ['lomefloxacin', 'quinolones'],
-['nadifloxacin', 'quinolones'], ['rufloxacin', 'quinolones'], ['enoxacin', 'quinolones'],
-['levofloxacin', 'quinolones'], ['balofloxacin', 'quinolones'], ['grepafloxacin', 'quinolones'],
-['pazufloxacin', 'quinolones'], ['sparfloxacin', 'quinolones'], ['temafloxacin', 'quinolones'],
-['tosufloxacin', 'quinolones'], ['gatifloxacin', 'quinolones'], ['clinafloxacin', 'quinolones'],
-['moxifloxacin', 'quinolones'], ['sitafloxacin', 'quinolones'], ['prulifloxacin', 'quinolones'],
-['besifloxacin', 'quinolones'], ['delafloxacin', 'quinolones'], ['gemifloxacin', 'quinolones'],
-['trovafloxacin', 'quinolones'], ['ozenoxacin', 'quinolones'], ['finafloxacin', 'quinolones'],
-['garenoxacin', 'quinolones'], ['alatrofloxacin', 'quinolones'], ['valcofloxacin', 'quinolones'],
-['gelmofloxacin', 'quinolones'], ['cinoxacin', 'quinolones'], ['nemonoxacin', 'quinolones'],
-['pradofloxacin', 'quinolones'], ['enrofloxacin', 'quinolones'], ['danofloxacin', 'quinolones'],
-['marbofloxacin', 'quinolones'], ['difloxacin', 'quinolones'], ['ibafloxacin', 'quinolones'],
-['orbifloxacin', 'quinolones'], ['sarafloxacin', 'quinolones'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM sulfonamid - KS kìm khuẩn.
-//Lưu ý: Cotrimoxazol-diệt khuẩn: Kết hợp của Sulfonamides ức chế enzyme dihydropteroate synthase (giai đoạn đầu của tổng hợp acid folic), trong khi diaminopyrimidine ức chế enzyme dihydrofolate reductase (giai đoạn sau)
-['sulfamethoxazole', 'sulfonamides'], ['sulfaguanidine', 'sulfonamides'], ['sulfadimidine', 'sulfonamides'],
-['sulfamonomethoxine', 'sulfonamides'], ['sulfadimethoxine', 'sulfonamides'], ['sulfasalazine', 'sulfonamides'],
-['sulfafurazole', 'sulfonamides'], ['sulfamethizole', 'sulfonamides'], ['sulfanilamid', 'sulfonamides'],
-['sulfonamidochrysoidine', 'sulfonamides'], ['sulfacetamid', 'sulfonamides'], ['sulfadiazine', 'sulfonamides'],
-['sulfisomidine', 'sulfonamides'], ['sulfamoxole', 'sulfonamides'], ['sulfanitran', 'sulfonamides'],
-['sulfamethoxypyridazine', 'sulfonamides'], ['sulfametoxydiazine', 'sulfonamides'], ['sulfadoxine', 'sulfonamides'],
-['sulfametopyrazine', 'sulfonamides'], ['mafenid', 'sulfonamides'], ['sulfaclozine', 'sulfonamides'],
-['sulfachloropyridazine', 'sulfonamides'], ['cotrimoxazol', 'sulfonamides'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM oxazolidone - KS kìm khuẩn.
-// tedizolid còn có tên là torezolid
-['cycloserine', 'oxazolidones'], ['linezolid', 'oxazolidones'], ['posizolid', 'oxazolidones'],
-['tedizolid', 'oxazolidones'], ['radezolid', 'oxazolidones'], ['eperezolid', 'oxazolidones'],
-['ranbezolid', 'oxazolidones'], ['sutezolid', 'oxazolidones'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM nitroimidazol - KS diệt khuẩn
-['metronidazole', 'nitroimidazoles'], ['tinidazole', 'nitroimidazoles'], ['ornidazole', 'nitroimidazoles'],
-['secnidazole', 'nitroimidazoles'], ['nimorazole', 'nitroimidazoles'], ['carnidazole', 'nitroimidazoles'],
-['misonidazole', 'nitroimidazoles'], ['dimetridazol', 'nitroimidazoles'], ['ronidazole', 'nitroimidazoles'],
-['ipronidazole', 'nitroimidazoles'], ['benznidazole', 'nitroimidazoles'], ['azomycin', 'nitroimidazoles'],
-['fexinidazole', 'nitroimidazoles'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM nitrofuran (kìm khuẩn ở nồng độ thấp, diệt khuẩn ở nồng độ cao)
-['difurazone', 'nitrofurans'], ['furazolidone', 'nitrofurans'], ['nifuroxazide', 'nitrofurans'],
-['nifurquinazol', 'nitrofurans'], ['nifurtoinol', 'nitrofurans'], ['nifurzide', 'nitrofurans'],
-['nitrofurazone', 'nitrofurans'], ['nitrofurantoin', 'nitrofurans'], ['furaltadone', 'nitrofurans'],
-['furazidine', 'nitrofurans'], ['furylfuramide', 'nitrofurans'], ['nifuratel', 'nitrofurans'],
-['nifurtimox', 'nitrofurans'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM phosphonic - KS diệt khuẩn.
-['fosfomycin', 'phosphonics'], ['fosmidomycin', 'phosphonics'], ['alafosfalin', 'phosphonics'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM ionophore - KS diệt khuẩn.
-['salinomycin', 'ionophores'], ['monensin', 'ionophores'], ['lasalocid', 'ionophores'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM pleuromutilin - KS kìm khuẩn.
-['lefamulin', 'pleuromutilins'], ['retapamulin', 'pleuromutilins'], ['tiamulin', 'pleuromutilins'],
-['valnemulin', 'pleuromutilins'], ['azamulin', 'pleuromutilins'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM Streptogramin
-// Gồm 2 thành phần: Streptogramin A và Streptogramin B, đứng riêng thì kìm khuẩn, khi kết hợp lại thì diệt khuẩn
-['pristinamycin', 'streptogramins'], ['quinupristin', 'streptogramins'], ['dalfopristin', 'streptogramins'],
-['virginiamycin', 'streptogramins'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM aminocoumarin - KS kìm khuẩn.
-['novobiocin', 'aminocoumarins'], ['coumermycin-a1', 'aminocoumarins'], ['clorobiocin', 'aminocoumarins'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM trị lao, trị phong
-['dapsone', 'lao-phong'], ['promin', 'lao-phong'], ['capreomycin', 'lao-phong'],
-['ethambutol', 'lao-phong'], ['ethionamide', 'lao-phong'], ['clofazimine', 'lao-phong'],
-['isoniazid', 'lao-phong'],
-
-        // CÁC KHOÁNG CHẤT PHỔ BIẾN
-['calcium', 'minerals'], ['magnesium', 'minerals'], ['iron', 'minerals'],
-['zinc', 'minerals'],
-
-        // TẤT CẢ KHÁNG SINH CỦA NHÓM diamino - KS kìm khuẩn.
-['trimethoprim', 'diaminopyrimidine'], ['pyrimethamine', 'diaminopyrimidine'], ['iclaprim', 'diaminopyrimidine'],
-
-        // TẤT CẢ KHÁNG SINH MỚI RA ĐỜI HOẶC KHÔNG CÓ NHÓM CỤ THỂ
-['fusidic-acid', 'other/new'], ['anthracimycin', 'other/new'], ['anthramycin', 'other/new'],
-['lugdunin', 'other/new'], ['nitazoxanide', 'other/new'], ['halicin', 'other/new'],
-['mupirocin', 'other/new'], ['platensimycin', 'other/new'], ['malacidin', 'other/new'],
-['lariocidin', 'other/new'], ['zosurabalpin', 'other/new'], ['cefepime-taniborbactam', 'other/new'],
-['darobactin', 'other/new'], ['orlynvah', 'other/new'], ['cefepime-enmetazobactam', 'other/new'],
-['cresomycin', 'other/new']
-
-]);
+export const antibioticGroups = {
+    'penicillins': [
+        'penicillin-g', 'propicillin', 'penicillin-v', 'penicillin-g-procaine',
+        'benzathine-penicillin-g', 'benethamine-penicillin', 'penicillin-m', 'oxacillin',
+        'cloxacillin', 'dicloxacillin', 'methicillin', 'nafcillin',
+        'flucloxacillin', 'ampicillin', 'amoxycillin', 'pivampicillin',
+        'hetacillin', 'bacampicillin', 'metampicillin', 'talampicillin',
+        'epicillin', 'sulbenicillin', 'temocillin', 'carbenicilin',
+        'ticarcilin', 'carindacillin', 'mecillinam', 'amdinocillin',
+        'mezlocillin', 'piperacillin', 'azlocillin', 'pivmecillinam'
+    ],
+    'cephalosporins': [
+        'cephalexin', 'cefalotin', 'cefazolin', 'cefradine', 'cefadroxil', 'cefaloglycin',
+        'cefalonium', 'cephaloridin', 'cefatrizine', 'cefazaflur', 'cefacetrile',
+        'cefapirin', 'cefaclor', 'cefoxitine', 'cefamandole', 'cefonicid', 'cefuroxime',
+        'cefprozil', 'cefuzonam', 'ceforanide', 'cefotetan', 'cefmetazole',
+        'cefbuperazone', 'cefminox', 'ceftizoxime', 'ceftiofur', 'cefotaxime',
+        'ceftriaxone', 'cefoperazone', 'cefpiramide', 'cefcapene', 'cefdaloxime',
+        'cefdinir', 'cefditoren', 'cefetamet', 'cefixime', 'cefmenoxime', 'cefodizime',
+        'cefovecin', 'cefpimizole', 'cefpodoxime', 'cefteram', 'ceftibuten',
+        'ceftiolene', 'ceftazidime', 'latamoxef', 'cefepime', 'cefclidin',
+        'cefiderocol', 'cefluprenam', 'cefoselis', 'cefozopran', 'cefpirome',
+        'cefquinome', 'flomoxef', 'ceftobiprole', 'ceftaroline', 'ceftolozane',
+        'cefazedone', 'cefroxadine', 'ceftezol', 'cefazoline', 'loracarbef',
+        'cefotiam', 'cefaparole', 'cefmatilen', 'cefsumide'
+    ],
+    'carbapenems': [
+        'imipenem', 'meropenem', 'ertapenem', 'doripenem', 'biapenem',
+        'panipenem', 'faropenem', 'ritipenem', 'sulopenem', 'thienamycin'
+    ],
+    'monobactams': [
+        'aztreonam', 'tigemonam', 'carumonam', 'nocardicin-a'
+    ],
+    'beta-lactamase': [
+        'clavulanic-acid', 'sulbactam', 'tazobactam', 'vaborbactam',
+        'enmetazobactam', 'relebactam', 'avibactam', 'taniborbactam',
+        'durlobactam', 'nacubactam', 'xeruborbactam', 'zidebactam'
+    ],
+    'peptides': [
+        'daptomycin', 'gramicidin', 'gramicidin-s', 'teixobactin',
+        'vancomycin', 'oritavancin', 'telavancin', 'teicoplanin',
+        'dalbavancin', 'ramoplanin', 'bleomycin', 'polymyxin-b',
+        'colistin', 'bacitracin', 'tyrothricin', 'surfactin',
+        'amphomycin', 'tyrocidine'
+    ],
+    'aminoglycosides': [
+        'netilmicin', 'gentamicin', 'streptomycin', 'kanamycin',
+        'neomycin', 'tobramycin', 'amikacin', 'dibekacin', 'sisomicin',
+        'plazomicin', 'dihydrostreptomycin', 'paromomycin', 'framycetin',
+        'ribostamycin', 'arbekacin', 'bekanamycin', 'hygromycin-b',
+        'apramycin', 'puromycin', 'nourseothricin', 'isepamicin',
+        'verdamicin', 'astromicin', 'spectinomycin'
+    ],
+    'tetracyclines': [
+        'chlortetracycline', 'tetracycline', 'oxytetracycline', 'doxycycline',
+        'minocycline', 'lymecycline', 'demeclocycline', 'meclocycline',
+        'metacycline', 'rolitetracycline', 'tigecycline', 'eravacycline',
+        'sarecycline', 'glycylcycline', 'clomocycline', 'omadacycline',
+        'pipacycline', 'penimepicycline'
+    ],
+    'macrolides': [
+        'pikromycin', 'erythromycin', 'boromycin', 'dirithromycin',
+        'flurithromycin', 'miocamycin', 'rokitamycin', 'josamycin',
+        'spiramycin', 'tylosin', 'clarithromycin', 'azithromycin',
+        'tulathromycin', 'tilmicosin', 'kitasamycin', 'midecamycin',
+        'oleandomycin', 'troleandomycin', 'roxithromycin',
+        'telithromycin', 'cethromycin', 'solithromycin',
+        'streptovaricin-a-g', 'geldanamycin', 'macbecin',
+        'herbimycin', 'fidaxomicin', 'rifamycin-sv', 'rifampicin',
+        'rifabutin', 'rifapentine', 'rifaximin', 'rifalazil',
+        'tildipirosin'
+    ],
+    'lincosamides': [
+        'lincomycin', 'clindamycin', 'pirlimycin', 'iboxamycin'
+    ],
+    'phenicols': [
+        'chloramphenicol', 'thiamphenicol', 'florfenicol', 'azidamfenicol'
+    ],
+    'quinolones': [
+        'nalidixic-acid', 'pipemidic-acid', 'oxolinic-acid', 'piromidic-acid',
+        'flumequine', 'rosoxacin', 'norfloxacin', 'ofloxacin',
+        'ciprofloxacin', 'pefloxacin', 'fleroxacin', 'lomefloxacin',
+        'nadifloxacin', 'rufloxacin', 'enoxacin', 'levofloxacin',
+        'balofloxacin', 'grepafloxacin', 'pazufloxacin',
+        'sparfloxacin', 'temafloxacin', 'tosufloxacin',
+        'gatifloxacin', 'clinafloxacin', 'moxifloxacin',
+        'sitafloxacin', 'prulifloxacin', 'besifloxacin',
+        'delafloxacin', 'gemifloxacin', 'trovafloxacin',
+        'ozenoxacin', 'finafloxacin', 'garenoxacin',
+        'alatrofloxacin', 'valcofloxacin', 'gelmofloxacin',
+        'cinoxacin', 'nemonoxacin', 'pradofloxacin',
+        'enrofloxacin', 'danofloxacin', 'marbofloxacin',
+        'difloxacin', 'ibafloxacin', 'orbifloxacin',
+        'sarafloxacin'
+    ],
+    'sulfonamides': [
+        'sulfamethoxazole', 'sulfaguanidine', 'sulfadimidine',
+        'sulfamonomethoxine', 'sulfadimethoxine', 'sulfasalazine',
+        'sulfafurazole', 'sulfamethizole', 'sulfanilamid',
+        'sulfonamidochrysoidine', 'sulfacetamid', 'sulfadiazine',
+        'sulfisomidine', 'sulfamoxole', 'sulfanitran',
+        'sulfamethoxypyridazine', 'sulfametoxydiazine', 'sulfadoxine',
+        'sulfametopyrazine', 'mafenid', 'sulfaclozine',
+        'sulfachloropyridazine', 'cotrimoxazol'
+    ],
+    'oxazolidones': [
+        'cycloserine', 'linezolid', 'posizolid', 'tedizolid',
+        'torezolid', // Thêm tên thay thế cho dễ tra cứu
+        'radezolid', 'eperezolid', 'ranbezolid', 'sutezolid'
+    ],
+    'nitroimidazoles': [
+        'metronidazole', 'tinidazole', 'ornidazole', 'secnidazole',
+        'nimorazole', 'carnidazole', 'misonidazole', 'dimetridazol',
+        'ronidazole', 'ipronidazole', 'benznidazole', 'azomycin',
+        'fexinidazole'
+    ],
+    'nitrofurans': [
+        'difurazone', 'furazolidone', 'nifuroxazide',
+        'nifurquinazol', 'nifurtoinol', 'nifurzide',
+        'nitrofurazone', 'nitrofurantoin', 'furaltadone',
+        'furazidine', 'furylfuramide', 'nifuratel',
+        'nifurtimox'
+    ],
+    'phosphonics': [
+        'fosfomycin', 'fosmidomycin', 'alafosfalin'
+    ],
+    'ionophores': [
+        'salinomycin', 'monensin', 'lasalocid'
+    ],
+    'pleuromutilins': [
+        'lefamulin', 'retapamulin', 'tiamulin', 'valnemulin',
+        'azamulin'
+    ],
+    'streptogramins': [
+        'pristinamycin', 'quinupristin', 'dalfopristin',
+        'virginiamycin'
+    ],
+    'aminocoumarins': [
+        'novobiocin', 'coumermycin-a1', 'clorobiocin'
+    ],
+    'lao-phong': [
+        'dapsone', 'promin', 'capreomycin', 'ethambutol',
+        'ethionamide', 'clofazimine', 'isoniazid'
+    ],
+    'minerals': [
+        'calcium', 'magnesium', 'iron', 'zinc'
+    ],
+    'diaminopyrimidine': [
+        'trimethoprim', 'pyrimethamine', 'iclaprim'
+    ],
+    'other/new': [
+        'fusidic-acid', 'anthracimycin', 'anthramycin',
+        'lugdunin', 'nitazoxanide', 'halicin',
+        'mupirocin', 'platensimycin', 'malacidin',
+        'lariocidin', 'zosurabalpin', 'cefepime-taniborbactam',
+        'darobactin', 'orlynvah', 'cefepime-enmetazobactam',
+        'cresomycin'
+    ]
+};
 
 // Ánh xạ từng kháng sinh về nhóm của nó (để tra cứu nhanh)
 export const antibioticToGroupMap = new Map();
