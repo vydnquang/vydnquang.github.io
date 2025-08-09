@@ -189,6 +189,7 @@ export function getAntibioticGroup(antibioticName) {
 export const combinationRules = {
     // Các tương tác giữa các thành viên beta-lactam với nhau (ức chế quá trình tổng hợp thành tế bào vi khuẩn bằng cách liên kết với các protein gắn penicillin (PBP))
     'penicillins-cephalosporins': 'competition', // Cạnh tranh vị trí gắn lên PBP, có thể gây dị ứng chéo nhưng không hẳn là đối kháng. Cẩn trọng
+    'cephalosporins-penicillins': 'competition',
     'penicillins-carbapenems': 'competition', // Cạnh tranh vị trí gắn lên PBP (Carbapenems có phổ kháng khuẩn rộng nhất trong các beta-lactam, gram dương, gram âm và vi khuẩn kỵ khí)
     'penicillins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
     'cephalosporins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
@@ -530,3 +531,4 @@ export function getCombinationRule(groupA, groupB) {
     const key = `${sortedGroups[0]}-${sortedGroups[1]}`;
     return combinationRules[key] || 'neutral';
 }
+
