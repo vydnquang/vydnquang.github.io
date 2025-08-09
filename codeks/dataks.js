@@ -3,14 +3,14 @@
 // Danh sách các nhóm kháng sinh và các kháng sinh thuộc nhóm đó
 export const antibioticGroups = {
     'penicillins': [
-        'penicillin g', 'propicillin', 'penicillin v', 'penicillin g procaine',
-        'benzathine penicillin g', 'benethamine penicillin', 'penicillin m', 'oxacillin',
+        'penicillin-g', 'propicillin', 'penicillin-v', 'penicillin-g-procaine',
+        'benzathine-penicillin-g', 'benethamine-penicillin', 'penicillin-m', 'oxacillin',
         'cloxacillin', 'dicloxacillin', 'methicillin', 'nafcillin',
         'flucloxacillin', 'ampicillin', 'amoxycillin', 'pivampicillin',
         'hetacillin', 'bacampicillin', 'metampicillin', 'talampicillin',
         'epicillin', 'sulbenicillin', 'temocillin', 'carbenicilin',
         'ticarcilin', 'carindacillin', 'mecillinam (amdinocillin)', 'mezlocillin',
-        'piperacillin', 'azlocillin', 'pivmecillinam', 'penicillin'
+        'piperacillin', 'azlocillin', 'pivmecillinam'
         // TẤT CẢ KHÁNG SINH CỦA NHÓM penicillin - KS diệt khuẩn.
     ],
     'cephalosporins': [
@@ -207,6 +207,13 @@ export function getAntibioticGroup(antibioticName) {
 // Quy tắc tương tác giữa các NHÓM kháng sinh
 // Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁC từ các nguồn y khoa.
 export const combinationRules = {
+    // Các tương tác giữa các thành viên beta-lactam với nhau (ức chế quá trình tổng hợp thành tế bào vi khuẩn bằng cách liên kết với các protein gắn penicillin (PBP))
+    'penicillins-cephalosporins': 'competition', // Cạnh tranh vị trí gắn lên PBP, có thể gây dị ứng chéo nhưng không hẳn là đối kháng. Cẩn trọng
+    'penicillins-carbapenems': 'competition', // Cạnh tranh vị trí gắn lên PBP (Carbapenems có phổ kháng khuẩn rộng nhất trong các beta-lactam, gram dương, gram âm và vi khuẩn kỵ khí)
+    'penicillins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'cephalosporins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'cephalosporins-carbapenems': 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'monobactams-carbapenems': 'caution', // Cẩn thận, có thể gây dị ứng chéo nghiêm trọng, hai loại này vẫn là competition, cạnh tranh vị trí gắn lên PBP
 
     // Các quy tắc của nhóm penicillins
     'penicillins-aminoglycosides': 'synergistic', // Hiệp lực hay Hiệp đồng đều ok, trong kết quả sẽ hiện ra chữ HIỆP ĐỒNG
@@ -521,14 +528,6 @@ export const combinationRules = {
     'aminocoumarins-quinolones': 'synergistic', // Hiệp đồng mạnh mẽ, do quinolones ức chế enzyme DNA gyrase, nhưng ở 2 vị trí khác nhau
     'aminocoumarins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
     'aminocoumarins-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
-
-    // Các tương tác giữa các thành viên beta-lactam với nhau (ức chế quá trình tổng hợp thành tế bào vi khuẩn bằng cách liên kết với các protein gắn penicillin (PBP))
-    'penicillins-cephalosporins': 'competition', // Cạnh tranh vị trí gắn lên PBP, có thể gây dị ứng chéo nhưng không hẳn là đối kháng. Cẩn trọng
-    'penicillins-carbapenems': 'competition', // Cạnh tranh vị trí gắn lên PBP (Carbapenems có phổ kháng khuẩn rộng nhất trong các beta-lactam, gram dương, gram âm và vi khuẩn kỵ khí)
-    'penicillins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
-    'cephalosporins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
-    'cephalosporins-carbapenems': 'competition', // Cạnh tranh vị trí gắn lên PBP
-    'monobactams-carbapenems': 'caution', // Cẩn thận, có thể gây dị ứng chéo nghiêm trọng, hai loại này vẫn là //competition//, cạnh tranh vị trí gắn lên PBP
 
     // Các quy tắc của các nhóm chưa mà chưa có tài liệu nói rõ là có hay không
     'phosphonics-aminoglycosides': 'synergistic',
