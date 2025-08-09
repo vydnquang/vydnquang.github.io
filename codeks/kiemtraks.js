@@ -184,10 +184,10 @@ function checkCombination() {
     }
     const isAChloramphenicol = antibioticA === 'chloramphenicol';
     const isBChloramphenicol = antibioticB === 'chloramphenicol';
-    const isAPenicillinGroup = antibioticToGroupMap.get(antibioticA) === 'penicillins';
-    const isBPenicillinGroup = antibioticToGroupMap.get(antibioticB) === 'penicillins';
+    const isAPenicillinsGroup = antibioticToGroupMap.get(antibioticA) === 'penicillins';
+    const isBPenicillinsGroup = antibioticToGroupMap.get(antibioticB) === 'penicillins';
 
-    if ((isAChloramphenicol && isBPenicillinGroup) || (isBChloramphenicol && isAPenicillinGroup)) {
+    if ((isAChloramphenicol && isBPenicillinsGroup) || (isBChloramphenicol && isAPenicillinsGroup)) {
         resultText = 'ĐỐI KHÁNG (Chloramphenicol có thể cản trở tác dụng diệt khuẩn của Penicillins. KHÔNG NÊN PHỐI HỢP.)';
         resultClass = 'antagonistic';
         resultBox.textContent = resultText;
@@ -195,25 +195,34 @@ function checkCombination() {
         return;
     }
 
-// LOGIC MỚI CHO BETA-LACTAMASE
+// LOGIC MỚI CHO BETA-LACTAMASE (Cải thiện logic và xử lý trường hợp hiệp đồng)
 
-    const isABetaLactamase = groupA === 'beta-lactamase';
-    const isBBetaLactamase = groupB === 'beta-lactamase';
-    const isAPenicillins = groupA === 'penicillins';
-    const isBPenicillins = groupB === 'penicillins';
-    const isACephalosporins = groupA === 'cephalosporins';
-    const isBCephalosporins = groupB === 'cephalosporins';
-    
-    // Kiểm tra trường hợp phối hợp beta-lactamase với một nhóm khác (không phải penicillins, cephalosporins hoặc chính nó)
-    if ((isABetaLactamase && !isBBetaLactamase && !isBPenicillins && !isBCephalosporins) || 
-        (isBBetaLactamase && !isABetaLactamase && !isAPenicillins && !isACephalosporins)) {
-        
-        let otherGroup = isABetaLactamase ? groupB : groupA;
-        resultText = `Không có dữ liệu về việc phối hợp giữa nhóm beta-lactamase với nhóm ${otherGroup}.`;
-        resultBox.textContent = resultText;
-        resultBox.classList.add('unknown');
-        return;
-    }
+    const isABetaLactamase = groupA === 'beta-lactamase';
+    const isBBetaLactamase = groupB === 'beta-lactamase';
+    const isAPenicillins = groupA === 'penicillins';
+    const isBPenicillins = groupB === 'penicillins';
+    const isACephalosporins = groupA === 'cephalosporins';
+    const isBCephalosporins = groupB === 'cephalosporins';
+    
+    // Trường hợp phối hợp hiệp đồng giữa Beta-lactamase và các nhóm beta-lactam khác
+    if ((isABetaLactamase && (isBPenicillins || isBCephalosporins)) || 
+        (isBBetaLactamase && (isAPenicillins || isACephalosporins))) {
+        resultText = `HIỆP ĐỒNG (Nhóm beta-lactamase ức chế men kháng thuốc của vi khuẩn, giúp kháng sinh nhóm beta-lactam kia phát huy tác dụng)`;
+        resultClass = 'synergistic-positive';
+        resultBox.textContent = resultText;
+        resultBox.classList.add(resultClass);
+        return;
+    }
+
+    // Trường hợp beta-lactamase phối hợp với một nhóm khác (không phải penicillins, cephalosporins hoặc chính nó)
+    if ((isABetaLactamase && !isBBetaLactamase) || (isBBetaLactamase && !isABetaLactamase)) {
+        let otherGroup = isABetaLactamase ? groupB : groupA;
+        resultText = `Không có dữ liệu về việc phối hợp giữa nhóm beta-lactamase với nhóm ${otherGroup}.`;
+        resultBox.textContent = resultText;
+        resultBox.classList.add('unknown');
+        return;
+    }
+
 
 // 2 BỘ QUY TẮC PHỐI HỢP CỦA NHÓM OTHER/NEW
 
@@ -260,19 +269,19 @@ function checkCombination() {
             break;
         case 'competition':
             resultText = `CẠNH TRANH (Nhóm ${groupA} và nhóm ${groupB} có cùng cơ chế tác dụng, dẫn đến cạnh tranh, có thể làm giảm hiệu quả)`;
-            resultClass = 'caution';
+            resultClass = 'competition';
             break;
         case 'caution':
             resultText = `THẬN TRỌNG (Cần cân nhắc khi kết hợp nhóm ${groupA} và nhóm ${groupB})`;
             resultClass = 'caution';
             break;
         case 'neutral':
-            errorMessage.textContent = `Việc phối hợp giữa nhóm kháng sinh ${groupA} và nhóm ${groupB} đôi khi không theo quy tắc chung, nhưng có tài liệu nói là được phép cho một số trường hợp điều trị đặc biệt.`;
+            errorMessage.textContent = `Việc phối hợp giữa nhóm kháng sinh ${groupA} và nhóm ${groupB} đôi khi không theo quy tắc chung, nhưng có tài liệu nói là được phép cho một số trường hợp điều trị đặc biệt.`;
             resultText = 'TRUNG TÍNH (Có thể được hoặc có thể không, phụ thuộc từng cặp kháng sinh cụ thể)';
             resultClass = 'neutral';
             break;
         default:
-            errorMessage.textContent = 'Quy tắc chưa được định nghĩa trong cơ sở dữ liệu';
+            errorMessage.textContent = 'Quy tắc chưa được định nghĩa trong cơ sở dữ liệu';
             resultText = 'KHÔNG XÁC ĐỊNH';
             resultClass = 'unknown';
             break;
