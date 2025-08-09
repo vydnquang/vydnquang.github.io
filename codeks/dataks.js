@@ -1,8 +1,9 @@
 // TOÀN BỘ CODE CỦA FILE codeks/dataks.js
 
-// Danh sách các nhóm kháng sinh và các kháng sinh thuộc nhóm đó
+// Danh sách nhóm kháng sinh và các kháng sinh thuộc nhóm đó
 export const antibioticToGroupMap = new Map([ // hàm lấy tên nhóm của 1 kháng sinh trong nhóm //
         // TẤT CẢ KHÁNG SINH CỦA NHÓM penicillins - KS diệt khuẩn.
+// mecillinam còn có tên là amdinocillin
 ['penicillin-g', 'penicillins'], ['propicillin', 'penicillins'], ['penicillin-v', 'penicillins'],
 ['penicillin-g-procaine', 'penicillins'], ['benzathine-penicillin-g', 'penicillins'], ['benethamine-penicillin', 'penicillins'],
 ['penicillin-m', 'penicillins'], ['oxacillin', 'penicillins'], ['cloxacillin', 'penicillins'],
@@ -11,7 +12,7 @@ export const antibioticToGroupMap = new Map([ // hàm lấy tên nhóm của 1 k
 ['pivampicillin', 'penicillins'], ['hetacillin', 'penicillins'], ['bacampicillin', 'penicillins'],
 ['metampicillin', 'penicillins'], ['talampicillin', 'penicillins'], ['epicillin', 'penicillins'],
 ['sulbenicillin', 'penicillins'], ['temocillin', 'penicillins'], ['carbenicilin', 'penicillins'],
-['ticarcilin', 'penicillins'], ['carindacillin', 'penicillins'], ['mecillinam (amdinocillin)', 'penicillins'],
+['ticarcilin', 'penicillins'], ['carindacillin', 'penicillins'], ['mecillinam', 'penicillins'],
 ['mezlocillin', 'penicillins'], ['piperacillin', 'penicillins'], ['azlocillin', 'penicillins'],
 ['pivmecillinam', 'penicillins'],
 
@@ -90,9 +91,9 @@ export const antibioticToGroupMap = new Map([ // hàm lấy tên nhóm của 1 k
 ['tulathromycin', 'macrolides'], ['tilmicosin', 'macrolides'], ['kitasamycin', 'macrolides'],
 ['midecamycin', 'macrolides'], ['oleandomycin', 'macrolides'], ['troleandomycin', 'macrolides'],
 ['roxithromycin', 'macrolides'], ['telithromycin', 'macrolides'], ['cethromycin', 'macrolides'],
-['solithromycin', 'macrolides'], ['streptovaricin a-g', 'macrolides'], ['geldanamycin', 'macrolides'],
+['solithromycin', 'macrolides'], ['streptovaricin-a-g', 'macrolides'], ['geldanamycin', 'macrolides'],
 ['macbecin', 'macrolides'], ['herbimycin', 'macrolides'], ['fidaxomicin', 'macrolides'],
-['rifamycin sv', 'macrolides'], ['rifampicin', 'macrolides'], ['rifabutin', 'macrolides'],
+['rifamycin-sv', 'macrolides'], ['rifampicin', 'macrolides'], ['rifabutin', 'macrolides'],
 ['rifapentine', 'macrolides'], ['rifaximin', 'macrolides'], ['rifalazil', 'macrolides'],
 ['tildipirosin', 'macrolides'],
 
@@ -194,25 +195,16 @@ export const antibioticToGroupMap = new Map([ // hàm lấy tên nhóm của 1 k
 ]);
 
 // Ánh xạ từng kháng sinh về nhóm của nó (để tra cứu nhanh)
-// Sử dụng Map thay vì Object cho hiệu suất tốt hơn
 export const antibioticToGroupMap = new Map();
 for (const group in antibioticGroups) {
- antibioticGroups[group].forEach(antibiotic => {
-    antibioticToGroupMap.set(antibiotic.toLowerCase(), group);
-    // Xử lý các trường hợp trong ngoặc đơn
-    const match = antibiotic.match(/\((.*?)\)/);
-    if (match && match[1]) {
-        antibioticToGroupMap.set(match[1].toLowerCase(), group);
+    if (Object.prototype.hasOwnProperty.call(antibioticGroups, group)) {
+        antibioticGroups[group].forEach(antibiotic => {
+            antibioticToGroupMap.set(antibiotic.toLowerCase(), group);
+        });
     }
-});
 }
 
 // Hàm lấy tên nhóm của một kháng sinh
-
-// export function getAntibioticGroup(antibioticName) {
-//    return antibioticToGroupMap.get(antibioticName.toLowerCase()) || null;
-// }
-
 export function getAntibioticGroup(antibioticName) {
     if (!antibioticName) return null;
     return antibioticToGroupMap.get(antibioticName.trim().toLowerCase());
@@ -555,8 +547,8 @@ export const combinationRules = {
     'ionophores-other/new': 'neutral',
     'pleuromutilins-macrolides': 'caution',
     'streptogramins-macrolides': 'caution',
-    'aminocoumarins-rifamycins': 'synergistic',
-    'anti-tuberculosis_anti-leprosy-quinolones': 'additive',
+    'aminocoumarins-rifamycins': 'synergistic', // Cộng gộp hoặc hiệp đồng, hiện tại không có nhóm rifamycins ở đầu vào
+    'lao-phong-quinolones': 'additive',
     'other/new-other/new': 'neutral',
 
     // CÁC TƯƠNG TÁC ĐẶC BIỆT
@@ -567,11 +559,7 @@ export const combinationRules = {
 // Hàm giúp lấy quy tắc tương tác giữa hai nhóm
 export function getCombinationRule(groupA, groupB) {
     if (!groupA || !groupB) return 'unknown';
-
-    // Đảm bảo thứ tự nhóm để tra cứu nhất quán (VD: A-B và B-A đều tìm được)
     const sortedGroups = [groupA, groupB].sort();
     const key = `${sortedGroups[0]}-${sortedGroups[1]}`;
-
-    // Trả về quy tắc nếu tìm thấy, nếu không mặc định là 'neutral'
     return combinationRules[key] || 'neutral';
 }
