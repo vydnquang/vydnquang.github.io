@@ -89,7 +89,7 @@ export const antibioticGroups = {
         // TẤT CẢ KHÁNG SINH CỦA NHÓM phenicols - KS kìm khuẩn.
     ],
     'quinolones': [
-        'nalidixic acid', 'axit pipemidic', 'oxolinic acid', 'piromidic acid',
+        'nalidixic acid', 'pipemidic acid', 'oxolinic acid', 'piromidic acid',
         'flumequine', 'rosoxacin', 'norfloxacin', 'ofloxacin',
         'ciprofloxacin', 'pefloxacin', 'fleroxacin', 'lomefloxacin',
         'nadifloxacin', 'rufloxacin', 'enoxacin', 'levofloxacin',
@@ -197,6 +197,13 @@ export function getAntibioticGroup(antibioticName) {
     return antibioticToGroupMap.get(antibioticName.toLowerCase()) || null;
 }
 
+// GIẢI THÍCH MỘT SỐ TỪ CHUYÊN NGÀNH
+// Hiệp đồng (Synergistic): Hai loại kháng sinh hoạt động tốt hơn khi kết hợp so với khi dùng riêng lẻ (1+1=3)
+// Đối kháng (Antagonistic): Hai loại kháng sinh làm giảm hiệu quả của nhau khi kết hợp.
+// Cộng gộp (Additive): Hai loại kháng sinh có tác dụng cộng lại khi kết hợp. Ví dụ, Beta-lactamase và Penicillins.
+// Thận trọng (Caution): Cần cân nhắc kỹ khi kết hợp vì có thể có tác dụng phụ nghiêm trọng hoặc tương tác không mong muốn.
+// Cạnh tranh (Competition): Hai loại kháng sinh có cơ chế tác dụng tương tự, thường cùng gắn vào một vị trí (ví dụ, PBP trên thành tế bào vi khuẩn), dẫn đến cạnh tranh và có thể làm giảm hiệu quả của nhau.
+
 // Quy tắc tương tác giữa các NHÓM kháng sinh
 // Đây là phần CỰC KỲ QUAN TRỌNG. Bạn cần điền DỮ LIỆU CHÍNH XÁC từ các nguồn y khoa.
 export const combinationRules = {
@@ -266,17 +273,26 @@ export const combinationRules = {
     'peptides-macrolides': 'synergistic', // Hiệp lực
     'peptides-lincosamides': 'synergistic', // Hiệp lực
     'peptides-pleuromutilins': 'synergistic', // Hiệp lực
+// Cần xem xét lại 2 trường hợp dưới (cùng là nhóm diệt khuẩn)
+    'peptides-aminoglycosides': 'additive', // Hiệp đồng mạnh mẽ (Có tài liệu ghi 'caution', hết sức thận trọng)
+    'peptides-quinolones': 'additive', // Hiệp đồng hoặc cộng gộp (Đôi khi là 'caution' vì độc tính)
 
     // Các quy tắc của nhóm quinolon
     'quinolones-tetracyclines': 'synergistic', // Hiệp lực
     'quinolones-phenicols': 'synergistic', // Hiệp lực
-    'quinolones-macrolides': 'synergistic', // Hiệp lực
+    'quinolones-macrolides': 'synergistic', // Hiệp lực, có lúc lại ghi 'additive'
     'quinolones-lincosamides': 'synergistic', // Hiệp lực
     'quinolones-pleuromutilins': 'synergistic', // Hiệp lực
+// Cầm kiểm tra 2 trường hợp sau
+    'quinolones-sulfonamides': 'additive',
+    'quinolones-aminoglycosides': 'synergistic', // Cùng là diệt khuẩn, tùy vào nồng độ có khi là cộng gộp, có khi hiệp đồng (Có lúc thận trọng 'caution')
 
     // Các quy tắc của nhóm tetracyclines
     'tetracyclines-sulfonamides': 'synergistic', // Hiệp lực
     'tetracyclines-diaminopyrimidine': 'synergistic', // Hiệp lực
+// Cần xem xét 2 trường hợp dưới
+    'tetracyclines-phenicols': 'caution', // Cộng gộp vì tetra gắn 30S, pheni gắn 50S ('caution' không khuyến cáo vì tác dụng phụ nghiêm trọng)
+    'tetracyclines-macrolides': 'caution', // Cộng gộp (Không khuyến cáo vì tác dụng phụ nghiêm trọng)
 
     // Các quy tắc của nhóm phenicols
     'phenicols-sulfonamides': 'synergistic', // Hiệp lực
@@ -285,10 +301,16 @@ export const combinationRules = {
     // Các quy tắc của nhóm macrolides
     'macrolides-sulfonamides': 'synergistic', // Hiệp lực
     'macrolides-diaminopyrimidine': 'synergistic', // Hiệp lực
+// Cần kiểm tra 2 trường hợp dưới
+    'macrolides-lincosamides': 'competition', // Cạnh tranh 50S
+    'macrolides-phenicols': 'competition', // Cạnh tranh 50S
 
     // Các quy tắc của nhóm lincosamides
     'lincosamides-sulfonamides': 'synergistic', // Hiệp lực
     'lincosamides-diaminopyrimidine': 'synergistic', // Hiệp lực
+// Cần xem xét 2 trường hợp dưới
+    'lincosamides-tetracyclines': 'caution', // Cộng gộp (Không khuyến cáo vì tăng tác dụng phụ)
+    'lincosamides-phenicols': 'competition', // Cạnh tranh 50S, không khuyến cáo, cân nhắc
 
     // Các quy tắc của nhóm pleuromutilins
     'pleuromutilins-sulfonamides': 'synergistic', // Hiệp lực
@@ -385,7 +407,7 @@ export const combinationRules = {
     'nitrofurans-streptogramins': 'synergistic', // Hiệp đồng hoặc cộng gộp
     'nitrofurans-aminocoumarins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
     // 17.3 Với các kháng sinh khác
-    'nitrofurans-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase
+    'nitrofurans-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, có tài liệu ghi 'additive'
     'nitrofurans-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
     'nitrofurans-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
     'nitrofurans-ionophores': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
@@ -448,11 +470,11 @@ export const combinationRules = {
     'pleuromutilins-peptides': 'synergistic', // Cộng gộp
     // 20.2 Với các kháng sinh ức chế tổng hợp protein khác
     'pleuromutilins-aminoglycosides': 'synergistic', // Cộng gộp hoặc Hiệp đồng
-    'pleuromutilins-tetracyclines': 'synergistic', // Cộng gộp-Additive, vì tetracyclines gắn vào tiểu đơn vị 30S
-    'pleuromutilins-macrolides': 'antagonistic', // Đối kháng, do cạnh tranh vị trí gắn
-    'pleuromutilins-lincosamides': 'antagonistic', // Đối kháng
-    'pleuromutilins-phenicols': 'synergistic', // Cộng gộp hoặc Hiệp đồng
-    'pleuromutilins-streptogramins': 'antagonistic', // Đối kháng
+    'pleuromutilins-tetracyclines': 'caution', // Cộng gộp-Additive, vì tetracyclines gắn vào tiểu đơn vị 30S, cũng có trường hợp gây tác dụng phụ
+    'pleuromutilins-macrolides': 'competition', // Cạnh tranh vị trí gắn vào tiểu đơn vị 50S của ribosome
+    'pleuromutilins-lincosamides': 'competition', // Cạnh tranh, không khuyến cáo, cùng gắn vào 50S
+    'pleuromutilins-phenicols': 'competition', // Cạnh tranh 50S (Có trường hợp Cộng gộp hoặc Hiệp đồng, nhưng có trường hợp giảm hiệu quả của nhau. Cần cân nhắc)
+    'pleuromutilins-streptogramins': 'competition', // Cạnh tranh 50S
     'pleuromutilins-aminocoumarins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
     // 20.3 Với các kháng sinh khác
     'pleuromutilins-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, mở rộng phổ
@@ -471,8 +493,8 @@ export const combinationRules = {
     // 21.2 Với các kháng sinh ức chế tổng hợp protein khác
     'streptogramins-aminoglycosides': 'synergistic', // Cộng gộp hoặc Hiệp đồng
     'streptogramins-tetracyclines': 'synergistic', // Cộng gộp-Additive hoặc Hiệp đồng, vì tetracyclines gắn vào tiểu đơn vị 30S
-    'streptogramins-macrolides': 'antagonistic', // Đối kháng, do cạnh tranh vị trí gắn
-    'streptogramins-lincosamides': 'antagonistic', // Đối kháng, cạnh tranh vị trí gắn
+    'streptogramins-macrolides': 'competition', // Cạnh tranh vị trí gắn 50S
+    'streptogramins-lincosamides': 'competition', // Cạnh tranh vị trí gắn
     'streptogramins-phenicols': 'synergistic', // Cộng gộp hoặc Hiệp đồng
     'streptogramins-aminocoumarins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
     // 21.3 Với các kháng sinh khác
@@ -492,43 +514,23 @@ export const combinationRules = {
     // 22.2 Với các kháng sinh ức chế tổng hợp protein khác
     'aminocoumarins-aminoglycosides': 'synergistic', // Cộng gộp hoặc Hiệp đồng
     'aminocoumarins-tetracyclines': 'synergistic', // Cộng gộp-Additive hoặc Hiệp đồng, vì tetracyclines gắn vào tiểu đơn vị 30S
-    'aminocoumarins-macrolides': 'antagonistic', // Đối kháng, do cạnh tranh vị trí gắn
-    'aminocoumarins-lincosamides': 'antagonistic', // Đối kháng, cạnh tranh vị trí gắn
+    'aminocoumarins-macrolides': 'competition', // Cạnh tranh vị trí gắn 50S
+    'aminocoumarins-lincosamides': 'competition', // Cạnh tranh vị trí gắn 50S
     'aminocoumarins-phenicols': 'synergistic', // Cộng gộp hoặc Hiệp đồng
     // 22.3 Với các kháng sinh khác
     'aminocoumarins-quinolones': 'synergistic', // Hiệp đồng mạnh mẽ, do quinolones ức chế enzyme DNA gyrase, nhưng ở 2 vị trí khác nhau
     'aminocoumarins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
     'aminocoumarins-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
 
+    // Các tương tác giữa các thành viên beta-lactam với nhau (ức chế quá trình tổng hợp thành tế bào vi khuẩn bằng cách liên kết với các protein gắn penicillin (PBP))
+    'penicillins-cephalosporins': 'competition', // Cạnh tranh vị trí gắn lên PBP, có thể gây dị ứng chéo nhưng không hẳn là đối kháng. Cẩn trọng
+    'penicillins-carbapenems': 'competition', // Cạnh tranh vị trí gắn lên PBP (Carbapenems có phổ kháng khuẩn rộng nhất trong các beta-lactam, gram dương, gram âm và vi khuẩn kỵ khí)
+    'penicillins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'cephalosporins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'cephalosporins-carbapenems': 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'monobactams-carbapenems': 'caution', // Cẩn thận, có thể gây dị ứng chéo nghiêm trọng, hai loại này vẫn là 'competition', // Cạnh tranh vị trí gắn lên PBP
+
     // Các quy tắc của các nhóm chưa mà chưa có tài liệu nói rõ là có hay không
-    'quinolones-aminoglycosides': 'synergistic', // Có tài liệu ghi hết sức thận trọng 'caution'
-    'lincosamides-macrolides': 'antagonistic',
-    'phenicols-macrolides': 'antagonistic',
-
-    // --- CÁC QUY TẮC MỚI CẦN BỔ SUNG DỰA TRÊN CÁC NHÓM BẠN ĐÃ THÊM ---
-    // Đây chỉ là VÍ DỤ. Bạn cần điền DỮ LIỆU CHÍNH XÁC TỪ NGUỒN Y TẾ.
-    'beta-lactames-metroimidazol': 'additive',
-    'beta-lactames-quinolones': 'additive',
-    'peptides-aminoglycosides': 'additive', // Có tài liệu ghi 'caution', hết sức thận trọng
-    'peptides-quinolones': 'additive', // Đôi khi là 'caution' vì độc tính
-    'macrolides-quinolones': 'additive',
-    'sulfonamides-quinolones': 'additive',
-    'phenicols-tetracyclines': 'caution', // Không khuyến cáo vì tác dụng phụ nghiêm trọng
-    'macrolides-tetracyclines': 'caution', // Không khuyến cáo vì tác dụng phụ nghiêm trọng
-    'lincosamides-tetracyclines': 'antagonistic', // Không khuyến cáo vì tác dụng đối kháng
-    'pleuromutilins-tetracyclines': 'antagonistic', // Không khuyến cáo vì tác dụng đối kháng
-    'pleuromutilins-phenicols': 'antagonistic', // Không khuyến cáo vì tác dụng đối kháng
-    'lincosamides-phenicols': 'caution', // Không khuyến cáo, cân nhắc
-    'lincosamides-pleuromutilins': 'caution', // Không khuyến cáo, cân nhắc
-    'penicillins-cephalosporins': 'antagonistic', // Cẩn trọng
-    'penicillins-carbapenems': 'antagonistic', // Cẩn trọng
-    'penicillins-monobactams': 'antagonistic', // Cẩn trọng
-    'cephalosporins-monobactams': 'antagonistic', // Cẩn trọng
-    'cephalosporins-carbapenems': 'antagonistic', // Cẩn trọng
-    'monobactams-carbapenems': 'antagonistic', // Cấm, gây dị ứng
-
-    'nitroimidazoles-quinolones': 'synergistic',
-    'nitrofurans-quinolones': 'additive',
     'phosphonics-aminoglycosides': 'synergistic',
     'ionophores-other/new': 'neutral',
     'pleuromutilins-macrolides': 'caution',
@@ -536,13 +538,11 @@ export const combinationRules = {
     'aminocoumarins-rifamycins': 'synergistic',
     'anti-tuberculosis_anti-leprosy-quinolones': 'additive',
     'other/new-other/new': 'neutral',
-    // ... bạn cần tiếp tục bổ sung các cặp nhóm khác cho đầy đủ
 
+    // CÁC TƯƠNG TÁC ĐẶC BIỆT
     // Lưu ý: Các tương tác cụ thể giữa 2 kháng sinh không theo nhóm cần được xử lý riêng trong kiemtraks.js
-    // Ví dụ: clindamycin-erythromycin hay chloramphenicol-penicillins
-    // Hiện tại bạn đã có logic đó cho ceftriaxone-calcium.
+    // Ví dụ: clindamycin-erythromycin hay chloramphenicol-penicillins, ceftriaxone-calcium.
 };
-
 
 // Hàm giúp lấy quy tắc tương tác giữa hai nhóm
 export function getCombinationRule(groupA, groupB) {
