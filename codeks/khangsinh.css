@@ -297,7 +297,7 @@ button:active {
     border-color: #ffc107;
 }
 .result-box.competition {
-    color: #ffc707;
+    color: #ff298d;
     background-color: #ffc107;
     border-color: #ffb300;
 }
@@ -443,4 +443,5 @@ footer a:hover {
         font-size: 0.9em;
     }
 }
+
 
