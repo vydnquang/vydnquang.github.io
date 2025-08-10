@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phần mềm phối hợp Kháng sinh thông minh</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS và các thư viện cần thiết -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://vydnquang.github.io/codeks/khangsinh.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
@@ -13,62 +13,62 @@
 <body>
     <header>
         <h1>Tra cứu phối hợp Kháng Sinh</h1>
-<p class="update-info">
-    <i class="fas fa-sync-alt loading-icon"></i>(Cập nhật đến 8/2025: <span id="antibioticCount">100</span> loại kháng sinh)
-</p>
+        <p class="update-info">
+            <i class="fas fa-sync-alt loading-icon"></i>(Cập nhật đến 8/2025: <span id="antibioticCount">100</span> loại kháng sinh)
+        </p>
     </header>
 
-<main class="container">
-    <div class="input-group">
-        <div class="autocomplete-container">
-            <div class="pill-visual" id="pillA">
-                <input type="text" id="antibioticA" placeholder="Nhập tên kháng sinh 1">
-                <div class="divider"></div>
+    <main class="container">
+        <div class="input-group">
+            <div class="autocomplete-container">
+                <div class="pill-visual" id="pillA">
+                    <input type="text" id="antibioticA" placeholder="Nhập tên kháng sinh 1">
+                    <div class="divider"></div>
+                </div>
+                <div id="suggestionsA" class="suggestions-list"></div>
             </div>
-            <div id="suggestionsA" class="suggestions-list"></div>
-        </div>
-        <div class="autocomplete-container">
-            <div class="pill-visual" id="pillB">
-                <input type="text" id="antibioticB" placeholder="Nhập tên kháng sinh 2">
-                <div class="divider"></div>
+            <div class="autocomplete-container">
+                <div class="pill-visual" id="pillB">
+                    <input type="text" id="antibioticB" placeholder="Nhập tên kháng sinh 2">
+                    <div class="divider"></div>
+                </div>
+                <div id="suggestionsB" class="suggestions-list"></div>
             </div>
-            <div id="suggestionsB" class="suggestions-list"></div>
         </div>
-    </div>
 
-    <button id="checkCombinationBtn">
-        <i class="fas fa-search search-icon"></i> Kiểm tra !
-    </button>
+        <button id="checkCombinationBtn" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300 w-full flex items-center justify-center gap-2">
+            <i class="fas fa-search"></i> Kiểm tra !
+        </button>
 
-    <div class="result-box" id="result">
-        Kết quả sẽ hiển thị ở đây
-    </div>
-    <div class="error-message" id="errorMessage"></div>
+        <div class="result-box" id="result">
+            Kết quả sẽ hiển thị ở đây
+        </div>
+        <div class="error-message" id="errorMessage"></div>
 
-    <div class="general-guidance" id="generalGuidance">
-        <h3><i class="fas fa-exclamation-triangle warning-icon"></i> Chỉ dẫn quan trọng:</h3>
-        <ol>
-            <li>Việc phối hợp kháng sinh cần phải dựa trên lâm sàng từng ca bệnh cụ thể, sau khi thực hiện kháng sinh đồ đầy đủ.</li>
-            <li>Cần cân nhắc giữa lợi và hại khi phối hợp kháng sinh, vì "thuốc là con dao 2 lưỡi", chỉ nên phối hợp khi thực sự cần thiết.</li>
-            <li>Hãy sử dụng kháng sinh một cách có trách nhiệm để không làm cho tình trạng kháng kháng sinh ngày càng nghiêm trọng hơn.</li>
-            <li>Luôn luôn điều chỉnh liều lượng cho phù hợp, chứ không cứng nhắc 1 liều cho cả một quá trình điều trị.</li>
-            <li>Các kết quả "CẠNH TRANH"; "THẬN TRỌNG"; "TRUNG TÍNH" cần được tìm hiểu kỹ đối với mỗi cặp kháng sinh cần kết hợp.</li>
-            <li>Tất cả các kết quả trên chỉ mang tính tham khảo, bác sĩ phải kiểm chứng lại kết quả đưa ra trước khi thực hiện.</li>
-        </ol>
-    </div>
-</main>
+        <div class="general-guidance" id="generalGuidance">
+            <h3><i class="fas fa-exclamation-triangle warning-icon"></i> Chỉ dẫn quan trọng:</h3>
+            <ol>
+                <li>Việc phối hợp kháng sinh cần phải dựa trên lâm sàng từng ca bệnh cụ thể, sau khi thực hiện kháng sinh đồ đầy đủ.</li>
+                <li>Cần cân nhắc giữa lợi và hại khi phối hợp kháng sinh, vì "thuốc là con dao 2 lưỡi", chỉ nên phối hợp khi thực sự cần thiết.</li>
+                <li>Hãy sử dụng kháng sinh một cách có trách nhiệm để không làm cho tình trạng kháng kháng sinh ngày càng nghiêm trọng hơn.</li>
+                <li>Luôn luôn điều chỉnh liều lượng cho phù hợp, chứ không cứng nhắc 1 liều cho cả một quá trình điều trị.</li>
+                <li>Các kết quả "CẠNH TRANH"; "THẬN TRỌNG"; "TRUNG TÍNH" cần được tìm hiểu kỹ đối với mỗi cặp kháng sinh cần kết hợp.</li>
+                <li>Tất cả các kết quả trên chỉ mang tính tham khảo, bác sĩ phải kiểm chứng lại kết quả đưa ra trước khi thực hiện.</li>
+            </ol>
+        </div>
+    </main>
 
-<!-- Footer đã được sửa lỗi cấu trúc -->
     <footer class="bg-white shadow-inner p-4 mt-auto">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-center items-center gap-4">
                 <!-- Nút 1: Kiểm tra tương tác thuốc với Dropdown -->
+                <!-- Đổi ID để khớp với menuks.js -->
                 <div class="relative w-full md:w-auto">
-                    <button id="checkDropdownBtn" class="w-full px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                    <button id="homeDropdownBtn" class="w-full px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
                         Kiểm tra tương tác thuốc
                     </button>
-                    <!-- Loại bỏ class 'hidden' để CSS và JS xử lý việc hiển thị -->
-                    <div id="checkDropdownMenu" class="dropdown-menu">
+                    <!-- Thêm class hidden ban đầu để menuks.js có thể xử lý việc hiển thị -->
+                    <div id="homeDropdownMenu" class="dropdown-menu hidden scale-95 opacity-0">
                         <div class="p-2 space-y-2">
                             <a href="https://www.google.com/search?q=phối+hợp+kháng+sinh" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
                                 Phối hợp kháng sinh
@@ -84,6 +84,7 @@
                 </div>
 
                 <!-- Nút 2: Giới thiệu, mở modal -->
+                <!-- Đổi ID để khớp với menuks.js -->
                 <button id="aboutBtn" class="w-full md:w-auto px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
                     Giới thiệu
                 </button>
@@ -136,40 +137,36 @@
         </div>
     </div>
     
-<script type="module" src="https://vydnquang.github.io/codeks/kiemtraks.js"></script>
-<script type="module" src="https://vydnquang.github.io/codeks/menuks.js"></script>  
+    <!-- Các file JavaScript cần được gọi đúng thứ tự -->
+    <script type="module" src="https://vydnquang.github.io/codeks/dataks.js"></script>
+    <script type="module" src="https://vydnquang.github.io/codeks/kiemtraks.js"></script>
+    <script type="module" src="https://vydnquang.github.io/codeks/menuks.js"></script>
     
-<script>
-    // Hàm chạy số lượng kháng sinh
-    document.addEventListener('DOMContentLoaded', function() {
-        const countElement = document.getElementById('antibioticCount');
-        const targetCount = 374;
-        let currentCount = 100;
-        const duration = 50000; // Thời gian chạy (miligiây)
-        const increment = Math.ceil((targetCount - currentCount) / (duration / 1)); // Số lượng tăng mỗi lần (tăng nhanh hơn một chút)
+    <!-- Tối ưu hóa việc đếm số lượng kháng sinh, lấy số liệu thực tế từ dataks.js -->
+    <script type="module">
+        import { allAntibiotics } from './kiemtraks.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const countElement = document.getElementById('antibioticCount');
+            const targetCount = allAntibiotics.length; // Lấy số lượng thực tế từ data
+            let currentCount = 100;
+            const duration = 5000; // Rút ngắn thời gian để hiệu ứng mượt hơn
+            const increment = Math.ceil((targetCount - currentCount) / (duration / 16)); // Tính toán lại tốc độ tăng
 
-        const updateCount = () => {
-            if (currentCount < targetCount) {
-                currentCount += increment;
-                if (currentCount > targetCount) {
-                    currentCount = targetCount; // Đảm bảo không vượt quá số đích
+            const updateCount = () => {
+                if (currentCount < targetCount) {
+                    currentCount += increment;
+                    if (currentCount > targetCount) {
+                        currentCount = targetCount;
+                    }
+                    countElement.textContent = currentCount;
+                    requestAnimationFrame(updateCount);
+                } else {
+                    countElement.textContent = targetCount;
                 }
-                countElement.textContent = currentCount;
-                requestAnimationFrame(updateCount); // Sử dụng requestAnimationFrame để mượt mà hơn
-            } else {
-                countElement.textContent = targetCount; // Đảm bảo số cuối cùng là chính xác
-            }
-        };
-
-        // Bắt đầu animation
-        updateCount();
-    });
-</script>
-    
+            };
+            updateCount();
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
