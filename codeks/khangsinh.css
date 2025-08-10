@@ -464,24 +464,82 @@ button:active {
     }
 }
 
-/* Cần các style cho modal để sử dụng cho thanh menu */
-        .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.5);
-            transition: opacity 0.3s ease-in-out;
-            visibility: hidden;
-            opacity: 0;
-        }
-        .modal-overlay.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .modal-content {
-            transform: scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
+/* ========================================= */
+/* === Kiểu dáng cho Modal (Cửa sổ bật lên) === */
+/* ========================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: hidden; /* Ẩn mặc định */
+    opacity: 0; /* Ẩn mặc định */
+    transition: visibility 0.3s, opacity 0.3s ease-in-out;
+}
+
+.modal-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    position: relative;
+    transform: scale(0.9); /* Thu nhỏ mặc định */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1); /* Phóng to khi active */
+}
+
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af; /* Màu xám */
+}
+
+.close-btn:hover {
+    color: #4b5563; /* Đậm hơn khi hover */
+}
+
+/* ========================================= */
+/* === Kiểu dáng cho Dropdown === */
+/* ========================================= */
+.dropdown-menu {
+    position: absolute;
+    bottom: 100%; /* Đặt menu ở phía trên nút */
+    left: 0;
+    margin-bottom: 0.5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 200;
+    opacity: 0; /* Ẩn mặc định */
+    transform: scale(0.9); /* Thu nhỏ mặc định */
+    transition: all 0.2s ease-in-out;
+    transform-origin: bottom left;
+    visibility: hidden;
+}
+
+.dropdown-menu.active {
+    opacity: 1;
+    transform: scale(1);
+    visibility: visible;
+}
 
 /* Thêm hiệu ứng cho icon loading */
 .loading-icon {
@@ -545,6 +603,7 @@ button:active {
         font-size: 0.9em;
     }
 }
+
 
 
 
