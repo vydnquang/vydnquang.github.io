@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phần mềm phối hợp Kháng sinh thông minh</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://vydnquang.github.io/codeks/khangsinh.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -57,10 +59,84 @@
 </main>
 
 <footer>
+    <!-- Footer đã được cập nhật -->
+    <footer class="bg-white shadow-inner p-4 mt-auto">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+                <!-- Nút 1: Kiểm tra tương tác thuốc với Dropdown -->
+                <div class="relative w-full md:w-auto">
+                    <button id="checkDropdownBtn" class="w-full px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                        Kiểm tra tương tác thuốc
+                    </button>
+                    <div id="checkDropdownMenu" class="absolute hidden bottom-full left-0 mb-2 w-full md:w-48 bg-white rounded-lg shadow-xl z-10 transition-all duration-300 ease-in-out origin-bottom-left scale-95 opacity-0">
+                        <div class="p-2 space-y-2">
+                            <a href="https://www.google.com/search?q=tương+tác+thuốc+1" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                                Phối hợp kháng sinh
+                            </a>
+                            <a href="https://www.google.com/search?q=tương+tác+thuốc+2" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                                Tương tác thuốc khác
+                            </a>
+                            <a href="https://www.google.com/search?q=tương+tác+thuốc+3" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                                Cơ sở dữ liệu thuốc
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nút 2: Giới thiệu, mở modal -->
+                <button id="aboutBtn" class="w-full md:w-auto px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                    Giới thiệu
+                </button>
+
+                <!-- Nút 3: Liên hệ, mở modal -->
+                <button id="contactBtn" class="w-full md:w-auto px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                    Liên hệ
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Giới thiệu -->
+    <div id="aboutModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full relative">
+            <button id="closeAboutModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Giới thiệu Phần mềm</h2>
+            <div class="space-y-4 text-gray-700">
+                <p>Đây là phần mềm tra cứu phối hợp kháng sinh thông minh, được xây dựng với mục tiêu cung cấp một công cụ tham khảo nhanh chóng về tương tác của các loại kháng sinh.</p>
+                <p>Phần mềm bao gồm các quy tắc phối hợp dựa trên cơ chế tác động của thuốc, giúp các chuyên gia y tế có thể đưa ra quyết định lâm sàng tốt hơn.</p>
+                <p>Chúng tôi luôn nỗ lực cập nhật dữ liệu để mang lại thông tin chính xác và hữu ích nhất. Tuy nhiên, các kết quả chỉ mang tính chất tham khảo. Vui lòng tham khảo ý kiến chuyên gia trước khi đưa ra quyết định điều trị.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Liên hệ -->
+    <div id="contactModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full relative">
+            <button id="closeContactModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Thông tin Liên hệ</h2>
+            <div class="space-y-4 text-center">
+                <p class="text-gray-700">
+                    <span class="font-semibold">Tác giả:</span> Nguyễn Văn A
+                </p>
+                <p class="text-gray-700">
+                    <span class="font-semibold">Điện thoại:</span> 0987-654-321
+                </p>
+            </div>
+        </div>
+    </div>
     <p>Copyright © 2025 by BSTY. <a href="[https://www.facebook.com/annhonpet](https://www.facebook.com/annhonpet)">An Nhơn Pet</a></p>
 </footer>
     
 <script type="module" src="https://vydnquang.github.io/codeks/kiemtraks.js"></script>
+<script type="module" src="https://vydnquang.github.io/codeks/menuks.js"></script>  
     
 <script>
     // Hàm chạy số lượng kháng sinh
@@ -91,6 +167,7 @@
     
 </body>
 </html>
+
 
 
 
