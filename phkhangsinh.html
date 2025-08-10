@@ -58,8 +58,7 @@
     </div>
 </main>
 
-<footer>
-    <!-- Footer đã được cập nhật -->
+<!-- Footer đã được sửa lỗi cấu trúc -->
     <footer class="bg-white shadow-inner p-4 mt-auto">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-center items-center gap-4">
@@ -68,15 +67,16 @@
                     <button id="checkDropdownBtn" class="w-full px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
                         Kiểm tra tương tác thuốc
                     </button>
-                    <div id="checkDropdownMenu" class="absolute hidden bottom-full left-0 mb-2 w-full md:w-48 bg-white rounded-lg shadow-xl z-10 transition-all duration-300 ease-in-out origin-bottom-left scale-95 opacity-0">
+                    <!-- Loại bỏ class 'hidden' để CSS và JS xử lý việc hiển thị -->
+                    <div id="checkDropdownMenu" class="dropdown-menu">
                         <div class="p-2 space-y-2">
-                            <a href="https://www.google.com/search?q=tương+tác+thuốc+1" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <a href="https://www.google.com/search?q=phối+hợp+kháng+sinh" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
                                 Phối hợp kháng sinh
                             </a>
-                            <a href="https://www.google.com/search?q=tương+tác+thuốc+2" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <a href="https://www.google.com/search?q=tương+tác+thuốc+khác" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
                                 Tương tác thuốc khác
                             </a>
-                            <a href="https://www.google.com/search?q=tương+tác+thuốc+3" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <a href="https://www.google.com/search?q=cơ+sở+dữ+liệu+thuốc" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
                                 Cơ sở dữ liệu thuốc
                             </a>
                         </div>
@@ -93,14 +93,17 @@
                     Liên hệ
                 </button>
             </div>
+            <p class="text-center text-gray-500 text-sm mt-4">
+                Copyright © 2025 by BSTY. <a href="https://www.facebook.com/annhonpet" target="_blank" class="text-blue-600 hover:text-blue-800 transition-colors">An Nhơn Pet</a>
+            </p>
         </div>
     </footer>
 
     <!-- Modal Giới thiệu -->
-    <div id="aboutModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full relative">
-            <button id="closeAboutModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div id="aboutModal" class="modal-overlay">
+        <div class="modal-content max-w-lg w-full">
+            <button id="closeAboutModalBtn" class="close-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -114,10 +117,10 @@
     </div>
     
     <!-- Modal Liên hệ -->
-    <div id="contactModal" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full relative">
-            <button id="closeContactModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div id="contactModal" class="modal-overlay">
+        <div class="modal-content max-w-sm w-full">
+            <button id="closeContactModalBtn" class="close-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -132,8 +135,6 @@
             </div>
         </div>
     </div>
-    <p>Copyright © 2025 by BSTY. <a href="[https://www.facebook.com/annhonpet](https://www.facebook.com/annhonpet)">An Nhơn Pet</a></p>
-</footer>
     
 <script type="module" src="https://vydnquang.github.io/codeks/kiemtraks.js"></script>
 <script type="module" src="https://vydnquang.github.io/codeks/menuks.js"></script>  
@@ -167,6 +168,7 @@
     
 </body>
 </html>
+
 
 
 
