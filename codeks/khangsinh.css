@@ -362,23 +362,106 @@ button:active {
     margin-bottom: 0;
 }
 
-footer {
-    background-color: #FFD700; /* Màu vàng */
-    color: blue;
-    padding: 15px 0;
-    text-align: center;
-    font-size: 0.9em;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    margin-top: auto;
+/* ========================================= */
+/* === Kiểu dáng cho Footer (Chân trang) === */
+/* ========================================= */
+
+.footer {
+    background-color: #2c3e50; /* Màu nền tối cho chân trang */
+    color: #ecf0f1; /* Màu chữ sáng */
+    padding: 4rem 2rem; /* Khoảng đệm trên dưới và hai bên */
+    font-family: 'Inter', sans-serif; /* Sử dụng font Inter */
 }
 
-footer a {
-    color: blue; /* Đảm bảo màu link trong footer */
-    text-decoration: none;
+/* Container cho nội dung footer */
+.footer-container {
+    display: grid; /* Sử dụng Grid để tạo bố cục linh hoạt */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Tự động chia cột */
+    gap: 2rem; /* Khoảng cách giữa các cột */
+    max-width: 1200px; /* Chiều rộng tối đa của container */
+    margin: 0 auto; /* Căn giữa container */
 }
 
-footer a:hover {
-    text-decoration: underline;
+/* Kiểu dáng cho mỗi phần trong footer */
+.footer-section {
+    padding-right: 1rem; /* Khoảng đệm bên phải */
+}
+
+/* Tiêu đề của các phần */
+.footer-section h3 {
+    font-size: 1.25rem; /* Kích thước font */
+    font-weight: 600; /* Độ đậm của chữ */
+    margin-bottom: 1rem; /* Khoảng cách dưới tiêu đề */
+    color: #e67e22; /* Màu cam nổi bật */
+}
+
+/* Kiểu dáng cho danh sách liên kết */
+.footer-section ul {
+    list-style: none; /* Bỏ dấu đầu dòng */
+    padding: 0; /* Bỏ khoảng đệm */
+    margin: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.75rem; /* Khoảng cách giữa các mục */
+}
+
+.footer-section ul li a {
+    color: #ecf0f1; /* Màu chữ của liên kết */
+    text-decoration: none; /* Bỏ gạch chân */
+    transition: color 0.3s ease; /* Hiệu ứng chuyển đổi màu mượt mà */
+}
+
+.footer-section ul li a:hover {
+    color: #3498db; /* Đổi màu khi di chuột vào */
+}
+
+/* Kiểu dáng cho phần bản quyền */
+.footer-bottom {
+    text-align: center; /* Căn giữa nội dung */
+    margin-top: 3rem; /* Khoảng cách trên */
+    border-top: 1px solid #34495e; /* Đường kẻ phân chia */
+    padding-top: 2rem; /* Khoảng đệm trên */
+    font-size: 0.875rem; /* Kích thước font nhỏ hơn */
+}
+
+/*
+    Mã cho các biểu tượng mạng xã hội (ví dụ)
+    Nếu bạn sử dụng Font Awesome, các lớp sẽ trông giống thế này:
+    .social-icons a { margin-right: 1rem; }
+    .social-icons a i { font-size: 1.5rem; }
+*/
+
+/* ========================================= */
+/* === Thiết kế đáp ứng (Responsive) === */
+/* ========================================= */
+@media (max-width: 768px) {
+    .footer {
+        padding: 3rem 1.5rem; /* Giảm khoảng đệm trên màn hình nhỏ */
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-container {
+        grid-template-columns: 1fr; /* Chỉ hiển thị 1 cột trên màn hình siêu nhỏ */
+    }
+
+    .footer-section {
+        padding-right: 0;
+        text-align: center; /* Căn giữa các phần trên màn hình nhỏ */
+    }
+
+    .footer-section h3 {
+        margin-bottom: 0.5rem; /* Giảm khoảng cách dưới tiêu đề */
+    }
+
+    .footer-section ul {
+        margin-bottom: 2rem; /* Thêm khoảng cách dưới mỗi danh sách */
+    }
+
+    .footer-bottom {
+        text-align: center; /* Căn giữa phần bản quyền */
+    }
 }
 
 /* Cần các style cho modal để sử dụng cho thanh menu */
@@ -462,6 +545,7 @@ footer a:hover {
         font-size: 0.9em;
     }
 }
+
 
 
 
