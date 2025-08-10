@@ -138,13 +138,12 @@
     </div>
     
     <!-- Các file JavaScript cần được gọi đúng thứ tự -->
-    <script type="module" src="https://vydnquang.github.io/codeks/dataks.js"></script>
     <script type="module" src="https://vydnquang.github.io/codeks/kiemtraks.js"></script>
     <script type="module" src="https://vydnquang.github.io/codeks/menuks.js"></script>
     
     <!-- Tối ưu hóa việc đếm số lượng kháng sinh, lấy số liệu thực tế từ dataks.js -->
     <script type="module">
-        import { allAntibiotics } from './kiemtraks.js';
+        import { allAntibiotics } from 'https://vydnquang.github.io/codeks/kiemtraks.js';
         
         document.addEventListener('DOMContentLoaded', function() {
             const countElement = document.getElementById('antibioticCount');
@@ -170,4 +169,3 @@
     </script>
 </body>
 </html>
-
