@@ -6,15 +6,329 @@
     <title>Phần mềm phối hợp Kháng sinh thông minh</title>
     <!-- Tailwind CSS và các thư viện cần thiết -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://vydnquang.github.io/codeks/khangsinh.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0f2f7; /* Nền xanh nhạt tổng thể */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #0070b5; /* Màu xanh */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5em;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        
+        .update-info {
+            font-size: 0.9em;
+            color: #d1d5db;
+        }
+        
+        .loading-icon {
+            color: #ffc107; /* Màu icon, ví dụ màu vàng */
+            font-size: 0.9em; /* Kích thước icon, nhỏ hơn một chút so với chữ */
+            vertical-align: middle; /* Căn chỉnh icon với chữ */
+            animation: spin 2s linear infinite; /* Áp dụng animation quay */
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        main.container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .autocomplete-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .pill-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 50px;
+            border: 2px solid #0070b5;
+            border-radius: 25px;
+            overflow: hidden;
+            background-color: #f7f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .pill-visual:focus-within {
+            box-shadow: 0 0 0 4px rgba(0, 112, 181, 0.2);
+        }
+
+        .pill-visual input {
+            flex-grow: 1;
+            padding: 0 20px;
+            border: none;
+            outline: none;
+            height: 100%;
+            background: transparent;
+            font-size: 1em;
+            color: #333;
+        }
+
+        .pill-visual .divider {
+            width: 30px;
+            height: 30px;
+            background-color: #0070b5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            position: absolute;
+            right: 10px;
+        }
+
+        .pill-visual-B .divider {
+            right: unset;
+            left: 10px;
+        }
+
+        .suggestions-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border: 1px solid #d1d5db;
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+            max-height: 12rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .suggestions-list div {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+        }
+        
+        .suggestions-list div:hover, .suggestions-list div.active {
+            background-color: #e5e7eb;
+        }
+
+        #checkCombinationBtn {
+            width: 100%;
+            padding: 18px;
+            background-image: linear-gradient(to right, #0070b5, #0099d0);
+            color: white;
+            font-weight: bold;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 112, 181, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #checkCombinationBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 112, 181, 0.4);
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        .synergistic { background-color: #10b981; }
+        .synergistic-positive { background-color: #10b981; }
+        .additive { background-color: #2563eb; }
+        .antagonistic { background-color: #ef4444; }
+        .competition { background-color: #f97316; }
+        .caution { background-color: #f59e0b; }
+        .neutral { background-color: #6b7280; }
+        .unknown { background-color: #4b5563; }
+        
+        .error-message {
+            color: #ef4444;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .general-guidance {
+            margin-top: 40px;
+            background-color: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .warning-icon {
+            color: #f59e0b;
+            margin-right: 10px;
+        }
+
+        .general-guidance h3 {
+            font-weight: bold;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+        }
+
+        .general-guidance ol {
+            margin-top: 15px;
+            padding-left: 25px;
+            list-style: decimal;
+            line-height: 1.6;
+        }
+
+        footer {
+            background-color: #ffffff;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+            margin-top: auto;
+        }
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            z-index: 50;
+            width: 100%;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform-origin: top;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin-top: 20px;
+                padding: 25px;
+            }
+            .input-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .autocomplete-container {
+                width: 100%;
+                min-width: unset;
+            }
+            .pill-visual, .pill-visual input {
+                height: 40px;
+                border-radius: 20px;
+            }
+            .pill-visual::before, .pill-visual::after {
+                border-radius: 20px 0 0 20px;
+            }
+            .pill-visual::after {
+                border-radius: 0 20px 20px 0;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Tra cứu phối hợp Kháng Sinh</h1>
         <p class="update-info">
-            <i class="fas fa-sync-alt loading-icon"></i>(Cập nhật đến 8/2025: <span id="antibioticCount">100</span> loại kháng sinh)
+            <i class="fas fa-sync-alt loading-icon"></i>(Cập nhật đến 8/2025: <span id="antibioticCount">0</span> loại kháng sinh)
         </p>
     </header>
 
@@ -25,18 +339,18 @@
                     <input type="text" id="antibioticA" placeholder="Nhập tên kháng sinh 1">
                     <div class="divider"></div>
                 </div>
-                <div id="suggestionsA" class="suggestions-list"></div>
+                <div id="suggestionsA" class="suggestions-list hidden"></div>
             </div>
             <div class="autocomplete-container">
                 <div class="pill-visual" id="pillB">
                     <input type="text" id="antibioticB" placeholder="Nhập tên kháng sinh 2">
                     <div class="divider"></div>
                 </div>
-                <div id="suggestionsB" class="suggestions-list"></div>
+                <div id="suggestionsB" class="suggestions-list hidden"></div>
             </div>
         </div>
 
-        <button id="checkCombinationBtn" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300 w-full flex items-center justify-center gap-2">
+        <button id="checkCombinationBtn">
             <i class="fas fa-search"></i> Kiểm tra !
         </button>
 
@@ -58,16 +372,13 @@
         </div>
     </main>
 
-    <footer class="bg-white shadow-inner p-4 mt-auto">
+    <footer>
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-center items-center gap-4">
-                <!-- Nút 1: Kiểm tra tương tác thuốc với Dropdown -->
-                <!-- Đổi ID để khớp với menuks.js -->
                 <div class="relative w-full md:w-auto">
                     <button id="homeDropdownBtn" class="w-full px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
                         Kiểm tra tương tác thuốc
                     </button>
-                    <!-- Thêm class hidden ban đầu để menuks.js có thể xử lý việc hiển thị -->
                     <div id="homeDropdownMenu" class="dropdown-menu hidden scale-95 opacity-0">
                         <div class="p-2 space-y-2">
                             <a href="https://www.google.com/search?q=phối+hợp+kháng+sinh" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
@@ -82,14 +393,9 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Nút 2: Giới thiệu, mở modal -->
-                <!-- Đổi ID để khớp với menuks.js -->
                 <button id="aboutBtn" class="w-full md:w-auto px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
                     Giới thiệu
                 </button>
-
-                <!-- Nút 3: Liên hệ, mở modal -->
                 <button id="contactBtn" class="w-full md:w-auto px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
                     Liên hệ
                 </button>
@@ -99,7 +405,7 @@
             </p>
         </div>
     </footer>
-
+    
     <!-- Modal Giới thiệu -->
     <div id="aboutModal" class="modal-overlay">
         <div class="modal-content max-w-lg w-full">
@@ -137,20 +443,751 @@
         </div>
     </div>
     
-    <!-- Các file JavaScript cần được gọi đúng thứ tự -->
-    <script type="module" src="https://vydnquang.github.io/codeks/kiemtraks.js"></script>
-    <script type="module" src="https://vydnquang.github.io/codeks/menuks.js"></script>
+    <script>
+        // dataks.js - Mã được tích hợp trực tiếp để tránh lỗi import
+        const antibioticGroups = {
+            'penicillins': [
+        'penicillin-g', 'propicillin', 'penicillin-v', 'penicillin-g-procaine',
+        'benzathine-penicillin-g', 'benethamine-penicillin', 'penicillin-m', 'oxacillin',
+        'cloxacillin', 'dicloxacillin', 'methicillin', 'nafcillin',
+        'flucloxacillin', 'ampicillin', 'amoxycillin', 'pivampicillin',
+        'hetacillin', 'bacampicillin', 'metampicillin', 'talampicillin',
+        'epicillin', 'sulbenicillin', 'temocillin', 'carbenicilin',
+        'ticarcilin', 'carindacillin', 'mecillinam', 'amdinocillin',
+        'mezlocillin', 'piperacillin', 'azlocillin', 'pivmecillinam'
+    ],
+    'cephalosporins': [
+        'cephalexin', 'cefalotin', 'cefazolin', 'cefradine', 'cefadroxil', 'cefaloglycin',
+        'cefalonium', 'cephaloridin', 'cefatrizine', 'cefazaflur', 'cefacetrile',
+        'cefapirin', 'cefaclor', 'cefoxitine', 'cefamandole', 'cefonicid', 'cefuroxime',
+        'cefprozil', 'cefuzonam', 'ceforanide', 'cefotetan', 'cefmetazole',
+        'cefbuperazone', 'cefminox', 'ceftizoxime', 'ceftiofur', 'cefotaxime',
+        'ceftriaxone', 'cefoperazone', 'cefpiramide', 'cefcapene', 'cefdaloxime',
+        'cefdinir', 'cefditoren', 'cefetamet', 'cefixime', 'cefmenoxime', 'cefodizime',
+        'cefovecin', 'cefpimizole', 'cefpodoxime', 'cefteram', 'ceftibuten',
+        'ceftiolene', 'ceftazidime', 'latamoxef', 'cefepime', 'cefclidin',
+        'cefiderocol', 'cefluprenam', 'cefoselis', 'cefozopran', 'cefpirome',
+        'cefquinome', 'flomoxef', 'ceftobiprole', 'ceftaroline', 'ceftolozane',
+        'cefazedone', 'cefroxadine', 'ceftezol', 'cefazoline', 'loracarbef',
+        'cefotiam', 'cefaparole', 'cefmatilen', 'cefsumide'
+    ],
+    'carbapenems': [
+        'imipenem', 'meropenem', 'ertapenem', 'doripenem', 'biapenem',
+        'panipenem', 'faropenem', 'ritipenem', 'sulopenem', 'thienamycin'
+    ],
+    'monobactams': [
+        'aztreonam', 'tigemonam', 'carumonam', 'nocardicin-a'
+    ],
+    'beta-lactamase': [
+        'clavulanic-acid', 'sulbactam', 'tazobactam', 'vaborbactam',
+        'enmetazobactam', 'relebactam', 'avibactam', 'taniborbactam',
+        'durlobactam', 'nacubactam', 'xeruborbactam', 'zidebactam'
+    ],
+    'peptides': [
+        'daptomycin', 'gramicidin', 'gramicidin-s', 'teixobactin',
+        'vancomycin', 'oritavancin', 'telavancin', 'teicoplanin',
+        'dalbavancin', 'ramoplanin', 'bleomycin', 'polymyxin-b',
+        'colistin', 'bacitracin', 'tyrothricin', 'surfactin',
+        'amphomycin', 'tyrocidine'
+    ],
+    'aminoglycosides': [
+        'netilmicin', 'gentamicin', 'streptomycin', 'kanamycin',
+        'neomycin', 'tobramycin', 'amikacin', 'dibekacin', 'sisomicin',
+        'plazomicin', 'dihydrostreptomycin', 'paromomycin', 'framycetin',
+        'ribostamycin', 'arbekacin', 'bekanamycin', 'hygromycin-b',
+        'apramycin', 'puromycin', 'nourseothricin', 'isepamicin',
+        'verdamicin', 'astromicin', 'spectinomycin'
+    ],
+    'tetracyclines': [
+        'chlortetracycline', 'tetracycline', 'oxytetracycline', 'doxycycline',
+        'minocycline', 'lymecycline', 'demeclocycline', 'meclocycline',
+        'metacycline', 'rolitetracycline', 'tigecycline', 'eravacycline',
+        'sarecycline', 'glycylcycline', 'clomocycline', 'omadacycline',
+        'pipacycline', 'penimepicycline'
+    ],
+    'macrolides': [
+        'pikromycin', 'erythromycin', 'boromycin', 'dirithromycin',
+        'flurithromycin', 'miocamycin', 'rokitamycin', 'josamycin',
+        'spiramycin', 'tylosin', 'clarithromycin', 'azithromycin',
+        'tulathromycin', 'tilmicosin', 'kitasamycin', 'midecamycin',
+        'oleandomycin', 'troleandomycin', 'roxithromycin',
+        'telithromycin', 'cethromycin', 'solithromycin',
+        'streptovaricin-a-g', 'geldanamycin', 'macbecin',
+        'herbimycin', 'fidaxomicin', 'rifamycin-sv', 'rifampicin',
+        'rifabutin', 'rifapentine', 'rifaximin', 'rifalazil',
+        'tildipirosin'
+    ],
+    'lincosamides': [
+        'lincomycin', 'clindamycin', 'pirlimycin', 'iboxamycin' // đến dòng này đã có 198 loại kháng sinh
+    ],
+    'phenicols': [
+        'chloramphenicol', 'thiamphenicol', 'florfenicol', 'azidamfenicol'
+    ],
+    'quinolones': [
+        'nalidixic-acid', 'pipemidic-acid', 'oxolinic-acid', 'piromidic-acid',
+        'flumequine', 'rosoxacin', 'norfloxacin', 'ofloxacin',
+        'ciprofloxacin', 'pefloxacin', 'fleroxacin', 'lomefloxacin',
+        'nadifloxacin', 'rufloxacin', 'enoxacin', 'levofloxacin',
+        'balofloxacin', 'grepafloxacin', 'pazufloxacin',
+        'sparfloxacin', 'temafloxacin', 'tosufloxacin',
+        'gatifloxacin', 'clinafloxacin', 'moxifloxacin',
+        'sitafloxacin', 'prulifloxacin', 'besifloxacin',
+        'delafloxacin', 'gemifloxacin', 'trovafloxacin',
+        'ozenoxacin', 'finafloxacin', 'garenoxacin',
+        'alatrofloxacin', 'valcofloxacin', 'gelmofloxacin',
+        'cinoxacin', 'nemonoxacin', 'pradofloxacin',
+        'enrofloxacin', 'danofloxacin', 'marbofloxacin',
+        'difloxacin', 'ibafloxacin', 'orbifloxacin',
+        'sarafloxacin'
+    ],
+    'sulfonamides': [
+        'sulfamethoxazole', 'sulfaguanidine', 'sulfadimidine',
+        'sulfamonomethoxine', 'sulfadimethoxine', 'sulfasalazine',
+        'sulfafurazole', 'sulfamethizole', 'sulfanilamid',
+        'sulfonamidochrysoidine', 'sulfacetamid', 'sulfadiazine',
+        'sulfisomidine', 'sulfamoxole', 'sulfanitran',
+        'sulfamethoxypyridazine', 'sulfametoxydiazine', 'sulfadoxine',
+        'sulfametopyrazine', 'mafenid', 'sulfaclozine',
+        'sulfachloropyridazine', 'cotrimoxazol'
+    ],
+    'oxazolidones': [
+        'cycloserine', 'linezolid', 'posizolid', 'tedizolid',
+        'torezolid', // Thêm tên thay thế cho dễ tra cứu
+        'radezolid', 'eperezolid', 'ranbezolid', 'sutezolid'
+    ],
+    'nitroimidazoles': [
+        'metronidazole', 'tinidazole', 'ornidazole', 'secnidazole',
+        'nimorazole', 'carnidazole', 'misonidazole', 'dimetridazol',
+        'ronidazole', 'ipronidazole', 'benznidazole', 'azomycin',
+        'fexinidazole'
+    ],
+    'nitrofurans': [
+        'difurazone', 'furazolidone', 'nifuroxazide',
+        'nifurquinazol', 'nifurtoinol', 'nifurzide',
+        'nitrofurazone', 'nitrofurantoin', 'furaltadone',
+        'furazidine', 'furylfuramide', 'nifuratel',
+        'nifurtimox'
+    ],
+    'phosphonics': [
+        'fosfomycin', 'fosmidomycin', 'alafosfalin'
+    ],
+    'ionophores': [
+        'salinomycin', 'monensin', 'lasalocid'
+    ],
+    'pleuromutilins': [
+        'lefamulin', 'retapamulin', 'tiamulin', 'valnemulin',
+        'azamulin'
+    ],
+    'streptogramins': [
+        'pristinamycin', 'quinupristin', 'dalfopristin',
+        'virginiamycin'
+    ],
+    'aminocoumarins': [
+        'novobiocin', 'coumermycin-a1', 'clorobiocin'
+    ],
+    'lao-phong': [
+        'dapsone', 'promin', 'capreomycin', 'ethambutol',
+        'ethionamide', 'clofazimine', 'isoniazid'
+    ],
+    'minerals': [
+        'calcium', 'magnesium', 'iron', 'zinc'
+    ],
+    'diaminopyrimidine': [
+        'trimethoprim', 'pyrimethamine', 'iclaprim'
+    ],
+    'other/new': [
+        'fusidic-acid', 'anthracimycin', 'anthramycin',
+        'lugdunin', 'nitazoxanide', 'halicin',
+        'mupirocin', 'platensimycin', 'malacidin',
+        'lariocidin', 'zosurabalpin', 'cefepime-taniborbactam',
+        'darobactin', 'orlynvah', 'cefepime-enmetazobactam',
+        'cresomycin' // đến dòng này có thêm 142 ks, tổng cộng: 340 ks
+    ]
+        };
+
+        const antibioticToGroupMap = {};
+        for (const group in antibioticGroups) {
+            antibioticGroups[group].forEach(antibiotic => {
+                antibioticToGroupMap[antibiotic] = group;
+            });
+        }
+
+// GIẢI THÍCH MỘT SỐ TỪ CHUYÊN NGÀNH
+// Hiệp đồng (Synergistic): Hai loại kháng sinh hoạt động tốt hơn khi kết hợp so với khi dùng riêng lẻ (1+1=3)
+// Đối kháng (Antagonistic): Hai loại kháng sinh làm giảm hiệu quả của nhau khi kết hợp.
+// Cộng gộp (Additive): Hai loại kháng sinh có tác dụng cộng lại khi kết hợp. Ví dụ, Beta-lactamase và Penicillins.
+// Thận trọng (Caution): Cần cân nhắc kỹ khi kết hợp vì có thể có tác dụng phụ nghiêm trọng hoặc tương tác không mong muốn.
+// Cạnh tranh (Competition): Hai loại kháng sinh có cơ chế tác dụng tương tự, thường cùng gắn vào một vị trí (ví dụ, PBP trên thành tế bào vi khuẩn), dẫn đến cạnh tranh và có thể làm giảm hiệu quả của nhau.
+
+        const combinationRules = {
+            // Các tương tác giữa các thành viên beta-lactam với nhau (ức chế quá trình tổng hợp thành tế bào vi khuẩn bằng cách liên kết với các protein gắn penicillin (PBP))
+    'cephalosporins-penicillins': 'competition', // Cạnh tranh vị trí gắn lên PBP, có thể gây dị ứng chéo nhưng không hẳn là đối kháng. Cẩn trọng
+    'carbapenems-penicillins': 'competition', // Cạnh tranh vị trí gắn lên PBP (Carbapenems có phổ kháng khuẩn rộng nhất trong các beta-lactam, gram dương, gram âm và vi khuẩn kỵ khí)
+    'monobactams-penicillins': 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'cephalosporins-monobactams': 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'carbapenems-cephalosporins': 'competition', // Cạnh tranh vị trí gắn lên PBP
+    'carbapenems-monobactams': 'caution', // Cẩn thận, có thể gây dị ứng chéo nghiêm trọng, hai loại này vẫn là competition, cạnh tranh vị trí gắn lên PBP
+
+    // Các quy tắc của nhóm penicillins
+    'aminoglycosides-penicillins': 'synergistic', // Hiệp lực hay Hiệp đồng đều ok, trong kết quả sẽ hiện ra chữ HIỆP ĐỒNG
+    'penicillins-peptides': 'synergistic', // Hiệp lực
+    'penicillins-quinolones': 'synergistic', // Hiệp lực
+    'penicillins-tetracyclines': 'antagonistic', // Đối kháng
+    'penicillins-phenicols': 'antagonistic', // Đối kháng
+    'macrolides-penicillins': 'antagonistic', // Đối kháng
+    'lincosamides-penicillins': 'antagonistic', // Đối kháng
+    'pleuromutilins-penicillins': 'antagonistic', // Đối kháng
+    'penicillins-sulfonamides': 'antagonistic', // Đối kháng
+    'diaminopyrimidine-penicillins': 'antagonistic', // Đối kháng
+
+    // Các quy tắc của nhóm cephalosporins
+    'aminoglycosides-cephalosporins': 'synergistic', // Hiệp lực, có tài liệu là 'additive'
+    'cephalosporins-peptides': 'synergistic', // Hiệp lực, có tài liệu là 'additive'
+    'cephalosporins-quinolones': 'synergistic', // Hiệp lực
+    'cephalosporins-tetracyclines': 'antagonistic', // Đối kháng
+    'cephalosporins-phenicols': 'antagonistic', // Đối kháng
+    'cephalosporins-macrolides': 'antagonistic', // Đối kháng
+    'cephalosporins-lincosamides': 'antagonistic', // Đối kháng
+    'cephalosporins-pleuromutilins': 'antagonistic', // Đối kháng
+    'cephalosporins-sulfonamides': 'antagonistic', // Đối kháng
+    'cephalosporins-diaminopyrimidine': 'antagonistic', // Đối kháng
+
+    // Các quy tắc của nhóm monobactams
+    'aminoglycosides-monobactams': 'synergistic', // Hiệp lực
+    'monobactams-peptides': 'synergistic', // Hiệp lực
+    'monobactams-quinolones': 'synergistic', // Hiệp lực
+    'monobactams-tetracyclines': 'antagonistic', // Đối kháng
+    'monobactams-phenicols': 'antagonistic', // Đối kháng
+    'macrolides-monobactams': 'antagonistic', // Đối kháng
+    'lincosamides-monobactams': 'antagonistic', // Đối kháng
+    'monobactams-pleuromutilins': 'antagonistic', // Đối kháng
+    'monobactams-sulfonamides': 'antagonistic', // Đối kháng
+    'diaminopyrimidine-monobactams': 'antagonistic', // Đối kháng
     
-    <!-- Tối ưu hóa việc đếm số lượng kháng sinh, lấy số liệu thực tế từ dataks.js -->
-    <script type="module">
-        import { allAntibiotics } from 'https://vydnquang.github.io/codeks/kiemtraks.js';
-        
-        document.addEventListener('DOMContentLoaded', function() {
+    // Các quy tắc của nhóm carbapenems
+    'aminoglycosides-carbapenems': 'synergistic', // Hiệp lực
+    'carbapenems-peptides': 'synergistic', // Hiệp lực
+    'carbapenems-quinolones': 'synergistic', // Hiệp lực
+    'carbapenems-tetracyclines': 'antagonistic', // Đối kháng
+    'carbapenems-phenicols': 'antagonistic', // Đối kháng
+    'carbapenems-macrolides': 'antagonistic', // Đối kháng
+    'carbapenems-lincosamides': 'antagonistic', // Đối kháng
+    'carbapenems-pleuromutilins': 'antagonistic', // Đối kháng
+    'carbapenems-sulfonamides': 'antagonistic', // Đối kháng
+    'carbapenems-diaminopyrimidine': 'antagonistic', // Đối kháng
+
+    // Các quy tắc của nhóm beta-lactamase
+    'beta-lactamase-penicillins': 'additive', // Phụ gia, ý nói là 2 chất này bổ trợ cho nhau, không có beta-lactamase thì peni không phát huy tác dụng
+    'beta-lactamase-cephalosporins': 'additive', // Trong kết quả hiện ra chữ HIỆP LỰC
+
+    // Các quy tắc của nhóm aminoglycosides
+    'aminoglycosides-tetracyclines': 'synergistic', // Hiệp lực. Tài liệu mới lại nói là đối kháng
+    'aminoglycosides-phenicols': 'synergistic', // Hiệp lực
+    'aminoglycosides-macrolides': 'synergistic', // Hiệp lực
+    'aminoglycosides-lincosamides': 'synergistic', // Hiệp lực
+    'aminoglycosides-pleuromutilins': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của nhóm peptid
+    'peptides-tetracyclines': 'synergistic', // Hiệp lực
+    'peptides-phenicols': 'synergistic', // Hiệp lực
+    'macrolides-peptides': 'synergistic', // Hiệp lực
+    'lincosamides-peptides': 'synergistic', // Hiệp lực
+    'peptides-pleuromutilins': 'synergistic', // Hiệp lực
+// Cần xem xét lại 2 trường hợp dưới (cùng là nhóm diệt khuẩn)
+    'aminoglycosides-peptides': 'additive', // Hiệp đồng mạnh mẽ (Có tài liệu ghi 'caution', hết sức thận trọng)
+    'peptides-quinolones': 'additive', // Hiệp đồng hoặc cộng gộp (Đôi khi là 'caution' vì độc tính)
+
+    // Các quy tắc của nhóm quinolon
+    'quinolones-tetracyclines': 'synergistic', // Hiệp lực
+    'phenicols-quinolones': 'synergistic', // Hiệp lực
+    'macrolides-quinolones': 'synergistic', // Hiệp lực, có lúc lại ghi 'additive'
+    'lincosamides-quinolones': 'synergistic', // Hiệp lực
+    'pleuromutilins-quinolones': 'synergistic', // Hiệp lực
+// Cầm kiểm tra 2 trường hợp sau
+    'quinolones-sulfonamides': 'additive',
+    'aminoglycosides-quinolones': 'synergistic', // Cùng là diệt khuẩn, tùy vào nồng độ có khi là cộng gộp, có khi hiệp đồng (Có lúc thận trọng 'caution')
+
+    // Các quy tắc của nhóm tetracyclines
+    'sulfonamides-tetracyclines': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-tetracyclines': 'synergistic', // Hiệp lực
+// Cần xem xét 2 trường hợp dưới
+    'phenicols-tetracyclines': 'caution', // Cộng gộp vì tetra gắn 30S, pheni gắn 50S ('caution' không khuyến cáo vì tác dụng phụ nghiêm trọng)
+    'macrolides-tetracyclines': 'caution', // Cộng gộp (Không khuyến cáo vì tác dụng phụ nghiêm trọng)
+
+    // Các quy tắc của nhóm phenicols
+    'phenicols-sulfonamides': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-phenicols': 'synergistic', // Hiệp lực 
+
+    // Các quy tắc của nhóm macrolides
+    'macrolides-sulfonamides': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-macrolides': 'synergistic', // Hiệp lực
+// Cần kiểm tra 2 trường hợp dưới
+    'lincosamides-macrolides': 'competition', // Cạnh tranh 50S
+    'macrolides-phenicols': 'competition', // Cạnh tranh 50S
+
+    // Các quy tắc của nhóm lincosamides
+    'lincosamides-sulfonamides': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-lincosamides': 'synergistic', // Hiệp lực
+// Cần xem xét 2 trường hợp dưới
+    'lincosamides-tetracyclines': 'caution', // Cộng gộp (Không khuyến cáo vì tăng tác dụng phụ)
+    'lincosamides-phenicols': 'competition', // Cạnh tranh 50S, không khuyến cáo, cân nhắc
+
+    // Các quy tắc của nhóm pleuromutilins
+    'pleuromutilins-sulfonamides': 'synergistic', // Hiệp lực
+    'diaminopyrimidine-pleuromutilins': 'synergistic', // Hiệp lực
+
+    // Các quy tắc của nhóm diaminopyrimidine (ức chế enzyme dihydrofolate reductase, một enzyme quan trọng trong con đường tổng hợp acid folic của vi khuẩn)
+    'diaminopyrimidine-pleuromutilins': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-tetracyclines': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-phenicols': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-macrolides': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-lincosamides': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-penicillins': 'antagonistic', // Có tài liệu ghi là Hiệp đồng hoặc cộng gộp
+    'cephalosporins-diaminopyrimidine': 'antagonistic', // Có tài liệu ghi là Hiệp đồng hoặc cộng gộp
+    'carbapenems-diaminopyrimidine': 'antagonistic', // Có tài liệu ghi là Hiệp đồng hoặc cộng gộp
+    'diaminopyrimidine-monobactams': 'antagonistic', // Có tài liệu ghi là Hiệp đồng hoặc cộng gộp
+    'diaminopyrimidine-sulfonamides': 'synergistic', // Hiệp đồng mạnh mẽ
+    'diaminopyrimidine-peptides': 'synergistic', // Cộng gộp
+    'aminoglycosides-diaminopyrimidine': 'synergistic', // Cộng gộp
+    'diaminopyrimidine-quinolones': 'synergistic', // Hiệp đồng
+
+    // XV. Các quy tắc của nhóm oxazolidones
+    // 15.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 15.1.1 Với thành viên của beta-lactam
+    'oxazolidones-penicillins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'cephalosporins-oxazolidones': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'monobactams-oxazolidones': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'carbapenems-oxazolidones': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    // 15.1.2 Với thành viên của peptides
+    'oxazolidones-peptides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    // 15.1.3 Với thành viên của phosphonics
+    'oxazolidones-phosphonics': 'synergistic', // Hiệp đồng
+    // 15.2 Với các kháng sinh ức chế tổng hợp protein khác, lưu ý một vài trường hợp sẽ cạnh tranh vị trí tác động, dẫn đến chồng chéo, đối kháng
+    'aminoglycosides-oxazolidones': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-tetracyclines': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'macrolides-oxazolidones': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'lincosamides-oxazolidones': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-phenicols': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'oxazolidones-streptogramins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'aminocoumarins-oxazolidones': 'synergistic', // Hiệp đồng hoặc cộng gộp, do nhóm này ức chế DNA gyrase
+    // 15.3 Với các kháng sinh khác
+    'oxazolidones-quinolones': 'synergistic', // Hiệp đồng hoặc cộng gộp, do quino ức chế DNA
+    'oxazolidones-sulfonamides': 'synergistic', // Hiệp đồng hoặc cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'diaminopyrimidine-oxazolidones': 'synergistic', // Hiệp đồng hoặc cộng gộp, do diamino ức chế tổng hợp acid folic
+    'nitroimidazoles-oxazolidones': 'synergistic', // Cộng gộp, do nitroimi sản sinh chất có hại cho tế bào vi khuẩn
+    'nitrofurans-oxazolidones': 'synergistic', // Cộng gộp, do nitrofu sản sinh chất có hại cho tế bào vi khuẩn
+    'ionophores-oxazolidones': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
+    'oxazolidones-pleuromutilins': 'caution', // Có thể cộng gộp, cũng có thể đối kháng, do cùng cạnh tranh gắn vào tiểu đơn vị 50S của ribosome.
+
+    // XVI. Các quy tắc của nhóm nitroimidazoles
+    // 16.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 16.1.1 Với thành viên của beta-lactam
+    'nitroimidazoles-penicillins': 'synergistic', // Cộng gộp
+    'cephalosporins-nitroimidazoles': 'synergistic', // Cộng gộp
+    'monobactams-nitroimidazoles': 'synergistic', // Cộng gộp
+    'carbapenems-nitroimidazoles': 'synergistic', // Cộng gộp
+    // 16.1.2 Với thành viên của peptides
+    'nitroimidazoles-peptides': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    // 16.1.3 Với thành viên của phosphonics
+    'nitroimidazoles-phosphonics': 'synergistic', // Cộng gộp
+    // 16.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'aminoglycosides-nitroimidazoles': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-tetracyclines': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'macrolides-nitroimidazoles': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'lincosamides-nitroimidazoles': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-phenicols': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-pleuromutilins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitroimidazoles-streptogramins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'aminocoumarins-nitroimidazoles': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 16.3 Với các kháng sinh khác
+    'nitroimidazoles-quinolones': 'synergistic', // Hiệp đồng, do quino ức chế DNA
+    'nitroimidazoles-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'diaminopyrimidine-nitroimidazoles': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+    'nitrofurans-nitroimidazoles': 'synergistic', // Cộng gộp, do nitrofu sản sinh chất có hại cho tế bào vi khuẩn
+    'ionophores-nitroimidazoles': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
+
+    // XVII. Các quy tắc của nhóm nitrofurans (chủ yếu trị tiết niệu, ít toàn thân)
+    // 17.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 17.1.1 Với thành viên của beta-lactam
+    'nitrofurans-penicillins': 'synergistic', // Cộng gộp
+    'cephalosporins-nitrofurans': 'synergistic', // Cộng gộp
+    'monobactams-nitrofurans': 'synergistic', // Cộng gộp
+    'carbapenems-nitrofurans': 'synergistic', // Cộng gộp
+    // 17.1.2 Với thành viên của peptides
+    'nitrofurans-peptides': 'synergistic', // Cộng gộp
+    // 17.1.3 Với thành viên của phosphonics
+    'nitrofurans-phosphonics': 'synergistic', // Cộng gộp
+    // 17.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'aminoglycosides-nitrofurans': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-tetracyclines': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'macrolides-nitrofurans': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'lincosamides-nitrofurans': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-phenicols': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-pleuromutilins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'nitrofurans-streptogramins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'aminocoumarins-nitrofurans': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 17.3 Với các kháng sinh khác
+    'nitrofurans-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, có tài liệu ghi 'additive'
+    'nitrofurans-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'diaminopyrimidine-nitrofurans': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+    'ionophores-nitrofurans': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
+
+    // XVIII. Các quy tắc của nhóm phosphonics
+    // 18.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 18.1.1 Với thành viên của beta-lactam (để trị các nhiễm trùng đa kháng MRSA, VRE)
+    'penicillins-phosphonics': 'synergistic', // Hiệp đồng
+    'cephalosporins-phosphonics': 'synergistic', // Hiệp đồng
+    'monobactams-phosphonics': 'synergistic', // Hiệp đồng
+    'carbapenems-phosphonics': 'synergistic', // Hiệp đồng
+    // 18.1.2 Với thành viên của peptides
+    'peptides-phosphonics': 'synergistic', // Hiệp đồng mạnh mẽ
+    // 18.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'aminoglycosides-phosphonics': 'synergistic', // Hiệp đồng, tạo điều kiện cho aminoglycosides xâm nhập vào tế bào vi khuẩn dễ dàng hơn bằng cách làm suy yếu thành tế bào
+    'phosphonics-tetracyclines': 'synergistic', // Cộng gộp-Additive
+    'macrolides-phosphonics': 'synergistic', // Cộng gộp
+    'lincosamides-phosphonics': 'synergistic', // Cộng gộp
+    'phenicols-phosphonics': 'synergistic', // Cộng gộp
+    'phosphonics-pleuromutilins': 'synergistic', // Cộng gộp
+    'phosphonics-streptogramins': 'synergistic', // Cộng gộp
+    'aminocoumarins-phosphonics': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 18.3 Với các kháng sinh khác
+    'phosphonics-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, mở rộng phổ
+    'phosphonics-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'diaminopyrimidine-phosphonics': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+    'ionophores-phosphonics': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
+
+    // XIX. Các quy tắc của nhóm ionophores
+    // 19.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 19.1.1 Với thành viên của beta-lactam (hoạt động độc lập, kết hợp có thể tăng hiệu quả)
+    'ionophores-penicillins': 'synergistic', // Cộng gộp
+    'cephalosporins-ionophores': 'synergistic', // Cộng gộp
+    'ionophores-monobactams': 'synergistic', // Cộng gộp
+    'carbapenems-ionophores': 'synergistic', // Cộng gộp
+    // 19.1.2 Với thành viên của peptides
+    'ionophores-peptides': 'synergistic', // Cộng gộp
+    // 19.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'aminoglycosides-ionophores': 'synergistic', // Hiệp đồng, tạo điều kiện cho aminoglycosides xâm nhập vào tế bào vi khuẩn dễ dàng hơn bằng cách làm suy yếu thành tế bào
+    'ionophores-tetracyclines': 'synergistic', // Cộng gộp-Additive
+    'ionophores-macrolides': 'synergistic', // Cộng gộp
+    'ionophores-lincosamides': 'synergistic', // Cộng gộp
+    'ionophores-phenicols': 'synergistic', // Cộng gộp
+    'ionophores-pleuromutilins': 'synergistic', // Cộng gộp
+    'ionophores-streptogramins': 'synergistic', // Cộng gộp
+    'aminocoumarins-ionophores': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 19.3 Với các kháng sinh khác
+    'ionophores-quinolones': 'synergistic', // Cộng gộp hoặc Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, mở rộng phổ
+    'ionophores-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'diaminopyrimidine-ionophores': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+
+    // XX. Các quy tắc của nhóm pleuromutilins (ức chế tổng hợp protein bằng cách gắn vào tiểu đơn vị 50S của ribosome vi khuẩn, tại vị trí peptidyl transferase)
+    // 20.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 20.1.1 Với thành viên của beta-lactam (hoạt động độc lập, kết hợp có thể tăng hiệu quả)
+    'penicillins-pleuromutilins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'cephalosporins-pleuromutilins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'monobactams-pleuromutilins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'carbapenems-pleuromutilins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    // 20.1.2 Với thành viên của peptides
+    'peptides-pleuromutilins': 'synergistic', // Cộng gộp
+    // 20.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'aminoglycosides-pleuromutilins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'pleuromutilins-tetracyclines': 'caution', // Cộng gộp-Additive, vì tetracyclines gắn vào tiểu đơn vị 30S, cũng có trường hợp gây tác dụng phụ
+    'macrolides-pleuromutilins': 'competition', // Cạnh tranh vị trí gắn vào tiểu đơn vị 50S của ribosome
+    'lincosamides-pleuromutilins': 'competition', // Cạnh tranh, không khuyến cáo, cùng gắn vào 50S
+    'phenicols-pleuromutilins': 'competition', // Cạnh tranh 50S (Có trường hợp Cộng gộp hoặc Hiệp đồng, nhưng có trường hợp giảm hiệu quả của nhau. Cần cân nhắc)
+    'pleuromutilins-streptogramins': 'competition', // Cạnh tranh 50S
+    'aminocoumarins-pleuromutilins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 20.3 Với các kháng sinh khác
+    'pleuromutilins-quinolones': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, mở rộng phổ
+    'pleuromutilins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'diaminopyrimidine-pleuromutilins': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+
+    // XXI. Các quy tắc của nhóm streptogramins (Phức hợp 2 thành phần (Streptogramin A và Streptogramin B) hiệp đồng trên tiểu đơn vị 50S của ribosome, ức chế tổng hợp protein của vi khuẩn)
+    // 21.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 21.1.1 Với thành viên của beta-lactam (hoạt động độc lập, kết hợp có thể tăng hiệu quả)
+    'penicillins-streptogramins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'cephalosporins-streptogramins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'monobactams-streptogramins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'carbapenems-streptogramins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    // 21.1.2 Với thành viên của peptides
+    'peptides-streptogramins': 'synergistic', // Cộng gộp
+    // 21.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'aminoglycosides-streptogramins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'streptogramins-tetracyclines': 'synergistic', // Cộng gộp-Additive hoặc Hiệp đồng, vì tetracyclines gắn vào tiểu đơn vị 30S
+    'macrolides-streptogramins': 'competition', // Cạnh tranh vị trí gắn 50S
+    'lincosamides-streptogramins': 'competition', // Cạnh tranh vị trí gắn
+    'phenicols-streptogramins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'aminocoumarins-streptogramins': 'synergistic', // Cộng gộp, do nhóm này ức chế DNA gyrase
+    // 21.3 Với các kháng sinh khác
+    'quinolones-streptogramins': 'synergistic', // Hiệp đồng, do quinolones ức chế enzyme DNA gyrase, mở rộng phổ
+    'streptogramins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'diaminopyrimidine-streptogramins': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+
+    // XXII. Các quy tắc của nhóm aminocoumarins (ức chế enzyme DNA gyrase và DNA topoisomerase IV, tuy nhiên chú ý độc tính trên gan, thận, nên dùng cho thú y)
+    // 22.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 22.1.1 Với thành viên của beta-lactam (hoạt động độc lập, kết hợp có thể tăng hiệu quả)
+    'aminocoumarins-penicillins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'aminocoumarins-cephalosporins': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'aminocoumarins-monobactams': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'aminocoumarins-carbapenems': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    // 22.1.2 Với thành viên của peptides
+    'aminocoumarins-peptides': 'synergistic', // Cộng gộp
+    // 22.2 Với các kháng sinh ức chế tổng hợp protein khác
+    'aminocoumarins-aminoglycosides': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    'aminocoumarins-tetracyclines': 'synergistic', // Cộng gộp-Additive hoặc Hiệp đồng, vì tetracyclines gắn vào tiểu đơn vị 30S
+    'aminocoumarins-macrolides': 'competition', // Cạnh tranh vị trí gắn 50S
+    'aminocoumarins-lincosamides': 'competition', // Cạnh tranh vị trí gắn 50S
+    'aminocoumarins-phenicols': 'synergistic', // Cộng gộp hoặc Hiệp đồng
+    // 22.3 Với các kháng sinh khác
+    'aminocoumarins-quinolones': 'synergistic', // Hiệp đồng mạnh mẽ, do quinolones ức chế enzyme DNA gyrase, nhưng ở 2 vị trí khác nhau
+    'aminocoumarins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'aminocoumarins-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+
+    // Các quy tắc của các nhóm chưa mà chưa có tài liệu nói rõ là có hay không
+    'aminoglycosides-phosphonics': 'synergistic',
+    'ionophores-other/new': 'neutral',
+    'macrolides-pleuromutilins': 'caution',
+    'macrolides-streptogramins': 'caution',
+    'aminocoumarins-rifamycins': 'synergistic', // Cộng gộp hoặc hiệp đồng, hiện tại không có nhóm rifamycins ở đầu vào
+    'lao-phong-quinolones': 'additive',
+    'other/new-other/new': 'neutral'
+        };
+
+        function getAntibioticGroup(antibiotic) {
+            return antibioticToGroupMap[antibiotic] || null;
+        }
+
+        function getCombinationRule(groupA, groupB) {
+            if (groupA === groupB) {
+                if (groupA === 'penicillins' || groupA === 'cephalosporins' || groupA === 'carbapenems') {
+                    return 'competition';
+                }
+            }
+            const key = [groupA, groupB].sort().join('-');
+            return combinationRules[key] || null;
+        }
+
+        // kiemtraks.js - Mã được tích hợp trực tiếp để tránh lỗi import
+        const allAntibiotics = Array.from(Object.keys(antibioticToGroupMap)).sort();
+
+        const specificRules = {
+            'calcium-ceftriaxone': {
+                result: 'ĐỐI KHÁNG NGHIÊM TRỌNG (Calcium và Ceftriaxone không được trộn lẫn trong cùng dịch truyền. Có thể gây kết tủa nguy hiểm tính mạng, đặc biệt ở trẻ sơ sinh.)',
+                class: 'antagonistic'
+            },
+            'clindamycin-erythromycin': {
+                result: 'ĐỐI KHÁNG (Clindamycin và Erythromycin có thể đối kháng do cùng vị trí tác động trên ribosome. KHÔNG NÊN PHỐI HỢP.)',
+                class: 'antagonistic'
+            },
+            'doxycycline-tylosin': {
+                result: 'HIỆP ĐỒNG (Có thể phối hợp, nhất là trong Thú-Y, việc này sẽ mở rộng phổ kháng khuẩn, tăng hiệu quả điều trị các bệnh hô hấp, tiêu hóa.)',
+                class: 'synergistic-positive'
+            },
+            'chloramphenicol-penicillins': {
+                result: 'ĐỐI KHÁNG (Chloramphenicol có thể cản trở tác dụng diệt khuẩn của penicillin do ngăn cản tổng hợp peptidoglycan, khiến vi khuẩn vẫn ở trạng thái tĩnh. KHÔNG NÊN PHỐI HỢP.)',
+                class: 'antagonistic'
+            },
+            'chloramphenicol-cephalosporins': {
+                result: 'ĐỐI KHÁNG (Chloramphenicol có thể cản trở tác dụng diệt khuẩn của cephalosporin do ngăn cản tổng hợp peptidoglycan, khiến vi khuẩn vẫn ở trạng thái tĩnh. KHÔNG NÊN PHỐI HỢP.)',
+                class: 'antagonistic'
+            },
+            'macrolides-chloramphenicol': {
+                result: 'ĐỐI KHÁNG (Cả hai đều tác động lên tiểu đơn vị 50S của ribosome, cạnh tranh nhau và làm giảm hiệu quả. KHÔNG NÊN PHỐI HỢP.)',
+                class: 'antagonistic'
+            },
+            'fluoroquinolones-macrolides': {
+                result: 'CỘNG GỘP (Nhóm Fluoroquinolones và Macrolides có thể kết hợp với nhau do có cơ chế tác động khác nhau, nhưng đều nhắm vào nhân của tế bào vi khuẩn)',
+                class: 'additive'
+            },
+            'fluoroquinolones-tetracyclines': {
+                result: 'CỘNG GỘP (Nhóm Fluoroquinolones và Tetracyclines có thể kết hợp với nhau do có cơ chế tác động khác nhau, nhưng đều nhắm vào nhân của tế bào vi khuẩn)',
+                class: 'additive'
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const antibioticAInput = document.getElementById('antibioticA');
+            const antibioticBInput = document.getElementById('antibioticB');
+            const suggestionsA = document.getElementById('suggestionsA');
+            const suggestionsB = document.getElementById('suggestionsB');
+            const checkBtn = document.getElementById('checkCombinationBtn');
+            const resultBox = document.getElementById('result');
+            const errorMessage = document.getElementById('errorMessage');
+
+            const showSuggestions = (input, suggestionsBox) => {
+                const value = input.value.toLowerCase();
+                suggestionsBox.innerHTML = '';
+                if (value.length === 0) {
+                    suggestionsBox.classList.add('hidden');
+                    return;
+                }
+
+                const filtered = allAntibiotics.filter(antibiotic =>
+                    antibiotic.toLowerCase().includes(value)
+                );
+
+                if (filtered.length > 0) {
+                    filtered.forEach(antibiotic => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.textContent = antibiotic;
+                        suggestionItem.addEventListener('click', () => {
+                            input.value = antibiotic;
+                            suggestionsBox.classList.add('hidden');
+                        });
+                        suggestionsBox.appendChild(suggestionItem);
+                    });
+                    suggestionsBox.classList.remove('hidden');
+                } else {
+                    suggestionsBox.classList.add('hidden');
+                }
+            };
+
+            antibioticAInput.addEventListener('input', () => {
+                showSuggestions(antibioticAInput, suggestionsA);
+            });
+
+            antibioticBInput.addEventListener('input', () => {
+                showSuggestions(antibioticBInput, suggestionsB);
+            });
+            
+            checkBtn.addEventListener('click', () => {
+                const antibioticA = antibioticAInput.value.toLowerCase();
+                const antibioticB = antibioticBInput.value.toLowerCase();
+                
+                errorMessage.textContent = '';
+                resultBox.textContent = 'Kết quả sẽ hiển thị ở đây';
+                resultBox.className = 'result-box';
+
+                if (!antibioticA || !antibioticB) {
+                    errorMessage.textContent = 'Vui lòng nhập tên của cả hai loại kháng sinh.';
+                    return;
+                }
+
+                const ruleKey = [antibioticA, antibioticB].sort().join('-');
+                
+                if (specificRules[ruleKey]) {
+                    resultBox.textContent = specificRules[ruleKey].result;
+                    resultBox.className = `result-box ${specificRules[ruleKey].class}`;
+                    return;
+                }
+
+                const groupA = getAntibioticGroup(antibioticA);
+                const groupB = getAntibioticGroup(antibioticB);
+
+                if (!groupA || !groupB) {
+                    errorMessage.textContent = 'Một trong hai loại kháng sinh hoặc cả hai không được tìm thấy trong cơ sở dữ liệu.';
+                    resultBox.textContent = 'KHÔNG XÁC ĐỊNH';
+                    resultBox.className = 'result-box unknown';
+                    return;
+                }
+
+                const interactionRule = getCombinationRule(groupA, groupB);
+
+                let resultText, resultClass;
+                switch (interactionRule) {
+                    case 'synergistic':
+                        resultText = `HIỆP ĐỒNG (Nhóm ${groupA} và nhóm ${groupB} tác dụng hiệp đồng)`;
+                        resultClass = 'synergistic';
+                        break;
+                    case 'additive':
+                        resultText = `CỘNG GỘP (Nhóm ${groupA} và nhóm ${groupB} có thể bổ trợ để phát huy tác dụng tối đa)`;
+                        resultClass = 'additive';
+                        break;
+                    case 'antagonistic':
+                        resultText = `ĐỐI KHÁNG (Không nên kết hợp nhóm ${groupA} và nhóm ${groupB})`;
+                        resultClass = 'antagonistic';
+                        break;
+                    case 'competition':
+                        resultText = `CẠNH TRANH (Nhóm ${groupA} và nhóm ${groupB} có cùng cơ chế tác dụng, dẫn đến cạnh tranh, có thể làm giảm hiệu quả)`;
+                        resultClass = 'competition';
+                        break;
+                    case 'caution':
+                        resultText = `THẬN TRỌNG (Cần cân nhắc khi kết hợp nhóm ${groupA} và nhóm ${groupB})`;
+                        resultClass = 'caution';
+                        break;
+                    case 'neutral':
+                        errorMessage.textContent = `Việc phối hợp giữa nhóm kháng sinh ${groupA} và nhóm ${groupB} đôi khi không theo quy tắc chung, nhưng có tài liệu nói là được phép cho một số trường hợp điều trị đặc biệt.`;
+                        resultText = 'TRUNG TÍNH (Có thể được hoặc có thể không, phụ thuộc từng cặp kháng sinh cụ thể)';
+                        resultClass = 'neutral';
+                        break;
+                    default:
+                        errorMessage.textContent = 'Quy tắc chưa được định nghĩa trong cơ sở dữ liệu';
+                        resultText = 'KHÔNG XÁC ĐỊNH';
+                        resultClass = 'unknown';
+                }
+                resultBox.textContent = resultText;
+                resultBox.className = `result-box ${resultClass}`;
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('.autocomplete-container')) {
+                    suggestionsA.classList.add('hidden');
+                    suggestionsB.classList.add('hidden');
+                }
+            });
+        });
+
+        // menuks.js - Mã được tích hợp trực tiếp để tránh lỗi import
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactBtn = document.getElementById('contactBtn');
+            const contactModal = document.getElementById('contactModal');
+            const closeContactModalBtn = document.getElementById('closeContactModalBtn');
+            const aboutBtn = document.getElementById('aboutBtn');
+            const aboutModal = document.getElementById('aboutModal');
+            const closeAboutModalBtn = document.getElementById('closeAboutModalBtn');
+            const homeDropdownBtn = document.getElementById('homeDropdownBtn');
+            const homeDropdownMenu = document.getElementById('homeDropdownMenu');
+
+            if (contactBtn && contactModal && closeContactModalBtn) {
+                contactBtn.addEventListener('click', () => {
+                    contactModal.classList.add('active');
+                });
+                closeContactModalBtn.addEventListener('click', () => {
+                    contactModal.classList.remove('active');
+                });
+                contactModal.addEventListener('click', (event) => {
+                    if (event.target === contactModal) {
+                        contactModal.classList.remove('active');
+                    }
+                });
+            }
+
+            if (aboutBtn && aboutModal && closeAboutModalBtn) {
+                aboutBtn.addEventListener('click', () => {
+                    aboutModal.classList.add('active');
+                });
+                closeAboutModalBtn.addEventListener('click', () => {
+                    aboutModal.classList.remove('active');
+                });
+                aboutModal.addEventListener('click', (event) => {
+                    if (event.target === aboutModal) {
+                        aboutModal.classList.remove('active');
+                    }
+                });
+            }
+
+            if (homeDropdownBtn && homeDropdownMenu) {
+                homeDropdownBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    homeDropdownMenu.classList.toggle('hidden');
+                    homeDropdownMenu.classList.toggle('scale-95');
+                    homeDropdownMenu.classList.toggle('opacity-0');
+                });
+            }
+
+            document.addEventListener('click', (event) => {
+                if (homeDropdownMenu && !homeDropdownMenu.classList.contains('hidden') && !homeDropdownBtn.contains(event.target)) {
+                    homeDropdownMenu.classList.add('hidden');
+                    homeDropdownMenu.classList.add('scale-95');
+                    homeDropdownMenu.classList.add('opacity-0');
+                }
+            });
+
+            // Logic đếm số lượng kháng sinh
             const countElement = document.getElementById('antibioticCount');
-            const targetCount = allAntibiotics.length; // Lấy số lượng thực tế từ data
-            let currentCount = 100;
-            const duration = 5000; // Rút ngắn thời gian để hiệu ứng mượt hơn
-            const increment = Math.ceil((targetCount - currentCount) / (duration / 16)); // Tính toán lại tốc độ tăng
+            const targetCount = allAntibiotics.length;
+            let currentCount = 0;
+            const duration = 2000;
+            const increment = targetCount / (duration / 16);
 
             const updateCount = () => {
                 if (currentCount < targetCount) {
@@ -158,7 +1195,7 @@
                     if (currentCount > targetCount) {
                         currentCount = targetCount;
                     }
-                    countElement.textContent = currentCount;
+                    countElement.textContent = Math.floor(currentCount);
                     requestAnimationFrame(updateCount);
                 } else {
                     countElement.textContent = targetCount;
