@@ -298,7 +298,7 @@ color: orange;
 }
 
 .truncated-text-container.expanded {
-    max-height: 500px; /* Chiều cao tối đa khi hiển thị, điều chỉnh cho phù hợp */
+    max-height: 800px; /* Chiều cao tối đa khi hiển thị, điều chỉnh cho phù hợp */
 }
 
 .fade-overlay {
@@ -400,64 +400,61 @@ text-align: justify;
             max-height: 80vh;
             overflow-y: auto;
         }
+        
+/* Responsive adjustments */
         @media (max-width: 600px) {
-/* mã đợt trước */
-.container {
-        margin-top: 20px;
-        padding: 25px;
-    }
-    .input-group {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .autocomplete-container {
-        width: 100%;
-        min-width: unset;
-    }
-    .pill-visual, .pill-visual input { /* Điều chỉnh cho chiều cao trên mobile */
-        height: 40px;
-        border-radius: 20px;
-    }
-    .pill-visual::before, .pill-visual::after {
-        border-radius: 20px 0 0 20px; /* Cập nhật bo tròn cho pseudo-elements */
-    }
-    .pill-visual::after { /* Cần kiểm tra lại nếu có 2 ::after */
-        border-radius: 0 20px 20px 0;
-    }
-
-    header h1 {
-        font-size: 1.5em;
-    }
-    button {
-        font-size: 1.1em;
-        padding: 12px 20px;
-    }
-    .search-icon {
-        font-size: 1em;
-    }
-    .result-box {
-        font-size: 1.2em;
-        min-height: 60px;
-        padding: 15px;
-    }
-    .general-guidance h3 {
-        font-size: 1.2em;
-    }
-    .general-guidance li {
-        font-size: 1.1em;
-    }
-}
-
-/* mã cũ */
-            
-            .result-button {
-                width: 100%;
+            .container {
+                margin-top: 20px;
+                padding: 25px;
             }
-            .result-box h3 {
+            .input-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .autocomplete-container {
+                width: 100%;
+                min-width: unset;
+            }
+            .pill-visual, .pill-visual input { /* Điều chỉnh cho chiều cao trên mobile */
+                height: 40px;
+                border-radius: 20px;
+            }
+            
+            /* Tối ưu hóa footer trên mobile */
+            footer .grid-cols-3 {
+                grid-template-columns: 1fr; /* Chuyển thành 1 cột */
+                text-align: center; /* Căn giữa nội dung */
+            }
+            footer .space-x-4 {
+                flex-direction: column; /* Chuyển các link thành cột */
+                gap: 8px;
+                margin-top: 10px;
+            }
+            footer a {
+                padding: 5px 0;
+            }
+
+            /* Điều chỉnh các phần tử khác để đồng bộ */
+            header h1 {
+                font-size: 1.5em;
+            }
+            .check-button {
+                font-size: 1em;
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+            }
+            .result-text {
                 font-size: 1.25rem;
             }
-            .result-box p {
+            .result-description {
                 font-size: 1rem;
+            }
+            .general-guidance h3 {
+                font-size: 1em;
+            }
+            .general-guidance ul {
+                font-size: 0.9em;
             }
         }
     </style>
