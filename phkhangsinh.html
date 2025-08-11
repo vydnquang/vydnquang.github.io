@@ -289,6 +289,46 @@ color: orange;
             list-style: decimal;
             line-height: 1.6;
         }
+/* CODE THÊM NÚT READ MORE CHO PHẦN CHỈ DẪN */
+.truncated-text-container {
+    overflow: hidden;
+    max-height: 50px; /* Chiều cao ban đầu khi bị ẩn, bạn có thể điều chỉnh */
+    position: relative;
+    transition: max-height 0.5s ease-in-out;
+}
+
+.truncated-text-container.expanded {
+    max-height: 500px; /* Chiều cao tối đa khi hiển thị, điều chỉnh cho phù hợp */
+}
+
+.fade-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px; /* Chiều cao của lớp phủ mờ */
+    background: linear-gradient(to top, #fef3c7, rgba(254, 243, 199, 0));
+    pointer-events: none; /* Cho phép click xuyên qua lớp phủ */
+}
+
+.read-more-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: transparent;
+    border: 1px solid blue;
+    color: blue;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.read-more-btn:hover {
+    background-color: transparent;
+    color: orange;
+}
 
         footer {
     background-color: #FFD700; /* Màu vàng */
@@ -457,9 +497,10 @@ text-align: justify;
         </div>
         <div class="error-message" id="errorMessage"></div>
 
-        <div class="general-guidance" id="generalGuidance">
-            <h3><i class="fas fa-exclamation-triangle warning-icon"></i> Chỉ dẫn quan trọng:</h3>
-            <ol>
+        <div class="general-guidance">
+    <h3><i class="fas fa-exclamation-triangle warning-icon"></i> Chỉ dẫn quan trọng</h3>
+    <div id="guidanceText" class="truncated-text-container">
+        <ol>
                 <li>Việc phối hợp kháng sinh cần phải dựa trên lâm sàng từng ca bệnh cụ thể, sau khi thực hiện kháng sinh đồ đầy đủ.</li>
                 <li>Cần cân nhắc giữa lợi và hại khi phối hợp kháng sinh, vì "thuốc là con dao 2 lưỡi", chỉ nên phối hợp khi thực sự cần thiết.</li>
                 <li>Hãy sử dụng kháng sinh một cách có trách nhiệm để không làm cho tình trạng kháng kháng sinh ngày càng nghiêm trọng hơn.</li>
@@ -467,7 +508,10 @@ text-align: justify;
                 <li>Các kết quả "CẠNH TRANH"; "THẬN TRỌNG"; "TRUNG TÍNH" cần được tìm hiểu kỹ đối với mỗi cặp kháng sinh cần kết hợp.</li>
                 <li>Tất cả các kết quả trên chỉ mang tính tham khảo nhanh, chúng tôi không chịu bất kỳ trách nhiệm nào về các hậu quả không mong muốn do các bác sĩ làm theo mà không tìm hiểu kỹ trước khi thực hiện.</li>
             </ol>
-        </div>
+        <div class="fade-overlay"></div>
+    </div>
+    <button id="readMoreBtn" class="read-more-btn">Đọc thêm</button>
+</div>
     </main>
 
 <footer class="bg-yellow-400 text-blue py-2 mt-auto">
@@ -1236,6 +1280,25 @@ text-align: justify;
                 }
             });
         });
+
+        // CODE ĐIỀU KHIỂN NÚT READ MORE
+document.addEventListener('DOMContentLoaded', () => {
+    const readMoreBtn = document.getElementById('readMoreBtn');
+    const guidanceText = document.getElementById('guidanceText');
+    const fadeOverlay = guidanceText.querySelector('.fade-overlay');
+
+    readMoreBtn.addEventListener('click', () => {
+        guidanceText.classList.toggle('expanded');
+        
+        if (guidanceText.classList.contains('expanded')) {
+            readMoreBtn.textContent = 'Thu gọn';
+            fadeOverlay.style.display = 'none'; // Ẩn lớp phủ khi mở rộng
+        } else {
+            readMoreBtn.textContent = 'Đọc thêm';
+            fadeOverlay.style.display = 'block'; // Hiện lớp phủ khi thu gọn
+        }
+    });
+});
 
         // CODE ĐIỀU KHIỂN MENU FOOTER
         document.addEventListener('DOMContentLoaded', () => {
