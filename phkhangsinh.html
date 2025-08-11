@@ -81,52 +81,101 @@
             width: 100%;
         }
 
+
+/* ------------------------------------------------------------------ */
+        /* --- CẬP NHẬT: KIỂU DÁNG VIÊN THUỐC CON NHỘNG TRÊN .pill-visual --- */
+        /* ------------------------------------------------------------------ */
         .pill-visual {
             position: relative;
-            display: flex;
-            align-items: center;
-            height: 50px;
-            border: 2px solid #0070b5;
-            border-radius: 25px;
-            overflow: hidden;
-            background-color: #f7f9fa;
-            transition: all 0.3s ease;
+            width: 100%;
+            height: 45px; /* Chiều cao cố định */
+            border-radius: 22.5px; /* Bo tròn tối đa */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15),
+                        inset 0 1px 2px rgba(0, 0, 0, 0.08);
+            overflow: hidden; /* Quan trọng để cắt bớt các gradient con */
+            display: flex; /* Để input bên trong căn giữa */
+            align-items: center; /* Căn giữa input */
         }
 
-        .pill-visual:focus-within {
-            box-shadow: 0 0 0 4px rgba(0, 112, 181, 0.2);
-        }
-
+        /* Input bên trong .pill-visual */
         .pill-visual input {
-            flex-grow: 1;
-            padding: 0 20px;
+            width: 100%;
+            height: 100%; /* Chiếm toàn bộ chiều cao của .pill-visual */
+            padding: 0 25px; /* Padding ngang */
             border: none;
-            outline: none;
-            height: 100%;
-            background: transparent;
-            font-size: 1em;
+            background-color: transparent; /* Quan trọng: làm nền trong suốt */
+            font-size: 1.1em;
             color: #333;
+            outline: none;
+            box-sizing: border-box;
+            z-index: 3; /* Đảm bảo input nằm trên các lớp màu */
+            position: relative; /* Để z-index hoạt động */
         }
 
-        .pill-visual .divider {
-            width: 30px;
-            height: 30px;
-            background-color: #0070b5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2em;
+        /* Focus state cho input, áp dụng bóng cho pill-visual */
+        .pill-visual:has(input:focus) { /* Sử dụng :has() nếu trình duyệt hỗ trợ, nếu không dùng JS */
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25),
+                        inset 0 1px 3px rgba(0, 0, 0, 0.1),
+                        0 0 0 4px rgba(0, 123, 255, 0.3);
+        }
+        
+        /* Pseudo-elements cho hiệu ứng chia đôi (áp dụng cho .pill-visual) */
+        .pill-visual::before {
+            content: '';
             position: absolute;
-            right: 10px;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent 0%, #ffeea1 100%);
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 22.5px 0 0 22.5px;
         }
 
-        .pill-visual-B .divider {
-            right: unset;
-            left: 10px;
+        .pill-visual::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to left, transparent 0%, #bfffd2 100%);
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 0 22.5px 22.5px 0;
         }
+
+        /* Đường chia đôi rõ ràng (áp dụng cho .pill-visual) */
+        .pill-visual .divider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px; /* Độ dày của đường chia */
+            background-color: #dbdbdb; /* Màu đậm hơn cho đường chia */
+            transform: translateX(-50%);
+            pointer-events: none;
+            z-index: 2; /* Đảm bảo nằm trên cả hai lớp gradient */
+        }
+        
+        /* Màu sắc riêng biệt cho từng viên thuốc */
+        #pillA::before {
+            background: linear-gradient(to right, transparent 0%, #ffeea1 100%);
+        }
+
+        #pillA::after {
+            background: linear-gradient(to left, transparent 0%, #bfffd2 100%);
+        }
+        
+        #pillB::before {
+            background: linear-gradient(to right, transparent 0%, #709dff 100%);
+        }
+
+        #pillB::after {
+            background: linear-gradient(to left, transparent 0%, #ffc8a6 100%);
+        }
+
 
         .suggestions-list {
             position: absolute;
@@ -154,7 +203,7 @@
         #checkCombinationBtn {
             width: 100%;
             padding: 18px;
-            background-image: linear-gradient(to right, #0070b5, #0099d0);
+            background-image: linear-gradient(to right, #28a745, #5cd678);
             color: white;
             font-weight: bold;
             border-radius: 15px;
@@ -168,6 +217,11 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
+.search-icon {
+    color: #FFA500; /* Màu cam cho icon */
+    font-size: 1.1em;
+}
+
         #checkCombinationBtn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0, 112, 181, 0.4);
@@ -178,7 +232,7 @@
             padding: 20px;
             border-radius: 15px;
             text-align: center;
-            color: white;
+            color: red;
             font-weight: bold;
             font-size: 1.2em;
             min-height: 80px;
@@ -214,7 +268,7 @@
         }
 
         .warning-icon {
-            color: #f59e0b;
+            color: red;
             margin-right: 10px;
         }
 
@@ -223,6 +277,8 @@
             font-size: 1.2em;
             display: flex;
             align-items: center;
+color: orange;
+    justify-content: center;
         }
 
         .general-guidance ol {
@@ -233,93 +289,129 @@
         }
 
         footer {
-            background-color: #ffffff;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
-            padding: 20px 0;
-            margin-top: auto;
-        }
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+    background-color: #FFD700; /* Màu vàng */
+    color: blue;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 0.9em;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: auto;
+}
+
+footer a {
+    color: #009fb8; /* Đảm bảo màu link trong footer */
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+        .menu-dropdown-content {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background-color: #ffd336;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 100;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transform: translateX(-50%) translateY(0) scale(0.95);
+            transform-origin: bottom center;
         }
-        .modal-overlay.active {
+
+        .menu-dropdown-content.visible {
+            display: block;
             opacity: 1;
-            visibility: visible;
+            transform: translateX(-50%) translateY(-10px) scale(1);
+        }
+
+        .menu-dropdown-content a {
+            color: white;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .modal {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal.active {
+            opacity: 1;
         }
         .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            position: relative;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease-in-out;
         }
-        .modal-overlay.active .modal-content {
+        .modal.active .modal-content {
             transform: scale(1);
-        }
-        .close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        .dropdown-menu {
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 0;
-            z-index: 50;
-            width: 100%;
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform-origin: top;
         }
 
         @media (max-width: 600px) {
-            .container {
-                margin-top: 20px;
-                padding: 25px;
-            }
-            .input-group {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .autocomplete-container {
+/* mã đợt trước */
+.container {
+        margin-top: 20px;
+        padding: 25px;
+    }
+    .input-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .autocomplete-container {
+        width: 100%;
+        min-width: unset;
+    }
+    .pill-visual, .pill-visual input { /* Điều chỉnh cho chiều cao trên mobile */
+        height: 40px;
+        border-radius: 20px;
+    }
+    .pill-visual::before, .pill-visual::after {
+        border-radius: 20px 0 0 20px; /* Cập nhật bo tròn cho pseudo-elements */
+    }
+    .pill-visual::after { /* Cần kiểm tra lại nếu có 2 ::after */
+        border-radius: 0 20px 20px 0;
+    }
+
+    header h1 {
+        font-size: 1.5em;
+    }
+    button {
+        font-size: 1.1em;
+        padding: 12px 20px;
+    }
+    .search-icon {
+        font-size: 1em;
+    }
+    .result-box {
+        font-size: 1.2em;
+        min-height: 60px;
+        padding: 15px;
+    }
+    .general-guidance h3 {
+        font-size: 1.2em;
+    }
+    .general-guidance li {
+        font-size: 1.1em;
+    }
+}
+
+/* mã cũ */
+            
+            .result-button {
                 width: 100%;
-                min-width: unset;
             }
-            .pill-visual, .pill-visual input {
-                height: 40px;
-                border-radius: 20px;
+            .result-box h3 {
+                font-size: 1.25rem;
             }
-            .pill-visual::before, .pill-visual::after {
-                border-radius: 20px 0 0 20px;
-            }
-            .pill-visual::after {
-                border-radius: 0 20px 20px 0;
+            .result-box p {
+                font-size: 1rem;
             }
         }
     </style>
@@ -328,7 +420,7 @@
     <header>
         <h1>Tra cứu phối hợp Kháng Sinh</h1>
         <p class="update-info">
-            <i class="fas fa-sync-alt loading-icon"></i>(Cập nhật đến 8/2025: <span id="antibioticCount">0</span> loại kháng sinh)
+            <i class="fas fa-sync-alt loading-icon"></i> (Cập nhật đến 8/2025: <span id="antibioticCount">0</span> loại kháng sinh)
         </p>
     </header>
 
@@ -351,7 +443,7 @@
         </div>
 
         <button id="checkCombinationBtn">
-            <i class="fas fa-search"></i> Kiểm tra !
+<i class="fas fa-search search-icon"></i> Kiểm tra !
         </button>
 
         <div class="result-box" id="result">
@@ -372,74 +464,60 @@
         </div>
     </main>
 
-    <footer>
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-center items-center gap-4">
-                <div class="relative w-full md:w-auto">
-                    <button id="homeDropdownBtn" class="w-full px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
-                        Kiểm tra tương tác thuốc
-                    </button>
-                    <div id="homeDropdownMenu" class="dropdown-menu hidden scale-95 opacity-0">
-                        <div class="p-2 space-y-2">
-                            <a href="https://www.google.com/search?q=phối+hợp+kháng+sinh" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-                                Phối hợp kháng sinh
-                            </a>
-                            <a href="https://www.google.com/search?q=tương+tác+thuốc+khác" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-                                Tương tác thuốc khác
-                            </a>
-                            <a href="https://www.google.com/search?q=cơ+sở+dữ+liệu+thuốc" target="_blank" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
-                                Cơ sở dữ liệu thuốc
-                            </a>
-                        </div>
-                    </div>
+<footer class="bg-yellow-400 text-blue py-2 mt-auto">
+        <div class="flex justify-center items-center gap-4 text-sm">
+            <!-- Nút Tra cứu tương tác -->
+            <div class="menu-dropdown relative">
+                <a href="#" id="searchDropdownBtn" class="hover:text-[#080052] transition-colors duration-300">
+                    <i class="fas fa-search"></i> Tra cứu tương tác
+                </a>
+                <div id="searchDropdownMenu" class="menu-dropdown-content absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-yellow-700 rounded-lg shadow-lg hidden">
+                    <a href="https://go.drugbank.com/drug-interaction-checker">Tra cứu tại DrugBank</a>
+                    <a href="https://tuongtacthuoc.nhic.vn/Home/CSDLTuongTacThuoc">Tra cứu tại NHIC VN</a>
+                    <a href="https://www.drugs.com/drug_interactions.html">Tra cứu tại Drugs.com</a>
                 </div>
-                <button id="aboutBtn" class="w-full md:w-auto px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
-                    Giới thiệu
-                </button>
-                <button id="contactBtn" class="w-full md:w-auto px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors duration-300 text-center focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
-                    Liên hệ
-                </button>
             </div>
-            <p class="text-center text-gray-500 text-sm mt-4">
-                Copyright © 2025 by BSTY. <a href="https://www.facebook.com/annhonpet" target="_blank" class="text-blue-600 hover:text-blue-800 transition-colors">An Nhơn Pet</a>
-            </p>
-        </div>
-    </footer>
-    
-    <!-- Modal Giới thiệu -->
-    <div id="aboutModal" class="modal-overlay">
-        <div class="modal-content max-w-lg w-full">
-            <button id="closeAboutModalBtn" class="close-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+            <!-- Nút Giới thiệu -->
+            <button id="aboutBtn" class="hover:text-[#080052] transition-colors duration-300">
+                <i class="fas fa-info-circle"></i> Giới thiệu
             </button>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Giới thiệu Phần mềm</h2>
-            <div class="space-y-4 text-gray-700">
-                <p>Đây là phần mềm tra cứu phối hợp kháng sinh thông minh, được xây dựng với mục tiêu cung cấp một công cụ tham khảo nhanh chóng về tương tác của các loại kháng sinh.</p>
-                <p>Phần mềm bao gồm các quy tắc phối hợp dựa trên cơ chế tác động của thuốc, giúp các chuyên gia y tế có thể đưa ra quyết định lâm sàng tốt hơn.</p>
-                <p>Chúng tôi luôn nỗ lực cập nhật dữ liệu để mang lại thông tin chính xác và hữu ích nhất. Tuy nhiên, các kết quả chỉ mang tính chất tham khảo. Vui lòng tham khảo ý kiến chuyên gia trước khi đưa ra quyết định điều trị.</p>
-            </div>
+            <!-- Nút Liên hệ -->
+            <button id="contactBtn" class="hover:text-[#080052] transition-colors duration-300">
+                <i class="fas fa-envelope"></i> Liên hệ
+            </button>
+        </div>
+<p>Copyright © 2025 by BSTY. <a href="https://www.facebook.com/annhonpet">An Nhơn Pet</a></p>
+    </footer>
+
+    <!-- Modal Giới thiệu -->
+    <div id="aboutModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="modal-content bg-white rounded-lg shadow-xl p-8 max-w-lg w-full transform scale-95 transition-transform duration-300 relative">
+            <button id="closeAboutModalBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Giới thiệu Phần mềm</h2>
+            <p class="text-gray-600 mb-2">
+                Đây là phần mềm tra cứu phối hợp kháng sinh thông minh, được xây dựng với mục tiêu cung cấp một công cụ tham khảo nhanh chóng về tương tác của các loại kháng sinh.
+            </p>
+            <p class="text-gray-600">
+                Phần mềm bao gồm các quy tắc phối hợp dựa trên cơ chế tác động của thuốc, giúp các chuyên gia y tế có thể đưa ra quyết định lâm sàng tốt hơn. Chúng tôi luôn nỗ lực cập nhật dữ liệu để mang lại thông tin chính xác và hữu ích nhất. Tuy nhiên, các kết quả chỉ mang tính chất tham khảo. Vui lòng tham khảo ý kiến chuyên gia trước khi đưa ra quyết định điều trị.
+            </p>
         </div>
     </div>
     
     <!-- Modal Liên hệ -->
-    <div id="contactModal" class="modal-overlay">
-        <div class="modal-content max-w-sm w-full">
-            <button id="closeContactModalBtn" class="close-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+    <div id="contactModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="modal-content bg-white rounded-lg shadow-xl p-8 max-w-lg w-full transform scale-95 transition-transform duration-300 relative">
+            <button id="closeContactModalBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <i class="fas fa-times text-xl"></i>
             </button>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Thông tin Liên hệ</h2>
-            <div class="space-y-4 text-center">
-                <p class="text-gray-700">
-                    <span class="font-semibold">Tác giả:</span> Nguyễn Văn A
-                </p>
-                <p class="text-gray-700">
-                    <span class="font-semibold">Điện thoại:</span> 0987-654-321
-                </p>
-            </div>
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Thông tin Liên hệ</h2>
+            <p class="text-gray-600">
+                <strong>Tác giả:</strong> Nguyễn Văn A
+            </p>
+            <p class="text-gray-600">
+                <strong>Điện thoại:</strong> 0987-654-321
+            </p>
         </div>
     </div>
     
@@ -1126,59 +1204,72 @@
             });
         });
 
-        // menuks.js - Mã được tích hợp trực tiếp để tránh lỗi import
+        // CODE ĐIỀU KHIỂN MENU FOOTER
         document.addEventListener('DOMContentLoaded', () => {
-            const contactBtn = document.getElementById('contactBtn');
-            const contactModal = document.getElementById('contactModal');
-            const closeContactModalBtn = document.getElementById('closeContactModalBtn');
             const aboutBtn = document.getElementById('aboutBtn');
+            const contactBtn = document.getElementById('contactBtn');
             const aboutModal = document.getElementById('aboutModal');
+            const contactModal = document.getElementById('contactModal');
             const closeAboutModalBtn = document.getElementById('closeAboutModalBtn');
-            const homeDropdownBtn = document.getElementById('homeDropdownBtn');
-            const homeDropdownMenu = document.getElementById('homeDropdownMenu');
+            const closeContactModalBtn = document.getElementById('closeContactModalBtn');
+            const searchDropdownBtn = document.getElementById('searchDropdownBtn');
+            const searchDropdownMenu = document.getElementById('searchDropdownMenu');
 
-            if (contactBtn && contactModal && closeContactModalBtn) {
-                contactBtn.addEventListener('click', () => {
-                    contactModal.classList.add('active');
-                });
-                closeContactModalBtn.addEventListener('click', () => {
-                    contactModal.classList.remove('active');
-                });
-                contactModal.addEventListener('click', (event) => {
-                    if (event.target === contactModal) {
-                        contactModal.classList.remove('active');
-                    }
-                });
-            }
+            // Hàm để mở modal
+            const openModal = (modalElement) => {
+                modalElement.classList.remove('hidden');
+                setTimeout(() => {
+                    modalElement.classList.add('active');
+                    modalElement.classList.remove('opacity-0');
+                    modalElement.querySelector('.modal-content').classList.remove('scale-95');
+                }, 10);
+            };
 
-            if (aboutBtn && aboutModal && closeAboutModalBtn) {
-                aboutBtn.addEventListener('click', () => {
-                    aboutModal.classList.add('active');
-                });
-                closeAboutModalBtn.addEventListener('click', () => {
-                    aboutModal.classList.remove('active');
-                });
-                aboutModal.addEventListener('click', (event) => {
-                    if (event.target === aboutModal) {
-                        aboutModal.classList.remove('active');
-                    }
-                });
-            }
+            // Hàm để đóng modal
+            const closeModal = (modalElement) => {
+                modalElement.classList.remove('active');
+                modalElement.classList.add('opacity-0');
+                modalElement.querySelector('.modal-content').classList.add('scale-95');
+                setTimeout(() => {
+                    modalElement.classList.add('hidden');
+                }, 300);
+            };
 
-            if (homeDropdownBtn && homeDropdownMenu) {
-                homeDropdownBtn.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    homeDropdownMenu.classList.toggle('hidden');
-                    homeDropdownMenu.classList.toggle('scale-95');
-                    homeDropdownMenu.classList.toggle('opacity-0');
-                });
-            }
+            // Xử lý nút "Giới thiệu"
+            aboutBtn.addEventListener('click', () => openModal(aboutModal));
+            closeAboutModalBtn.addEventListener('click', () => closeModal(aboutModal));
+            aboutModal.addEventListener('click', (event) => {
+                if (event.target === aboutModal) {
+                    closeModal(aboutModal);
+                }
+            });
 
+            // Xử lý nút "Liên hệ"
+            contactBtn.addEventListener('click', () => openModal(contactModal));
+            closeContactModalBtn.addEventListener('click', () => closeModal(contactModal));
+            contactModal.addEventListener('click', (event) => {
+                if (event.target === contactModal) {
+                    closeModal(contactModal);
+                }
+            });
+
+            // Xử lý dropdown menu cho "Tra cứu tương tác"
+            searchDropdownBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const isHidden = searchDropdownMenu.classList.toggle('hidden');
+                searchDropdownMenu.classList.toggle('opacity-0', isHidden);
+                searchDropdownMenu.classList.toggle('scale-95', isHidden);
+                searchDropdownMenu.classList.toggle('visible', !isHidden);
+            });
+
+            // Đóng dropdown khi click ra ngoài
             document.addEventListener('click', (event) => {
-                if (homeDropdownMenu && !homeDropdownMenu.classList.contains('hidden') && !homeDropdownBtn.contains(event.target)) {
-                    homeDropdownMenu.classList.add('hidden');
-                    homeDropdownMenu.classList.add('scale-95');
-                    homeDropdownMenu.classList.add('opacity-0');
+                if (!searchDropdownBtn.contains(event.target) && !searchDropdownMenu.contains(event.target)) {
+                    searchDropdownMenu.classList.add('hidden');
+                    searchDropdownMenu.classList.add('opacity-0');
+                    searchDropdownMenu.classList.add('scale-95');
+                    searchDropdownMenu.classList.remove('visible');
                 }
             });
 
