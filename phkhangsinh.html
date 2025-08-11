@@ -97,11 +97,24 @@
             align-items: center; /* Căn giữa input */
         }
 
+.pill-visual .fa-pills {
+            /* Vị trí tuyệt đối để di chuyển icon tự do trong .pill-visual */
+            position: absolute;
+            left: 25px; /* Đặt icon cách lề trái 25px */
+            top: 50%; /* Đặt icon ở giữa theo chiều dọc */
+            transform: translateY(-50%); /* Dịch chuyển ngược lại 50% chiều cao của chính nó để căn giữa chính xác */
+            color: #3b82f6; /* Tailwind: text-blue-500 */
+            font-size: 1.2rem;
+            pointer-events: none; /* Đảm bảo icon không cản trở việc click vào input */
+        }
+
         /* Input bên trong .pill-visual */
         .pill-visual input {
             width: 100%;
             height: 100%; /* Chiếm toàn bộ chiều cao của .pill-visual */
             padding: 0 25px; /* Padding ngang */
+padding-right: 40px; /* Thêm padding đủ để icon có chỗ đứng */
+            padding-left: 3.5rem; /* Giữ padding trái */
             border: none;
             background-color: transparent; /* Quan trọng: làm nền trong suốt */
             font-size: 1.1em;
@@ -169,11 +182,11 @@
         }
         
         #pillB::before {
-            background: linear-gradient(to right, transparent 0%, #709dff 100%);
+            background: linear-gradient(to right, transparent 0%, #ffc8a6 100%);
         }
 
         #pillB::after {
-            background: linear-gradient(to left, transparent 0%, #ffc8a6 100%);
+            background: linear-gradient(to left, transparent 0%, #709dff 100%);
         }
 
 
@@ -205,27 +218,51 @@ color: #007bff; /* màu xanh */
             width: 100%;
             padding: 18px;
             background-image: linear-gradient(to right, #5bc974, #96e0a7);
-            color: white;
+            color: #451c00;
             font-weight: bold;
             border-radius: 15px;
             box-shadow: 0 6px 15px rgba(0, 112, 181, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 10px; /* Khoảng cách giữa chữ và icon */
             cursor: pointer;
             border: none;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
 .fa-flask {
-    color: #FFA500; /* Màu cam cho icon, mặc định là giá trị search-icon */
+    color: blue; /* Màu cam cho icon bình thủy tinh */
     font-size: 1.5em;
 }
 
         #checkCombinationBtn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0, 112, 181, 0.4);
+        }
+
+  /* CSS cho icon khi đang xoay */
+        .icon-rotating {
+            animation: rotateFlask 1s ease-in-out infinite;
+        }
+
+        /* Định nghĩa animation */
+        @keyframes rotateFlask {
+            0% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(-15deg);
+            }
+            50% {
+                transform: rotate(0deg);
+            }
+            75% {
+                transform: rotate(15deg);
+            }
+            100% {
+                transform: rotate(0deg);
+            }
         }
 
         .result-box {
@@ -289,6 +326,7 @@ color: orange;
             list-style: decimal;
             line-height: 1.6;
         }
+
 /* CODE THÊM NÚT READ MORE CHO PHẦN CHỈ DẪN */
 .truncated-text-container {
     overflow: hidden;
@@ -400,7 +438,7 @@ text-align: justify;
             max-height: 80vh;
             overflow-y: auto;
         }
-        
+
             /* TỐI ƯU HÓA TRÊN MOBILE */
         @media (max-width: 600px) {
             .container {
@@ -478,6 +516,7 @@ text-align: justify;
         <div class="input-group">
             <div class="autocomplete-container">
                 <div class="pill-visual" id="pillA">
+<i class="fas fa-pills text-blue-400 mr-1"></i>
                     <input type="text" id="antibioticA" placeholder="Nhập tên kháng sinh 1">
                     <div class="divider"></div>
                 </div>
@@ -485,6 +524,7 @@ text-align: justify;
             </div>
             <div class="autocomplete-container">
                 <div class="pill-visual" id="pillB">
+<i class="fas fa-pills text-blue-400 mr-1"></i>
                     <input type="text" id="antibioticB" placeholder="Nhập tên kháng sinh 2">
                     <div class="divider"></div>
                 </div>
@@ -493,7 +533,7 @@ text-align: justify;
         </div>
 
         <button id="checkCombinationBtn">
-<i class="fas fa-flask"></i> KIỂM TRA !
+<i id="flaskIcon" class="fas fa-flask"></i> KIỂM TRA !
         </button>
 
         <div class="result-box" id="result">
@@ -584,7 +624,7 @@ text-align: justify;
                 <i class="fas fa-times text-xl"></i>
             </button>
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Thông tin Nhà phát triển:</h2>
-<img src="https://lh5.googleusercontent.com/6WDu5g1I1FzhAf6-XTdeKfyJ4jabnK_rgBNF99CEc3JnZUQjwzLVFLOrl_yLg1qgFHb3YyfA_jBDwj59Hx8Y3Jutn8gN4T6hFB_RCQ3AxKjk7HDPKocE4t4ZLPDviHK5zwI5blOqHSc=w16383" alt="Logo của An Nhơn Pet" 
+<img src="https://vydnquang.github.io/codeks/anp-logo.png" alt="Logo của An Nhơn Pet" 
                  class="rounded-lg mb-4 mx-auto shadow-md" width="240" height="240">
             <p class="text-gray-600">
                 <strong>Đơn vị:</strong> An Nhơn Pet
@@ -1306,6 +1346,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// CODE LÚC LẮC ICON LỌ THỦY TINH
+        const button = document.getElementById('checkCombinationBtn');
+        const icon = document.getElementById('flaskIcon');
+
+        button.addEventListener('click', function() {
+            // Thêm class 'icon-rotating' để kích hoạt animation
+            icon.classList.add('icon-rotating');
+
+            // Sau 60 giây, xóa class để dừng animation
+             setTimeout(function() {
+                icon.classList.remove('icon-rotating');
+             }, 60000); // Dừng sau 60 giây
+        });
 
         // CODE ĐIỀU KHIỂN MENU FOOTER
         document.addEventListener('DOMContentLoaded', () => {
