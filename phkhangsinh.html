@@ -401,26 +401,7 @@ text-align: justify;
             overflow-y: auto;
         }
         
-/* Responsive adjustments */
-        @media (max-width: 600px) {
-            .container {
-                margin-top: 20px;
-                padding: 25px;
-            }
-            .input-group {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .autocomplete-container {
-                width: 100%;
-                min-width: unset;
-            }
-            .pill-visual, .pill-visual input { /* Điều chỉnh cho chiều cao trên mobile */
-                height: 40px;
-                border-radius: 20px;
-            }
-            
-            /* Tối ưu hóa footer trên mobile */
+            /* TỐI ƯU HÓA TRÊN MOBILE */
         @media (max-width: 600px) {
             .container {
                 margin-top: 20px;
@@ -439,7 +420,7 @@ text-align: justify;
                 border-radius: 20px;
             }
             
-            /* Điều chỉnh CSS cho footer mới */
+            /* Điều chỉnh CSS cho footer trên mobile */
             footer .flex {
                 flex-wrap: nowrap; /* Ngăn các nút xuống dòng */
                 justify-content: space-around;
@@ -452,7 +433,7 @@ text-align: justify;
                 white-space: nowrap; /* Ngăn chữ trong nút xuống dòng */
             }
             footer p {
-                font-size: 0.65rem; /* Giảm kích thước font copyright */
+                font-size: 0.7rem; /* Giảm kích thước font copyright */
                 white-space: nowrap; /* Ngăn copyright xuống dòng */
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -460,7 +441,7 @@ text-align: justify;
                 margin: 0 auto; /* Căn giữa dòng copyright */
             }
 
-            /* Điều chỉnh các phần tử khác để đồng bộ */
+            /* Điều chỉnh các phần tử khác trên mobile */
             header h1 {
                 font-size: 1.5em;
             }
@@ -1315,7 +1296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         guidanceText.classList.toggle('expanded');
         
         if (guidanceText.classList.contains('expanded')) {
-            readMoreBtn.textContent = 'Thu gọn';
+            readMoreBtn.textContent = 'Ẩn bớt';
             fadeOverlay.style.display = 'none'; // Ẩn lớp phủ khi mở rộng
         } else {
             readMoreBtn.textContent = 'Đọc thêm';
