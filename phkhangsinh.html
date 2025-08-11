@@ -204,7 +204,7 @@ color: #007bff; /* màu xanh */
         #checkCombinationBtn {
             width: 100%;
             padding: 18px;
-            background-image: linear-gradient(to right, #28a745, #5cd678);
+            background-image: linear-gradient(to right, #5bc974, #96e0a7);
             color: white;
             font-weight: bold;
             border-radius: 15px;
@@ -218,9 +218,9 @@ color: #007bff; /* màu xanh */
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-.search-icon {
-    color: #FFA500; /* Màu cam cho icon */
-    font-size: 1.1em;
+.fa-flask {
+    color: #FFA500; /* Màu cam cho icon, mặc định là giá trị search-icon */
+    font-size: 1.5em;
 }
 
         #checkCombinationBtn:hover {
@@ -421,35 +421,43 @@ text-align: justify;
             }
             
             /* Tối ưu hóa footer trên mobile */
-            footer .max-w-7xl {
-                padding-left: 10px;
-                padding-right: 10px;
+        @media (max-width: 600px) {
+            .container {
+                margin-top: 20px;
+                padding: 25px;
             }
-            footer .grid-cols-1 {
-                display: flex;
+            .input-group {
                 flex-direction: column;
-                align-items: center;
+                gap: 15px;
             }
-            footer .space-x-4 {
-                display: flex;
-                justify-content: center;
-                flex-wrap: nowrap; /* Ngăn các link xuống dòng */
-                margin-top: 10px;
-                gap: 0.5rem; /* Giảm khoảng cách giữa các link */
+            .autocomplete-container {
+                width: 100%;
+                min-width: unset;
             }
-            footer .space-x-4 a {
-                font-size: 0.75rem; /* Giảm kích thước font cho link */
-                padding: 5px 8px; /* Giảm padding để link gọn hơn */
+            .pill-visual, .pill-visual input {
+                height: 40px;
+                border-radius: 20px;
             }
-            footer .text-2xl {
-                font-size: 1.5rem; /* Giảm kích thước font logo */
+            
+            /* Điều chỉnh CSS cho footer mới */
+            footer .flex {
+                flex-wrap: nowrap; /* Ngăn các nút xuống dòng */
+                justify-content: space-around;
+                gap: 0.5rem; /* Giảm khoảng cách giữa các nút */
+                padding: 0 10px;
             }
-            footer .text-sm {
+            footer .flex a, footer .flex button {
+                font-size: 0.75rem; /* Giảm kích thước font cho link và nút */
+                padding: 6px 10px; /* Giảm padding để nút gọn hơn */
+                white-space: nowrap; /* Ngăn chữ trong nút xuống dòng */
+            }
+            footer p {
                 font-size: 0.65rem; /* Giảm kích thước font copyright */
                 white-space: nowrap; /* Ngăn copyright xuống dòng */
                 overflow: hidden;
                 text-overflow: ellipsis;
                 max-width: 90%;
+                margin: 0 auto; /* Căn giữa dòng copyright */
             }
 
             /* Điều chỉnh các phần tử khác để đồng bộ */
@@ -504,7 +512,7 @@ text-align: justify;
         </div>
 
         <button id="checkCombinationBtn">
-<i class="fas fa-search search-icon"></i> Kiểm tra !
+<i class="fas fa-flask"></i> KIỂM TRA !
         </button>
 
         <div class="result-box" id="result">
@@ -529,7 +537,8 @@ text-align: justify;
 </div>
     </main>
 
-<footer class="bg-yellow-400 text-blue py-2 mt-auto">
+<!-- FOOTER -->
+    <footer class="bg-yellow-400 text-blue py-2 mt-auto">
         <div class="flex justify-center items-center gap-4 text-sm">
             <!-- Nút Tra cứu tương tác -->
             <div class="menu-dropdown relative">
@@ -551,7 +560,7 @@ text-align: justify;
                 <i class="fas fa-envelope"></i> Liên hệ
             </button>
         </div>
-<p>Copyright © 2025 by nh@tqu@ng (BSTY. <a href="https://www.facebook.com/annhonpet">An Nhơn Pet</a>)</p>
+        <p class="text-center mt-2">Copyright &copy; 2025 by nh@tqu@ng (BSTY. <a href="https://www.facebook.com/annhonpet">An Nhơn Pet</a>)</p>
     </footer>
 
     <!-- Modal Giới thiệu -->
@@ -562,10 +571,10 @@ text-align: justify;
             </button>
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Phần mềm tra cứu phối hợp Kháng Sinh</h2>
             <p class="text-gray-600 mb-2">
-                Đây là phần mềm tra cứu phối hợp kháng sinh thông minh, được xây dựng với mục tiêu cung cấp một công cụ tham khảo nhanh chóng về tương tác của các loại kháng sinh.
+                Đây là phần mềm tra cứu phối hợp kháng sinh thông minh, được xây dựng với mục tiêu cung cấp một công cụ tham khảo nhanh chóng về tương tác giữa các loại kháng sinh.
             </p>
             <p class="text-gray-600 mb-2">
-                Phần mềm bao gồm các quy tắc phối hợp dựa trên cơ chế tác động của thuốc, giúp các chuyên gia y tế có thể đưa ra quyết định lâm sàng tốt hơn. Chúng tôi luôn nỗ lực cập nhật dữ liệu để mang lại thông tin chính xác và hữu ích nhất. Tuy nhiên, các kết quả chỉ mang tính chất tham khảo. Vui lòng tham khảo ý kiến chuyên gia trước khi đưa ra quyết định điều trị.
+                Phần mềm bao gồm các quy tắc phối hợp dựa trên cơ chế tác động của thuốc, giúp các bác sĩ có thể đưa ra quyết định điều trị tốt hơn. Chúng tôi luôn nỗ lực cập nhật dữ liệu để mang lại thông tin chính xác và hữu ích nhất. Tuy nhiên, các kết quả chỉ mang tính chất tham khảo. Vui lòng tham khảo ý kiến chuyên gia trước khi đưa ra quyết định điều trị.
             </p>
 <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Một số định nghĩa cần hiểu thêm:</h2>
 <p class="text-gray-600">
