@@ -298,7 +298,7 @@ color: orange;
 }
 
 .truncated-text-container.expanded {
-    max-height: 800px; /* Chiều cao tối đa khi hiển thị, điều chỉnh cho phù hợp */
+    max-height: 1000px; /* Chiều cao tối đa khi hiển thị, điều chỉnh cho phù hợp */
 }
 
 .fade-overlay {
@@ -421,17 +421,35 @@ text-align: justify;
             }
             
             /* Tối ưu hóa footer trên mobile */
-            footer .grid-cols-3 {
-                grid-template-columns: 1fr; /* Chuyển thành 1 cột */
-                text-align: center; /* Căn giữa nội dung */
+            footer .max-w-7xl {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            footer .grid-cols-1 {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
             footer .space-x-4 {
-                flex-direction: column; /* Chuyển các link thành cột */
-                gap: 8px;
+                display: flex;
+                justify-content: center;
+                flex-wrap: nowrap; /* Ngăn các link xuống dòng */
                 margin-top: 10px;
+                gap: 0.5rem; /* Giảm khoảng cách giữa các link */
             }
-            footer a {
-                padding: 5px 0;
+            footer .space-x-4 a {
+                font-size: 0.75rem; /* Giảm kích thước font cho link */
+                padding: 5px 8px; /* Giảm padding để link gọn hơn */
+            }
+            footer .text-2xl {
+                font-size: 1.5rem; /* Giảm kích thước font logo */
+            }
+            footer .text-sm {
+                font-size: 0.65rem; /* Giảm kích thước font copyright */
+                white-space: nowrap; /* Ngăn copyright xuống dòng */
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 90%;
             }
 
             /* Điều chỉnh các phần tử khác để đồng bộ */
