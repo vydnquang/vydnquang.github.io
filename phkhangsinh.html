@@ -198,6 +198,7 @@
         
         .suggestions-list div:hover, .suggestions-list div.active {
             background-color: #e5e7eb;
+color: #007bff; /* màu xanh */
         }
 
         #checkCombinationBtn {
@@ -232,7 +233,7 @@
             padding: 20px;
             border-radius: 15px;
             text-align: center;
-            color: red;
+            color: blue;
             font-weight: bold;
             font-size: 1.2em;
             min-height: 80px;
@@ -242,17 +243,17 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s ease;
         }
-        .synergistic { background-color: #10b981; }
-        .synergistic-positive { background-color: #10b981; }
-        .additive { background-color: #2563eb; }
+        .synergistic { background-color: #00e096; }
+        .synergistic-positive { background-color: #00e096; }
+        .additive { background-color: #00c2e0; }
         .antagonistic { background-color: #ef4444; }
-        .competition { background-color: #f97316; }
-        .caution { background-color: #f59e0b; }
-        .neutral { background-color: #6b7280; }
-        .unknown { background-color: #4b5563; }
+        .competition { background-color: #ff9696; }
+        .caution { background-color: #ff7b00; }
+        .neutral { background-color: #bfbfbf; }
+        .unknown { background-color: #bf9780; }
         
         .error-message {
-            color: #ef4444;
+            color: #ff4545;
             text-align: center;
             margin-top: 10px;
             font-weight: bold;
@@ -265,6 +266,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+text-align: justify;
         }
 
         .warning-icon {
@@ -349,11 +351,15 @@ footer a:hover {
         }
         .modal-content {
             transition: transform 0.3s ease-in-out;
+text-align: justify;
         }
         .modal.active .modal-content {
             transform: scale(1);
         }
-
+.modal-content-scrollable {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
         @media (max-width: 600px) {
 /* mã đợt trước */
 .container {
@@ -459,7 +465,7 @@ footer a:hover {
                 <li>Hãy sử dụng kháng sinh một cách có trách nhiệm để không làm cho tình trạng kháng kháng sinh ngày càng nghiêm trọng hơn.</li>
                 <li>Luôn luôn điều chỉnh liều lượng cho phù hợp, chứ không cứng nhắc 1 liều cho cả một quá trình điều trị.</li>
                 <li>Các kết quả "CẠNH TRANH"; "THẬN TRỌNG"; "TRUNG TÍNH" cần được tìm hiểu kỹ đối với mỗi cặp kháng sinh cần kết hợp.</li>
-                <li>Tất cả các kết quả trên chỉ mang tính tham khảo, bác sĩ phải kiểm chứng lại kết quả đưa ra trước khi thực hiện.</li>
+                <li>Tất cả các kết quả trên chỉ mang tính tham khảo nhanh, chúng tôi không chịu bất kỳ trách nhiệm nào về các hậu quả không mong muốn do các bác sĩ làm theo mà không tìm hiểu kỹ trước khi thực hiện.</li>
             </ol>
         </div>
     </main>
@@ -468,7 +474,7 @@ footer a:hover {
         <div class="flex justify-center items-center gap-4 text-sm">
             <!-- Nút Tra cứu tương tác -->
             <div class="menu-dropdown relative">
-                <a href="#" id="searchDropdownBtn" class="hover:text-[#080052] transition-colors duration-300">
+                <a href="#" id="searchDropdownBtn" class="hover:text-[#080052] transition-colors duration-300 border border-blue rounded-full px-3 py-1">
                     <i class="fas fa-search"></i> Tra cứu tương tác
                 </a>
                 <div id="searchDropdownMenu" class="menu-dropdown-content absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-yellow-700 rounded-lg shadow-lg hidden">
@@ -478,29 +484,46 @@ footer a:hover {
                 </div>
             </div>
             <!-- Nút Giới thiệu -->
-            <button id="aboutBtn" class="hover:text-[#080052] transition-colors duration-300">
+            <button id="aboutBtn" class="hover:text-[#080052] transition-colors duration-300 border border-blue rounded-full px-3 py-1">
                 <i class="fas fa-info-circle"></i> Giới thiệu
             </button>
             <!-- Nút Liên hệ -->
-            <button id="contactBtn" class="hover:text-[#080052] transition-colors duration-300">
+            <button id="contactBtn" class="hover:text-[#080052] transition-colors duration-300 border border-blue rounded-full px-3 py-1">
                 <i class="fas fa-envelope"></i> Liên hệ
             </button>
         </div>
-<p>Copyright © 2025 by BSTY. <a href="https://www.facebook.com/annhonpet">An Nhơn Pet</a></p>
+<p>Copyright © 2025 by nh@tqu@ng (BSTY. <a href="https://www.facebook.com/annhonpet">An Nhơn Pet</a>)</p>
     </footer>
 
     <!-- Modal Giới thiệu -->
     <div id="aboutModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden opacity-0 transition-opacity duration-300">
-        <div class="modal-content bg-white rounded-lg shadow-xl p-8 max-w-lg w-full transform scale-95 transition-transform duration-300 relative">
+        <div class="modal-content-scrollable modal-content bg-white rounded-lg shadow-xl p-8 max-w-lg w-full transform scale-95 transition-transform duration-300 relative">
             <button id="closeAboutModalBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200">
                 <i class="fas fa-times text-xl"></i>
             </button>
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Giới thiệu Phần mềm</h2>
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Phần mềm tra cứu phối hợp Kháng Sinh</h2>
             <p class="text-gray-600 mb-2">
                 Đây là phần mềm tra cứu phối hợp kháng sinh thông minh, được xây dựng với mục tiêu cung cấp một công cụ tham khảo nhanh chóng về tương tác của các loại kháng sinh.
             </p>
-            <p class="text-gray-600">
+            <p class="text-gray-600 mb-2">
                 Phần mềm bao gồm các quy tắc phối hợp dựa trên cơ chế tác động của thuốc, giúp các chuyên gia y tế có thể đưa ra quyết định lâm sàng tốt hơn. Chúng tôi luôn nỗ lực cập nhật dữ liệu để mang lại thông tin chính xác và hữu ích nhất. Tuy nhiên, các kết quả chỉ mang tính chất tham khảo. Vui lòng tham khảo ý kiến chuyên gia trước khi đưa ra quyết định điều trị.
+            </p>
+<h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Một số định nghĩa cần hiểu thêm:</h2>
+<p class="text-gray-600">
+                1. Hiệp đồng (Synergistic): Hai loại kháng sinh hoạt động tốt hơn khi kết hợp so với khi dùng riêng lẻ (1+1=3)
+            </p>
+<p class="text-gray-600">
+                2. Cộng gộp (Additive): Hai loại kháng sinh có tác dụng cộng lại khi kết hợp. Ví dụ, Beta-lactamase và Penicillins.
+            </p>
+<p class="text-gray-600">
+                3. Đối kháng (Antagonistic): Hai loại kháng sinh làm giảm hiệu quả của nhau khi kết hợp.
+            </p>
+
+<p class="text-gray-600">
+                4. Cạnh tranh (Competition): Hai loại kháng sinh có cơ chế tác dụng tương tự, thường cùng gắn vào một vị trí (ví dụ, PBP trên thành tế bào vi khuẩn), dẫn đến cạnh tranh và có thể làm giảm hiệu quả của nhau.
+            </p>
+<p class="text-gray-600">
+                5. Thận trọng (Caution): Cần cân nhắc kỹ khi kết hợp vì có thể có tác dụng phụ nghiêm trọng hoặc tương tác không mong muốn.
             </p>
         </div>
     </div>
@@ -511,12 +534,22 @@ footer a:hover {
             <button id="closeContactModalBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200">
                 <i class="fas fa-times text-xl"></i>
             </button>
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Thông tin Liên hệ</h2>
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Thông tin Nhà phát triển:</h2>
             <p class="text-gray-600">
-                <strong>Tác giả:</strong> Nguyễn Văn A
+                <strong>Đơn vị:</strong> An Nhơn Pet
+            </p>
+            <p class="text-gray-600 mb-2">
+                <strong>Fanpage:</strong> https://www.facebook.com/annhonpet
+            </p>
+ <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Thông tin liên hệ:</h2>
+<p class="text-gray-600">
+                Đội ngũ phát triển xin nhận mọi ý kiến đóng góp hoặc phản ánh lỗi phần mềm để phần mềm ngày càng tốt hơn qua số điện thoại bên dưới:
             </p>
             <p class="text-gray-600">
-                <strong>Điện thoại:</strong> 0987-654-321
+                <strong>Tác giả:</strong> nh@tqu@ng
+            </p>
+            <p class="text-gray-600">
+                <strong>Zalo:</strong> 0935.985.468
             </p>
         </div>
     </div>
@@ -596,7 +629,7 @@ footer a:hover {
         'tildipirosin'
     ],
     'lincosamides': [
-        'lincomycin', 'clindamycin', 'pirlimycin', 'iboxamycin' // đến dòng này đã có 198 loại kháng sinh
+        'lincomycin', 'clindamycin', 'pirlimycin', 'iboxamycin'
     ],
     'phenicols': [
         'chloramphenicol', 'thiamphenicol', 'florfenicol', 'azidamfenicol'
@@ -679,7 +712,7 @@ footer a:hover {
         'mupirocin', 'platensimycin', 'malacidin',
         'lariocidin', 'zosurabalpin', 'cefepime-taniborbactam',
         'darobactin', 'orlynvah', 'cefepime-enmetazobactam',
-        'cresomycin' // đến dòng này có thêm 142 ks, tổng cộng: 340 ks
+        'cresomycin'
     ]
         };
 
@@ -1273,7 +1306,7 @@ footer a:hover {
                 }
             });
 
-            // Logic đếm số lượng kháng sinh
+            // HÀM ĐẾM SỐ LƯỢNG KHÁNG SINH TRONG DATA
             const countElement = document.getElementById('antibioticCount');
             const targetCount = allAntibiotics.length;
             let currentCount = 0;
