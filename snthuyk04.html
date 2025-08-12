@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sinh nhật Thú Y K04</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS tích hợp */
+        body {
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #fceabb, #f8b500); /* Nền gradient nhẹ nhàng */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden; /* Ngăn chặn cuộn ngang */
+        }
+
+        .main-header {
+            background-color: #ff66b2; /* Màu hồng rực rỡ */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-header h1 {
+            font-family: 'Pacifico', cursive; /* Font chữ viết tay cho tiêu đề */
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-header p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        .birthday-container {
+            flex-grow: 1; /* Cho phép container này mở rộng */
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Căn giữa các thẻ */
+            gap: 30px; /* Khoảng cách giữa các phần tử */
+        }
+
+        /* --- Thẻ Sinh Nhật (Birthday Card) --- */
+        .birthday-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            opacity: 0; /* Mặc định ẩn, JS sẽ làm hiện ra */
+            transform: translateY(20px); /* Bắt đầu hơi dịch xuống */
+            animation: fadeInSlideUp 0.8s ease-out forwards; /* Hiệu ứng động */
+        }
+
+        .birthday-card.today-birthday {
+            background: linear-gradient(to top right, #ffebee, #ffcdd2); /* Nền hồng nhạt */
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        /* --- Wrapper cho hình ảnh để chứa viền ngôi sao --- */
+        .profile-pic-wrapper {
+            position: relative; /* Quan trọng để định vị viền */
+            width: 100px; /* Tăng kích thước wrapper để viền rõ hơn */
+            height: 100px;
+            border-radius: 50%; /* Đảm bảo hình tròn */
+            display: flex; /* Dùng flexbox để căn giữa ảnh bên trong */
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px; /* Giữ khoảng cách với tiêu đề */
+            flex-shrink: 0; /* Ngăn không cho wrapper bị co lại */
+        }
+
+        .profile-pic-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('birthday/star_border.png'); /* Đặt tên file viền ngôi sao của bạn ở đây */
+            background-size: contain; /* Đảm bảo hình ảnh viền vừa vặn */
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 1; /* Đặt viền phía sau ảnh avatar */
+        }
+
+        .profile-pic {
+            width: 80px; /* Kích thước ảnh avatar thực tế (nhỏ hơn wrapper) */
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 2; /* Đảm bảo ảnh avatar nằm trên viền */
+            position: relative; /* Quan trọng để z-index hoạt động */
+        }
+
+        .card-header h2 {
+            font-family: 'Pacifico', cursive;
+            color: #ff66b2;
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .card-body h3 {
+            font-size: 1.8em;
+            color: #4CAF50; /* Màu xanh lá cây */
+            margin-bottom: 10px;
+        }
+
+        .age-info {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #FF5722; /* Màu cam */
+            margin-bottom: 15px;
+        }
+
+        .greeting {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .card-footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .countdown {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2196F3; /* Màu xanh dương */
+            margin-bottom: 10px;
+        }
+
+        .date-info {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        /* Hiệu ứng nhấp nháy cho lời chúc hôm nay */
+        .today-birthday .greeting {
+            animation: pulse-color 2s infinite alternate;
+        }
+
+        @keyframes pulse-color {
+            0% { color: #ff0000; }
+            50% { color: #0000ff; }
+            100% { color: #ff0000; }
+        }
+
+        /* Hiệu ứng Fade In và Slide Up cho thẻ */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-message {
+            background-color: #e0f7fa;
+            border: 1px solid #00bcd4;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #00838f;
+            text-align: center;
+        }
+
+        .upcoming-list {
+            background-color: #fff9c4;
+            border: 1px solid #ffeb3b;
+            border-radius: 10px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            margin-top: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .upcoming-list h2 {
+            color: #f57f17;
+            text-align: center;
+            margin-bottom: 15px;
+            font-family: 'Pacifico', cursive;
+        }
+
+        .upcoming-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .upcoming-list li {
+            background-color: #fffde7;
+            margin-bottom: 8px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border-left: 5px solid #ffcc80;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1em;
+        }
+
+        .upcoming-list li span:first-child {
+            font-weight: bold;
+            color: #d84315;
+        }
+
+        .upcoming-list li span:last-child {
+            color: #6d4c41;
+        }
+
+        .main-footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: auto; /* Đẩy footer xuống cuối trang */
+            font-size: 0.9em;
+        }
+/* trang trí màu link */
+.my-link {
+  color: Yellow;
+  text-decoration: none;
+  background-color: darkblue;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: inline-block; /* Để có thể sử dụng width và height */
+}
+
+.my-link:hover {
+  background-color: orange;
+  color: white;
+}
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .main-header h1 {
+                font-size: 2.2em;
+            }
+            .birthday-card {
+                padding: 15px;
+            }
+            .card-header h2 {
+                font-size: 1.5em;
+            }
+            .profile-pic-wrapper { /* Điều chỉnh kích thước wrapper cho responsive */
+                width: 80px; /* Tăng kích thước để viền rõ hơn */
+                height: 80px;
+            }
+            .profile-pic { /* Điều chỉnh kích thước ảnh cho responsive */
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <h1>Lịch Sinh Nhật Lớp Thú Y K04</h1>
+        <p>Những ngày đặc biệt của chúng ta!</p>
+    </header>
+
+    <main class="birthday-container">
+        <div id="birthdayCards">
+            
+</div>
+        
+        <div id="noBirthdayMessage" class="info-message" style="display: none;">
+            <p>Hiện tại không có sinh nhật hôm nay. Hãy cùng chờ đợi những ngày đặc biệt sắp tới nhé!</p>
+        </div>
+
+        <div id="upcomingBirthdaysList" class="upcoming-list">
+            <h2>Sinh Nhật Sắp Tới</h2>
+            <ul>
+                
+</ul>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 Thú Y K04. Thiết kế bởi Nhatquang.</p>
+	<a href="https://drive.google.com/drive/folders/19nu4EP3q7JVlx0Z1i00PYticbQlgt_cZ?usp=sharing" class="my-link">Kho ảnh kỷ niệm lớp Thú Y K04</a>
+    </footer>
+
+    <script>
+        // JavaScript tích hợp
+        function ngaysinh(year, month, date, ho, ten, avatar = 'birthday/avatar-sinhnhat.jpg') {
+            this.year = year;
+            this.month = month; // 1-12
+            this.date = date;
+            this.ho = ho;
+            this.ten = ten;
+            this.avatar = avatar; // Đường dẫn ảnh đại diện
+        }
+
+        const blist = [];
+
+        // Dữ liệu sinh nhật của bạn
+        /////////////////////SINH NHAT THANG 1//////////////////////////////
+        blist.push(new ngaysinh(1987, 1, 10, "Nguyễn Thị Lan", "Anh", "avatar-lananh.png"));
+        blist.push(new ngaysinh(1986, 1, 1, "Hồ Biên", "Cương"));
+        blist.push(new ngaysinh(1986, 1, 7, "Lý Phúc", "Hoài"));
+        blist.push(new ngaysinh(1985, 1, 10, "Đặng Văn", "Tám"));
+        blist.push(new ngaysinh(1986, 1, 24, "Nguyễn Tấn", "Thủ"));
+
+        /////////////////////SINH NHAT THANG 2/////////////////////////////
+        blist.push(new ngaysinh(1983, 2, 10, "Võ Thị", "Dung"));
+        blist.push(new ngaysinh(1985, 2, 22, "Nguyễn Hữu", "Hoàng"));
+
+        /////////////////////SINH NHAT THANG 3////////////////////////////////
+        blist.push(new ngaysinh(1985, 3, 28, "Đoàn Thị Kim", "Phượng"));
+
+        /////////////////////SINH NHAT THANG 4//////////////////////////////////
+        blist.push(new ngaysinh(1986, 4, 26, "Nguyễn Thị Hoàng", "Oanh"));
+        blist.push(new ngaysinh(1986, 4, 22, "Nguyễn Hương", "Quỳnh"));
+        blist.push(new ngaysinh(1985, 4, 10, "Trần Thị Thanh", "Vân"));
+
+        ///////////////////////SINH NHAT THANG 5///////////////////////////////////
+        blist.push(new ngaysinh(1986, 5, 17, "Đặng Mạnh", "Hùng"));
+        blist.push(new ngaysinh(1986, 5, 5, "Hoàng Thị Anh", "Phương"));
+        blist.push(new ngaysinh(1984, 5, 15, "Khê Bá Hoàng", "Trể"));
+        blist.push(new ngaysinh(1986, 5, 8, "Nguyễn Văn", "Tuyển"));
+
+        ///////////////////////SINH NHAT THANG 6/////////////////////////////////
+        blist.push(new ngaysinh(1985, 6, 27, "Nguyễn Thị", "Bắc"));
+
+        ////////////////////////SINH NHAT THANG 7////////////////////////////////
+        blist.push(new ngaysinh(1983, 7, 20, "Nguyễn Thị", "Trang", "https://jbagy.me/wp-content/uploads/2025/03/anh-sticker-avatar-sinh-nhat-3.jpg"));
+        blist.push(new ngaysinh(1986, 7, 4, "Huỳnh Thiện", "Vĩnh"));
+
+        /////////////////////////SINH NHAT THANG 8///////////////////////////////
+        blist.push(new ngaysinh(1986, 8, 19, "Nguyễn Văn", "Huy"));
+        blist.push(new ngaysinh(1986, 8, 8, "Lê Thị Duy", "Khánh"));
+        blist.push(new ngaysinh(1986, 8, 4, "Hoàng Trọng", "Minh"));
+        blist.push(new ngaysinh(1985, 8, 20, "Võ Văn", "Vàng"));
+
+        /////////////////////////SINH NHAT THANG 9////////////////////////////////////
+        blist.push(new ngaysinh(1986, 9, 6, "Hoàng Thị", "Lyly"));
+        blist.push(new ngaysinh(1985, 9, 5, "Trần Thị Minh", "Thi"));
+        blist.push(new ngaysinh(1983, 9, 25, "Mai Đức", "Toàn"));
+        blist.push(new ngaysinh(1984, 9, 1, "Tạ Đức", "Định"));
+        blist.push(new ngaysinh(1983, 9, 20, "Nguyễn Thị", "Hòa"));
+        blist.push(new ngaysinh(1986, 9, 11, "Nguyễn Thị Bích", "Liên"));
+
+        //////////////////////////SINH NHAT THANG 10/////////////////////////////////////
+        blist.push(new ngaysinh(1985, 10, 10, "", "Trương Văn Hải, Nguyễn Hùng Vũ"));
+        blist.push(new ngaysinh(1984, 10, 11, "Trần Nhật", "Vỹ"));
+        blist.push(new ngaysinh(1986, 10, 30, "", "Nguyễn Thị Duyên, Nguyễn Văn Dương, Phan Thanh Hòa"));
+
+        ///////////////////////////SINH NHAT THANG 11//////////////////////////////////////
+        blist.push(new ngaysinh(1984, 11, 28, "*", "*"));
+
+        ////////////////////////////SINH NHAT THANG 12//////////////////////////////
+        blist.push(new ngaysinh(1985, 12, 20, "", "Nguyễn Thị Thu Hà, Trương Minh Trí"));
+        blist.push(new ngaysinh(1986, 12, 10, "Ninh Văn", "Kiên"));
+
+
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth(); // 0-11
+        const currentDay = now.getDate();
+        const today = new Date(currentYear, currentMonth, currentDay);
+
+        function daysFromToday(sdate) {
+            const diffTime = sdate.getTime() - today.getTime();
+            return Math.round(diffTime / (24 * 60 * 60 * 1000));
+        }
+
+        function calculateAgeOnBirthday(birthYear, birthdayDateObject) {
+            const targetYear = birthdayDateObject.getFullYear();
+            return targetYear - birthYear;
+        }
+
+        function getBirthdayInfo(person) {
+            let birthdayDate = new Date(currentYear, person.month - 1, person.date);
+            let daysToBirthday = daysFromToday(birthdayDate);
+
+            if (daysToBirthday < 0) {
+                birthdayDate.setFullYear(currentYear + 1);
+                daysToBirthday = daysFromToday(birthdayDate);
+            }
+            const age = calculateAgeOnBirthday(person.year, birthdayDate);
+            return { person: person, birthdayDate: birthdayDate, daysToBirthday: daysToBirthday, age: age };
+        }
+
+        function renderBirthdays() {
+            const birthdayCardsContainer = document.getElementById('birthdayCards');
+            const noBirthdayMessage = document.getElementById('noBirthdayMessage');
+            const upcomingBirthdaysList = document.querySelector('#upcomingBirthdaysList ul');
+
+            birthdayCardsContainer.innerHTML = ''; // Xóa nội dung cũ
+            upcomingBirthdaysList.innerHTML = ''; // Xóa nội dung cũ
+            noBirthdayMessage.style.display = 'none'; // Ẩn mặc định
+
+            let hasTodayBirthday = false;
+            const allBirthdayInfos = blist.map(getBirthdayInfo);
+
+            // Sắp xếp để hiển thị sinh nhật gần nhất trước
+            allBirthdayInfos.sort((a, b) => a.daysToBirthday - b.daysToBirthday);
+
+            // Render sinh nhật hôm nay
+            for (const info of allBirthdayInfos) {
+                if (info.daysToBirthday === 0) {
+                    hasTodayBirthday = true;
+                    const card = document.createElement('div');
+                    card.classList.add('birthday-card', 'today-birthday');
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="profile-pic-wrapper"> 
+                                <img src="${info.person.avatar || 'birthday/avatar-sinhnhat.jpg'}" alt="Ảnh ${info.person.ten}" class="profile-pic">
+                            </div>
+                            <h2>Chúc Mừng Sinh Nhật!</h2>
+                        </div>
+                        <div class="card-body">
+                            <h3>${info.person.ho} ${info.person.ten}</h3>
+                            <p class="age-info">Đã bước sang tuổi ${info.age}!</p>
+                            <p class="greeting">Nhatquang chúc mừng sinh nhật ${info.person.ten} nha! Chúc bạn tuổi mới nhiều niềm vui, sức khỏe và thành công!</p>
+                        </div>
+                        <div class="card-footer">
+                            <span>${info.person.date} Tháng ${info.person.month}</span>
+                        </div>
+                    `;
+                    birthdayCardsContainer.appendChild(card);
+
+                    // Thay đổi ảnh nền body khi có sinh nhật hôm nay
+                    document.body.style.backgroundImage = "url('birthday/bg-sn-xanh.jpg')"; 
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                    document.body.style.backgroundRepeat = 'no-repeat';
+                    document.body.style.backgroundAttachment = 'fixed';
+                }
+            }
+
+            if (!hasTodayBirthday) {
+                noBirthdayMessage.style.display = 'block'; // Hiện thông báo nếu không có sinh nhật hôm nay
+                // Đảm bảo trả về màu nền mặc định nếu không phải sinh nhật hôm nay
+                document.body.style.backgroundImage = "url('birthday/nen-sn-bongvang.jpg')";
+                document.body.style.backgroundColor = '#f4f4f4'; 
+            }
+
+            // Render danh sách sinh nhật sắp tới (không phải sinh nhật hôm nay)
+            let countUpcoming = 0;
+            for (const info of allBirthdayInfos) {
+                if (info.daysToBirthday > 0 && countUpcoming < 5) { // Chỉ hiển thị 5 sinh nhật sắp tới
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <span>${info.person.ho} ${info.person.ten}</span>
+                        <span>còn ${info.daysToBirthday} ngày (${info.person.date}/${info.person.month})</span>
+                    `;
+                    upcomingBirthdaysList.appendChild(listItem);
+                    countUpcoming++;
+                }
+            }
+            if (countUpcoming === 0 && !hasTodayBirthday) {
+                document.getElementById('upcomingBirthdaysList').style.display = 'none'; // Ẩn danh sách nếu không có gì
+            } else {
+                document.getElementById('upcomingBirthdaysList').style.display = 'block';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderBirthdays);
+    </script>
+</body>
+</html>
