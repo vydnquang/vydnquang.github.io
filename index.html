@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sách ảnh Nhatquang</title>
+    <title>Sách ảnh nh@tqu@ng</title>
     <link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="global-marquee-container" class="marquee-container"><span class="marquee-text"></span></div>
+
     <div id="flipbook-container">
-        
         <button id="prevBtn">Trang trước</button>
         <button id="nextBtn">Trang sau</button>
+
+<div id="global-marquee-container" class="marquee-container"><span class="marquee-text"></span></div>
 
 <div id="audio-controls">
             <audio id="background-music" loop>
@@ -24,30 +25,30 @@
             <input type="range" id="volumeSlider" min="0" max="100" value="40">
         </div>
 
-
-
         <div id="flipbook">
             <div class="page title-page">
                 <h1 class="book-title">NHỮNG PHƯƠNG THỨC PHỤC HỒI SỨC KHỎE THEO TỰ NHIÊN</h1>
-                <p class="book-author">Tác giả: Nishi Katsuzo<br>Dịch giả: TS. Trương Thị Thảo</br></p>
+                <p class="book-author">Tác giả: Nishi Kasuzo<br>Dịch giả: TS. Trương Thị Thảo</br></p>
                 <img src="pages/g-border.png" alt="Khung trang trí" class="page-frame">
             </div>
 
-            
             <div class="page" style="background-image:url(pages/page1.jpg);"></div>
             <div class="page" style="background-image:url(pages/page2.jpg);"></div>
             <div class="page" style="background-image:url(pages/page3.jpg);"></div>
             <div class="page" style="background-image:url(pages/page4.jpg);"></div>
+            <div class="page" style="background-image:url(pages/page5.jpg);"></div>
+            <div class="page" style="background-image:url(pages/page6.jpg);"></div>
+            <div class="page" style="background-image:url(pages/page7.jpg);"></div>
+            <div class="page" style="background-image:url(pages/page8.jpg);"></div>
+            <div class="page" style="background-image:url(pages/page9.jpg);"></div>
+            <div class="page" style="background-image:url(pages/page10.jpg);"></div>
             
-
 	    <div class="page title-page final-page">
                 <h1 class="book-title">Cảm ơn bạn đã đọc!</h1>
                 <p class="book-author">Mời đón đọc các trang tiếp theo vào kỳ sau</p>
                 <img src="pages/g-border.png" alt="Khung trang trí" class="page-frame">
             </div>
-
         </div>
-
     </div>
 
     <script src="js/jquery.min.js"></script>
@@ -68,13 +69,12 @@
                 display: 'single',
                 elevation: 50
             });
-
-            
+        
 // Hàm để cập nhật hiển thị dòng chữ chạy
             function updateMarqueeVisibility(pageNumber) {
                 // Trang tiêu đề đầu tiên là 1, trang cảm ơn là 6.
                 // Các trang nội dung là 2, 3, 4, 5
-                if (pageNumber >= 2 && pageNumber <= 5) { // Điều chỉnh số trang tùy theo tổng số trang nội dung của bạn
+                if (pageNumber >= 2 && pageNumber <= 11) { // Điều chỉnh số trang tùy theo tổng số trang nội dung của bạn
                     marqueeTextElement.text(marqueeContent); // Đặt nội dung chữ
                     globalMarqueeContainer.show(); // Hiển thị container
                     // KHÔNG cần reset animation ở đây nữa vì nó nằm ngoài #flipbook
@@ -91,16 +91,12 @@
 
             // Gọi hàm khi sách được tải lần đầu để kiểm tra trang hiện tại
             updateMarqueeVisibility(flipbook.turn('page'));
-
-
             $('#nextBtn').click(function() {
                 $("#flipbook").turn('next');
             });
-
             $('#prevBtn').click(function() {
                 $("#flipbook").turn('previous');
             });
-
             $(document).keydown(function(e){
                 var flipbook = $("#flipbook");
                 if (e.keyCode == 37){ // Mũi tên trái
@@ -109,8 +105,6 @@
                     flipbook.turn('next');
                 }
             });
-
-
 
 // --- Javascript cho phần điều khiển nhạc ---
             const backgroundMusic = document.getElementById('background-music');
@@ -164,8 +158,6 @@
             //     console.log("Tự động phát nhạc bị chặn:", error);
             //     // Có thể thông báo cho người dùng click nút play
             // });
-
-
         });
     </script>
 
