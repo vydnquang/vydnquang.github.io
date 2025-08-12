@@ -118,12 +118,15 @@ padding-right: 40px; /* Thêm padding đủ để icon có chỗ đứng */
             border: none;
             background-color: transparent; /* Quan trọng: làm nền trong suốt */
             font-size: 1.1em;
-            color: #333;
+            color: blue !important;
             outline: none;
             box-sizing: border-box;
             z-index: 3; /* Đảm bảo input nằm trên các lớp màu */
             position: relative; /* Để z-index hoạt động */
         }
+.pill-visual input::placeholder {
+    color: #ff0099;
+}
 
         /* Focus state cho input, áp dụng bóng cho pill-visual */
         .pill-visual:has(input:focus) { /* Sử dụng :has() nếu trình duyệt hỗ trợ, nếu không dùng JS */
@@ -581,7 +584,7 @@ text-align: justify;
                 <i class="fas fa-envelope"></i> Liên hệ
             </button>
         </div>
-        <p class="text-center mt-2">Copyright &copy; 2025 by nh@tqu@ng (BSTY. <a href="https://www.facebook.com/annhonpet">An Nhơn Pet</a>)</p>
+        <p class="text-center mt-2">Copyright &copy; 2025 by nh@tqu@ng</p>
     </footer>
 
     <!-- Modal Giới thiệu -->
@@ -630,17 +633,17 @@ text-align: justify;
                 <strong>Đơn vị:</strong> An Nhơn Pet
             </p>
             <p class="text-gray-600 mb-2">
-                <strong>Fanpage:</strong> https://www.facebook.com/annhonpet
+                <strong>Fanpage:</strong><a href="https://www.facebook.com/annhonpet"> https://www.facebook.com/annhonpet</a>
             </p>
  <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Thông tin liên hệ:</h2>
 <p class="text-gray-600">
                 Đội ngũ phát triển xin nhận mọi ý kiến đóng góp hoặc phản ánh lỗi phần mềm để phần mềm ngày càng tốt hơn qua số điện thoại bên dưới:
             </p>
             <p class="text-gray-600">
-                <strong>Tác giả:</strong> nh@tqu@ng
+                <strong>Tác giả:</strong> nh@tqu@ng (BSTY. An Nhơn Pet)
             </p>
             <p class="text-gray-600">
-                <strong>Zalo:</strong> 0935.985.468
+                <strong>Zalo:</strong><a href="http://zaloapp.com/qr/p/ir7c78eqog94j"> 0935.985.468</a>
             </p>
         </div>
     </div>
