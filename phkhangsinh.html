@@ -217,13 +217,20 @@ padding-right: 40px; /* Thêm padding đủ để icon có chỗ đứng */
 color: #007bff; /* màu xanh */
         }
 
+/* CSS cho nhóm nút */
+.button-group {
+    display: flex;
+    gap: 15px; /* Khoảng cách giữa các nút */
+    margin-top: 20px;
+}
+
         #checkCombinationBtn {
             width: 100%;
-            padding: 18px;
+            padding: 10px;
             background-image: linear-gradient(to right, #5bc974, #96e0a7);
             color: #451c00;
             font-weight: bold;
-            border-radius: 15px;
+            border-radius: 22.5px;
             box-shadow: 0 6px 15px rgba(0, 112, 181, 0.3);
             display: flex;
             align-items: center;
@@ -235,8 +242,8 @@ color: #007bff; /* màu xanh */
         }
 
 .fa-flask {
-    color: blue; /* Màu cam cho icon bình thủy tinh */
-    font-size: 1.5em;
+    color: blue; /* Màu xanh cho icon bình thủy tinh */
+    font-size: 1.2em;
 }
 
         #checkCombinationBtn:hover {
@@ -267,6 +274,27 @@ color: #007bff; /* màu xanh */
                 transform: rotate(0deg);
             }
         }
+
+/* CSS cho nút reset */
+.reset-button {
+    padding: 10px 40px;
+    border-radius: 22.5px;
+    background-color: #fca5a5;
+    color: #b91c1c;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    flex-grow: 1; /* Nút sẽ giãn ra để lấp đầy không gian */
+}
+.fa-undo {
+    color: blue; /* Màu xanh cho icon bình thủy tinh */
+    font-size: 1.2em;
+}
+.reset-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(252, 165, 165, 0.4);
+}
 
         .result-box {
             margin-top: 25px;
@@ -535,9 +563,14 @@ text-align: justify;
             </div>
         </div>
 
-        <button id="checkCombinationBtn">
-<i id="flaskIcon" class="fas fa-flask"></i> KIỂM TRA !
-        </button>
+<div class="button-group">
+    <button id="checkCombinationBtn">
+        <i id="flaskIcon" class="fas fa-flask"></i> KIỂM TRA !
+    </button>
+    <button id="resetBtn" class="reset-button">
+        <i class="fas fa-undo"></i>
+    </button>
+</div>
 
         <div class="result-box" id="result">
             Kết quả sẽ hiển thị ở đây
@@ -1330,6 +1363,36 @@ text-align: justify;
                 }
             });
         });
+
+// CODE ĐIỀU KHIỂN NÚT RESET
+const resetBtn = document.getElementById('resetBtn');
+const antibioticAInput = document.getElementById('antibioticA');
+const antibioticBInput = document.getElementById('antibioticB');
+const resultBox = document.getElementById('result');
+const errorMessage = document.getElementById('errorMessage');
+
+resetBtn.addEventListener('click', function() {
+    // 1. Xóa nội dung của các ô input
+    antibioticAInput.value = '';
+    antibioticBInput.value = '';
+
+    // 2. Đặt lại placeholder ban đầu
+    antibioticAInput.placeholder = 'Nhập tên kháng sinh 1';
+    antibioticBInput.placeholder = 'Nhập tên kháng sinh 2';
+
+    // 3. Xóa nội dung và các class màu của hộp kết quả
+    resultBox.textContent = 'Kết quả sẽ hiển thị ở đây';
+    resultBox.className = 'result-box'; // Chỉ giữ lại class cơ bản
+
+    // 4. Xóa thông báo lỗi
+    errorMessage.textContent = '';
+    
+    // 5. Dừng animation icon bình thủy tinh (nếu đang chạy)
+    const flaskIcon = document.getElementById('flaskIcon');
+    if (flaskIcon.classList.contains('icon-rotating')) {
+        flaskIcon.classList.remove('icon-rotating');
+    }
+});
 
         // CODE ĐIỀU KHIỂN NÚT READ MORE
 document.addEventListener('DOMContentLoaded', () => {
