@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách Kháng sinh</title>
+    <!-- Thư viện Tailwind CSS để tạo kiểu nhanh chóng -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Sử dụng phông chữ Inter để giao diện hiện đại hơn -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0f2f7; /* Nền xanh nhạt tổng thể */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .group-item {
+            cursor: pointer;
+        }
+        .group-item:hover {
+            color: #4f46e5;
+        }
+        header {
+            background-color: #0070b5; /* Màu xanh */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex; /* Sử dụng flexbox */
+            justify-content: space-between; /* Căn giữa các phần tử */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            padding: 1rem 2rem; /* Thêm padding cho header */
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5em;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        footer {
+            background-color: #FFD700; /* Màu vàng */
+            color: blue;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 0.9em;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="text-2xl md:text-4xl">Danh sách các loại Kháng Sinh</h1>
+        <!-- Nút Trang chủ với icon và link -->
+        <a href="https://vydnquang.github.io/phks" class="inline-flex items-center space-x-2 px-4 py-2 bg-white text-indigo-600 font-semibold rounded-full shadow-lg hover:bg-indigo-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <!-- Icon Home (Inline SVG) -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span>Trang chủ</span>
+        </a>
+    </header>
+
+    <div class="max-w-4xl mx-auto p-8">
+        <!-- Container để chứa danh sách các nhóm kháng sinh -->
+        <div id="antibiotics-container" class="space-y-2">
+            <!-- Dữ liệu sẽ được chèn vào đây bằng JavaScript -->
+        </div>
+    </div>
+    <footer>
+        <p class="text-center mt-2">Copyright &copy; 2025 by nh@tqu@ng</p>
+    </footer>
+
+    <script>
+        // Dữ liệu kháng sinh của bạn được lưu trong một đối tượng JavaScript
+        const antibioticsData = {
+            'penicillins': [
+                'penicillin-g', 'propicillin', 'penicillin-v', 'penicillin-g-procaine',
+                'benzathine-penicillin-g', 'benethamine-penicillin', 'penicillin-m', 'oxacillin',
+                'cloxacillin', 'dicloxacillin', 'methicillin', 'nafcillin',
+                'flucloxacillin', 'ampicillin', 'amoxycillin', 'pivampicillin',
+                'hetacillin', 'bacampicillin', 'metampicillin', 'talampicillin',
+                'epicillin', 'sulbenicillin', 'temocillin', 'carbenicilin',
+                'ticarcilin', 'carindacillin', 'mecillinam', 'amdinocillin',
+                'mezlocillin', 'piperacillin', 'azlocillin', 'pivmecillinam'
+            ],
+            'cephalosporins': [
+                'cephalexin', 'cefalotin', 'cefazolin', 'cefradine', 'cefadroxil', 'cefaloglycin',
+                'cefalonium', 'cephaloridin', 'cefatrizine', 'cefazaflur', 'cefacetrile',
+                'cefapirin', 'cefaclor', 'cefoxitine', 'cefamandole', 'cefonicid', 'cefuroxime',
+                'cefprozil', 'cefuzonam', 'ceforanide', 'cefotetan', 'cefmetazole',
+                'cefbuperazone', 'cefminox', 'ceftizoxime', 'ceftiofur', 'cefotaxime',
+                'ceftriaxone', 'cefoperazone', 'cefpiramide', 'cefcapene', 'cefdaloxime',
+                'cefdinir', 'cefditoren', 'cefetamet', 'cefixime', 'cefmenoxime', 'cefodizime',
+                'cefovecin', 'cefpimizole', 'cefpodoxime', 'cefteram', 'ceftibuten',
+                'ceftiolene', 'ceftazidime', 'latamoxef', 'cefepime', 'cefclidin',
+                'cefiderocol', 'cefluprenam', 'cefoselis', 'cefozopran', 'cefpirome',
+                'cefquinome', 'flomoxef', 'ceftobiprole', 'ceftaroline', 'ceftolozane',
+                'cefazedone', 'cefroxadine', 'ceftezol', 'cefazoline', 'loracarbef',
+                'cefotiam', 'cefaparole', 'cefmatilen', 'cefsumide'
+            ],
+            'carbapenems': [
+                'imipenem', 'meropenem', 'ertapenem', 'doripenem', 'biapenem',
+                'panipenem', 'faropenem', 'ritipenem', 'sulopenem', 'thienamycin'
+            ],
+            'monobactams': [
+                'aztreonam', 'tigemonam', 'carumonam', 'nocardicin-a'
+            ],
+            'beta-lactamase': [
+                'clavulanic-acid', 'sulbactam', 'tazobactam', 'vaborbactam',
+                'enmetazobactam', 'relebactam', 'avibactam', 'taniborbactam',
+                'durlobactam', 'nacubactam', 'xeruborbactam', 'zidebactam'
+            ],
+            'peptides': [
+                'daptomycin', 'gramicidin', 'gramicidin-s', 'teixobactin',
+                'vancomycin', 'oritavancin', 'telavancin', 'teicoplanin',
+                'dalbavancin', 'ramoplanin', 'bleomycin', 'polymyxin-b',
+                'colistin', 'bacitracin', 'tyrothricin', 'surfactin',
+                'amphomycin', 'tyrocidine'
+            ],
+            'aminoglycosides': [
+                'netilmicin', 'gentamicin', 'streptomycin', 'kanamycin',
+                'neomycin', 'tobramycin', 'amikacin', 'dibekacin', 'sisomicin',
+                'plazomicin', 'dihydrostreptomycin', 'paromomycin', 'framycetin',
+                'ribostamycin', 'arbekacin', 'bekanamycin', 'hygromycin-b',
+                'apramycin', 'puromycin', 'nourseothricin', 'isepamicin',
+                'verdamicin', 'astromicin', 'spectinomycin'
+            ],
+            'tetracyclines': [
+                'chlortetracycline', 'tetracycline', 'oxytetracycline', 'doxycycline',
+                'minocycline', 'lymecycline', 'demeclocycline', 'meclocycline',
+                'metacycline', 'rolitetracycline', 'tigecycline', 'eravacycline',
+                'sarecycline', 'glycylcycline', 'clomocycline', 'omadacycline',
+                'pipacycline', 'penimepicycline'
+            ],
+            'macrolides': [
+                'pikromycin', 'erythromycin', 'boromycin', 'dirithromycin',
+                'flurithromycin', 'miocamycin', 'rokitamycin', 'josamycin',
+                'spiramycin', 'tylosin', 'clarithromycin', 'azithromycin',
+                'tulathromycin', 'tilmicosin', 'kitasamycin', 'midecamycin',
+                'oleandomycin', 'troleandomycin', 'roxithromycin',
+                'telithromycin', 'cethromycin', 'solithromycin',
+                'streptovaricin-a-g', 'geldanamycin', 'macbecin',
+                'herbimycin', 'fidaxomicin', 'tildipirosin'
+            ],
+            'rifamycins': [
+                'rifamycin-sv', 'rifampicin', 'rifabutin', 'rifapentine', 'rifaximin', 'rifalazil'
+            ],
+            'lincosamides': [
+                'lincomycin', 'clindamycin', 'pirlimycin', 'iboxamycin'
+            ],
+            'phenicols': [
+                'chloramphenicol', 'thiamphenicol', 'florfenicol', 'azidamfenicol'
+            ],
+            'quinolones': [
+                'nalidixic-acid', 'pipemidic-acid', 'oxolinic-acid', 'piromidic-acid',
+                'flumequine', 'rosoxacin', 'norfloxacin', 'ofloxacin',
+                'ciprofloxacin', 'pefloxacin', 'fleroxacin', 'lomefloxacin',
+                'nadifloxacin', 'rufloxacin', 'enoxacin', 'levofloxacin',
+                'balofloxacin', 'grepafloxacin', 'pazufloxacin',
+                'sparfloxacin', 'temafloxacin', 'tosufloxacin',
+                'gatifloxacin', 'clinafloxacin', 'moxifloxacin',
+                'sitafloxacin', 'prulifloxacin', 'besifloxacin',
+                'delafloxacin', 'gemifloxacin', 'trovafloxacin',
+                'ozenoxacin', 'finafloxacin', 'garenoxacin',
+                'alatrofloxacin', 'valcofloxacin', 'gelmofloxacin',
+                'cinoxacin', 'nemonoxacin', 'pradofloxacin',
+                'enrofloxacin', 'danofloxacin', 'marbofloxacin',
+                'difloxacin', 'ibafloxacin', 'orbifloxacin',
+                'sarafloxacin'
+            ],
+            'sulfonamides': [
+                'sulfamethoxazole', 'sulfaguanidine', 'sulfadimidine',
+                'sulfamonomethoxine', 'sulfadimethoxine', 'sulfasalazine',
+                'sulfafurazole', 'sulfamethizole', 'sulfanilamid',
+                'sulfonamidochrysoidine', 'sulfacetamid', 'sulfadiazine',
+                'sulfisomidine', 'sulfamoxole', 'sulfanitran',
+                'sulfamethoxypyridazine', 'sulfametoxydiazine', 'sulfadoxine',
+                'sulfametopyrazine', 'mafenid', 'sulfaclozine',
+                'sulfachloropyridazine', 'cotrimoxazol'
+            ],
+            'oxazolidones': [
+                'cycloserine', 'linezolid', 'posizolid', 'tedizolid',
+                'torezolid',
+                'radezolid', 'eperezolid', 'ranbezolid', 'sutezolid'
+            ],
+            'nitroimidazoles': [
+                'metronidazole', 'tinidazole', 'ornidazole', 'secnidazole',
+                'nimorazole', 'carnidazole', 'misonidazole', 'dimetridazol',
+                'ronidazole', 'ipronidazole', 'benznidazole', 'azomycin',
+                'fexinidazole'
+            ],
+            'nitrofurans': [
+                'difurazone', 'furazolidone', 'nifuroxazide',
+                'nifurquinazol', 'nifurtoinol', 'nifurzide',
+                'nitrofurazone', 'nitrofurantoin', 'furaltadone',
+                'furazidine', 'furylfuramide', 'nifuratel',
+                'nifurtimox'
+            ],
+            'phosphonics': [
+                'fosfomycin', 'fosmidomycin', 'alafosfalin'
+            ],
+            'ionophores': [
+                'salinomycin', 'monensin', 'lasalocid'
+            ],
+            'pleuromutilins': [
+                'lefamulin', 'retapamulin', 'tiamulin', 'valnemulin',
+                'azamulin'
+            ],
+            'streptogramins': [
+                'pristinamycin', 'quinupristin', 'dalfopristin',
+                'virginiamycin'
+            ],
+            'aminocoumarins': [
+                'novobiocin', 'coumermycin-a1', 'clorobiocin'
+            ],
+            'lao-phong': [
+                'dapsone', 'promin', 'capreomycin', 'ethambutol',
+                'ethionamide', 'clofazimine', 'isoniazid'
+            ],
+            'diaminopyrimidine': [
+                'trimethoprim', 'pyrimethamine', 'iclaprim'
+            ],
+            'other/new': [
+                'fusidic-acid', 'anthracimycin', 'anthramycin',
+                'lugdunin', 'nitazoxanide', 'halicin',
+                'mupirocin', 'platensimycin', 'malacidin',
+                'lariocidin', 'zosurabalpin', 'cefepime-taniborbactam',
+                'darobactin', 'orlynvah', 'cefepime-enmetazobactam',
+                'cresomycin'
+            ]
+        };
+
+        const descriptions = {
+            'penicillins': 'Kháng sinh beta-lactam cổ điển, hoạt động bằng cách ức chế tổng hợp thành tế bào vi khuẩn.',
+            'cephalosporins': 'Một nhóm kháng sinh beta-lactam phổ rộng, thường được chia thành nhiều thế hệ để chống lại các loại vi khuẩn khác nhau.',
+            'carbapenems': 'Nhóm kháng sinh beta-lactam mạnh, được sử dụng để điều trị các bệnh nhiễm khuẩn nghiêm trọng và kháng thuốc.',
+            'monobactams': 'Nhóm kháng sinh beta-lactam có cấu trúc vòng đơn, hiệu quả chủ yếu với vi khuẩn gram âm.',
+            'beta-lactamase': 'Các chất ức chế enzyme beta-lactamase, được dùng kết hợp với kháng sinh beta-lactam để tăng hiệu quả.',
+            'peptides': 'Kháng sinh peptide hoạt động bằng cách phá vỡ màng tế bào vi khuẩn hoặc ức chế tổng hợp protein.',
+            'aminoglycosides': 'Nhóm kháng sinh ức chế tổng hợp protein của vi khuẩn, hiệu quả với vi khuẩn gram âm hiếu khí.',
+            'tetracyclines': 'Kháng sinh phổ rộng, hoạt động bằng cách ngăn chặn quá trình tổng hợp protein.',
+            'macrolides': 'Kháng sinh ức chế tổng hợp protein, được dùng để điều trị các bệnh nhiễm khuẩn đường hô hấp và da.',
+            'rifamycins': 'Nhóm kháng sinh Rifamycin là một nhóm kháng sinh có hoạt tính diệt khuẩn mạnh, hoạt động bằng cách ức chế quá trình tổng hợp RNA của vi khuẩn. Nhóm này được sử dụng chủ yếu để điều trị các bệnh do vi khuẩn Mycobacterium gây ra, đặc biệt là bệnh lao và bệnh phong.',
+            'lincosamides': 'Kháng sinh kìm khuẩn, hoạt động bằng cách ức chế tổng hợp protein.',
+            'phenicols': 'Kháng sinh có phổ hoạt động rộng, hoạt động bằng cách ức chế tổng hợp protein.',
+            'quinolones': 'Nhóm kháng sinh tổng hợp, tác động vào DNA của vi khuẩn.',
+            'sulfonamides': 'Kháng sinh tổng hợp, hoạt động bằng cách ức chế tổng hợp folate của vi khuẩn.',
+            'oxazolidones': 'Một nhóm kháng sinh mới, ngăn chặn quá trình tổng hợp protein ở giai đoạn khởi đầu.',
+            'nitroimidazoles': 'Kháng sinh hiệu quả đối với vi khuẩn kỵ khí và ký sinh trùng.',
+            'nitrofurans': 'Kháng sinh có phổ tác dụng rộng, dùng để điều trị nhiễm khuẩn đường tiết niệu.',
+            'phosphonics': 'Kháng sinh có hoạt tính rộng, hoạt động bằng cách ức chế tổng hợp thành tế bào.',
+            'ionophores': 'Hợp chất vận chuyển ion qua màng tế bào, được dùng chủ yếu trong thú y.',
+            'pleuromutilins': 'Nhóm kháng sinh ức chế tổng hợp protein, được dùng trong thú y và y học.',
+            'streptogramins': 'Nhóm kháng sinh phức hợp, ức chế tổng hợp protein của vi khuẩn.',
+            'aminocoumarins': 'Nhóm kháng sinh ức chế enzyme DNA gyrase của vi khuẩn.',
+            'lao-phong': 'Các loại thuốc được dùng để điều trị bệnh lao và phong.',
+            'diaminopyrimidine': 'Kháng sinh tổng hợp, ức chế enzyme dihydrofolate reductase của vi khuẩn.',
+            'other/new': 'Các loại kháng sinh và hợp chất mới đang được nghiên cứu hoặc có cơ chế hoạt động độc đáo.',
+        };
+
+        // Lấy container để chèn nội dung
+        const container = document.getElementById('antibiotics-container');
+
+        // Lặp qua từng nhóm kháng sinh
+        for (const group in antibioticsData) {
+            if (antibioticsData.hasOwnProperty(group)) {
+                // Tạo một div cho mỗi nhóm kháng sinh
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'bg-white p-4 rounded-xl shadow-lg';
+
+                // Tạo tiêu đề cho nhóm, có thể nhấp vào
+                const groupTitle = document.createElement('h2');
+                groupTitle.className = 'text-xl font-semibold mb-1 capitalize text-indigo-600 group-item flex justify-between items-center';
+                groupTitle.innerHTML = `
+                    <span>${group.replace(/-/g, ' ')}</span>
+                    <svg class="h-5 w-5 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                `;
+                groupDiv.appendChild(groupTitle);
+
+                // Tạo đoạn tóm tắt cho nhóm, ẩn ban đầu
+                const groupDescription = document.createElement('p');
+                groupDescription.className = 'text-sm text-slate-500 hidden mt-2 mb-3';
+                groupDescription.textContent = descriptions[group];
+                groupDiv.appendChild(groupDescription);
+
+                // Tạo danh sách (ul) cho các loại kháng sinh, ẩn ban đầu
+                const antibioticList = document.createElement('ul');
+                antibioticList.className = 'list-disc list-inside space-y-1 text-slate-700 hidden pl-4';
+                
+                // Lấy danh sách kháng sinh, sắp xếp theo thứ tự bảng chữ cái và lặp qua
+                const sortedAntibiotics = antibioticsData[group].sort();
+                sortedAntibiotics.forEach(antibiotic => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'hover:text-indigo-800 transition-colors duration-200';
+                    listItem.textContent = antibiotic;
+                    antibioticList.appendChild(listItem);
+                });
+
+                // Thêm nút "Thu gọn" vào cuối danh sách và căn giữa
+                const closeButton = document.createElement('button');
+                closeButton.textContent = 'Thu gọn';
+                closeButton.className = 'mt-3 px-3 py-1 bg-indigo-500 text-white rounded-lg text-sm font-medium shadow-md hover:bg-indigo-600 transition-colors duration-200 hidden mx-auto block';
+                
+                groupDiv.appendChild(antibioticList);
+                groupDiv.appendChild(closeButton);
+                container.appendChild(groupDiv);
+
+                // Thêm sự kiện click để ẩn/hiện danh sách và tóm tắt
+                groupTitle.addEventListener('click', () => {
+                    const icon = groupTitle.querySelector('svg');
+                    groupDescription.classList.toggle('hidden');
+                    antibioticList.classList.toggle('hidden');
+                    closeButton.classList.toggle('hidden');
+                    icon.classList.toggle('rotate-90');
+                });
+
+                // Thêm sự kiện click cho nút "Thu gọn"
+                closeButton.addEventListener('click', () => {
+                    const icon = groupTitle.querySelector('svg');
+                    groupDescription.classList.add('hidden');
+                    antibioticList.classList.add('hidden');
+                    closeButton.classList.add('hidden');
+                    icon.classList.remove('rotate-90');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
