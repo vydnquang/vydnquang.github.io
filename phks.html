@@ -581,11 +581,14 @@ text-align: justify;
     <h3><i class="fas fa-exclamation-triangle warning-icon"></i> Chỉ dẫn quan trọng</h3>
     <div id="guidanceText" class="truncated-text-container">
         <ol>
+                <li>Danh sách kháng sinh trong cơ sở dữ liệu được liệt kê ở đây:<a href="https://vydnquang.github.io/codeks/dskhangsinh" style="font-weight: bold; color: blue;"> DANH SÁCH KHÁNG SINH </a></li>
+                <li>Trong danh sách này liệt kê tất cả các loại kháng sinh từng ra đời, do đó sẽ có cả những kháng sinh đã bị dừng lưu hành, bị cấm sử dụng trên thế giới cũng như luật pháp hiện hành của Việt Nam.</li>
                 <li>Việc phối hợp kháng sinh cần phải dựa trên lâm sàng từng ca bệnh cụ thể, sau khi thực hiện kháng sinh đồ đầy đủ.</li>
                 <li>Cần cân nhắc giữa lợi và hại khi phối hợp kháng sinh, vì "thuốc là con dao 2 lưỡi", chỉ nên phối hợp khi thực sự cần thiết.</li>
                 <li>Hãy sử dụng kháng sinh một cách có trách nhiệm để không làm cho tình trạng kháng kháng sinh ngày càng nghiêm trọng hơn.</li>
+                <li>Ở đây chúng tôi thể hiện kết quả phối hợp dựa trên cơ chế tác dụng, chưa xét đến sự tương thích về mặt pha dược động học của từng loại thuốc và vị trí cơ quan trong cơ thể mang mầm bệnh.</li>
                 <li>Luôn luôn điều chỉnh liều lượng cho phù hợp, chứ không cứng nhắc 1 liều cho cả một quá trình điều trị.</li>
-                <li>Các kết quả "CẠNH TRANH"; "THẬN TRỌNG"; "TRUNG TÍNH" cần được tìm hiểu kỹ đối với mỗi cặp kháng sinh cần kết hợp.</li>
+                <li>Các kết quả <span style="font-weight: bold; color: red;">"CẠNH TRANH"</span>; <span style="font-weight: bold; color: red;">"THẬN TRỌNG"</span>; <span style="font-weight: bold; color: red;">"TRUNG TÍNH"</span> cần được tìm hiểu kỹ đối với mỗi cặp kháng sinh cần kết hợp.</li>
                 <li>Tất cả các kết quả trên chỉ mang tính tham khảo nhanh, chúng tôi không chịu bất kỳ trách nhiệm nào về các hậu quả không mong muốn do các bác sĩ làm theo mà không tìm hiểu kỹ trước khi thực hiện.</li>
             </ol>
         <div class="fade-overlay"></div>
@@ -751,9 +754,10 @@ text-align: justify;
         'oleandomycin', 'troleandomycin', 'roxithromycin',
         'telithromycin', 'cethromycin', 'solithromycin',
         'streptovaricin-a-g', 'geldanamycin', 'macbecin',
-        'herbimycin', 'fidaxomicin', 'rifamycin-sv', 'rifampicin',
-        'rifabutin', 'rifapentine', 'rifaximin', 'rifalazil',
-        'tildipirosin'
+        'herbimycin', 'fidaxomicin', 'tildipirosin'
+    ],
+    'rifamycins': [
+        'rifamycin-sv', 'rifampicin', 'rifabutin', 'rifapentine', 'rifaximin', 'rifalazil'
     ],
     'lincosamides': [
         'lincomycin', 'clindamycin', 'pirlimycin', 'iboxamycin'
@@ -1180,6 +1184,35 @@ text-align: justify;
     'aminocoumarins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
     'aminocoumarins-diaminopyrimidine': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
 
+    // XXIII. Các quy tắc của nhóm rifamycins // Một nhóm rất dễ kháng thuốc
+    // 23.1 Với các kháng sinh ức chế tổng hợp thành tế bào vi khuẩn
+    // 23.1.1 Với thành viên của beta-lactam
+    'penicillins-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'cephalosporins-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'monobactams-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'carbapenems-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    // 23.1.2 Với thành viên của peptides
+    'peptides-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    // 23.1.3 Với thành viên của phosphonics
+    'phosphonics-rifamycins': 'synergistic', // Cộng gộp, do fosfomycin ức chế tổng hợp thành tế bào ở giai đoạn sớm.
+    // 23.2 Với các kháng sinh ức chế tổng hợp protein khác, lưu ý một vài trường hợp sẽ cạnh tranh vị trí tác động, dẫn đến chồng chéo, đối kháng
+    'aminoglycosides-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'rifamycins-tetracyclines': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'macrolides-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'lincosamides-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'phenicols-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'rifamycins-streptogramins': 'synergistic', // Hiệp đồng hoặc cộng gộp
+    'aminocoumarins-rifamycins': 'synergistic', // Hiệp đồng
+    // 23.3 Với các kháng sinh khác
+    'quinolones-rifamycins': 'synergistic', // Hiệp đồng
+    'rifamycins-sulfonamides': 'synergistic', // Cộng gộp, do Sulfo ức chế tổng hợp acid folic
+    'diaminopyrimidine-rifamycins': 'synergistic', // Cộng gộp, do diamino ức chế tổng hợp acid folic
+    'nitroimidazoles-rifamycins': 'synergistic', // Cộng gộp, do nitroimi sản sinh chất có hại cho tế bào vi khuẩn
+    'nitrofurans-rifamycins': 'synergistic', // Cộng gộp, do nitrofu sản sinh chất có hại cho tế bào vi khuẩn
+    'ionophores-rifamycins': 'synergistic', // Cộng gộp, do iono làm thay đổi gradient ion màng tế bào vi khuẩn
+    'pleuromutilins-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp.
+    'oxazolidones-rifamycins': 'synergistic', // Hiệp đồng hoặc cộng gộp.
+
     // Các quy tắc của các nhóm chưa mà chưa có tài liệu nói rõ là có hay không
     'aminoglycosides-phosphonics': 'synergistic',
     'ionophores-other/new': 'neutral',
@@ -1323,7 +1356,7 @@ text-align: justify;
                 let resultText, resultClass;
                 switch (interactionRule) {
                     case 'synergistic':
-                        resultText = `HIỆP ĐỒNG (Nhóm ${groupA} và nhóm ${groupB} tác dụng hiệp đồng)`;
+                        resultText = `HIỆP ĐỒNG (Nhóm ${groupA} và nhóm ${groupB} khi kết hợp làm tăng tác dụng)`;
                         resultClass = 'synergistic';
                         break;
                     case 'additive':
@@ -1339,11 +1372,11 @@ text-align: justify;
                         resultClass = 'competition';
                         break;
                     case 'caution':
-                        resultText = `THẬN TRỌNG (Cần cân nhắc khi kết hợp nhóm ${groupA} và nhóm ${groupB})`;
+                        resultText = `THẬN TRỌNG (Cần cân nhắc khi kết hợp nhóm ${groupA} và nhóm ${groupB} do độc tính hoặc tăng tác dụng phụ)`;
                         resultClass = 'caution';
                         break;
                     case 'neutral':
-                        errorMessage.textContent = `Việc phối hợp giữa nhóm kháng sinh ${groupA} và nhóm ${groupB} đôi khi không theo quy tắc chung, nhưng có tài liệu nói là được phép cho một số trường hợp điều trị đặc biệt.`;
+                        errorMessage.textContent = `Việc phối hợp giữa nhóm kháng sinh ${groupA} và nhóm ${groupB} đôi khi không theo quy tắc chung, nhưng có xem xét cho một số trường hợp điều trị đặc biệt.`;
                         resultText = 'TRUNG TÍNH (Có thể được hoặc có thể không, phụ thuộc từng cặp kháng sinh cụ thể)';
                         resultClass = 'neutral';
                         break;
@@ -1498,7 +1531,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // HÀM ĐẾM SỐ LƯỢNG KHÁNG SINH TRONG DATA
             const countElement = document.getElementById('antibioticCount');
-            const targetCount = allAntibiotics.length;
+            const targetCount = allAntibiotics.length - 4;
             let currentCount = 0;
             const duration = 2000;
             const increment = targetCount / (duration / 16);
