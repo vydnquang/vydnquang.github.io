@@ -367,7 +367,7 @@ color: orange;
 }
 
 .truncated-text-container.expanded {
-    max-height: 1000px; /* Chiều cao tối đa khi hiển thị, điều chỉnh cho phù hợp */
+    max-height: 2000px; /* Chiều cao tối đa khi hiển thị, điều chỉnh cho phù hợp */
 }
 
 .fade-overlay {
@@ -1531,7 +1531,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // HÀM ĐẾM SỐ LƯỢNG KHÁNG SINH TRONG DATA
             const countElement = document.getElementById('antibioticCount');
-            const targetCount = allAntibiotics.length - 4;
+            const targetCount = allAntibiotics.length - 16; // -4 khoáng chất, -12 beta-lactamase
             let currentCount = 0;
             const duration = 2000;
             const increment = targetCount / (duration / 16);
