@@ -325,9 +325,9 @@
                 groupDescription.id = uniqueId; // Gán ID để aria-controls có thể tham chiếu
                 groupDiv.appendChild(groupDescription);
 
-                // Tạo danh sách (ul) cho các loại kháng sinh, ẩn ban đầu
-                const antibioticList = document.createElement('ul');
-                antibioticList.className = 'list-disc list-inside space-y-1 text-slate-700 hidden pl-4';
+                // Thay đổi từ <ul> thành <ol> để có số thứ tự
+                const antibioticList = document.createElement('ol');
+                antibioticList.className = 'list-decimal list-inside space-y-1 text-slate-700 hidden pl-4';
                 antibioticList.id = `${uniqueId}-list`; // Gán ID
                 
                 // Lấy danh sách kháng sinh, sắp xếp theo thứ tự bảng chữ cái và lặp qua
