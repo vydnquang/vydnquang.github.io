@@ -6,7 +6,9 @@
     <title>Danh sách Kháng sinh</title>
     <!-- Thư viện Tailwind CSS để tạo kiểu nhanh chóng -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
+    <!-- Thư viện Lucide Icons cho các biểu tượng hiện đại -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Sử dụng phông chữ Inter để giao diện hiện đại hơn -->
     <style>
@@ -27,15 +29,14 @@
             color: #4f46e5;
         }
         header {
-            background-color: #0070b5; /* Màu xanh */
+            background-color: #0070b5; /* Màu xanh đậm */
             color: white;
-            padding: 20px 0;
-            text-align: center;
+            padding: 1rem 2rem;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex; /* Sử dụng flexbox */
-            justify-content: space-between; /* Căn giữa các phần tử */
-            align-items: center; /* Căn giữa theo chiều dọc */
-            padding: 1rem 2rem; /* Thêm padding cho header */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap; /* Đảm bảo các phần tử không xuống dòng */
         }
 
         header h1 {
@@ -43,37 +44,57 @@
             font-family: 'Pacifico', cursive;
             font-size: 2.5em;
             color: white;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             padding: 0 10px;
             box-sizing: border-box;
+            text-align: center;
+            flex-grow: 1;
         }
         footer {
             background-color: #FFD700; /* Màu vàng */
-            color: blue;
+            color: #1a237e; /* Màu xanh đậm để dễ đọc */
             padding: 15px 0;
             text-align: center;
             font-size: 0.9em;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
             margin-top: auto;
         }
+        
+        /* Điều chỉnh cho màn hình nhỏ hơn (điện thoại) */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.5rem 1rem; /* Giảm padding của header */
+            }
+            header h1 {
+                font-size: 1.5em; /* Giảm kích thước font của tiêu đề */
+                padding: 0 5px; /* Giảm padding của tiêu đề */
+            }
+            .home-button {
+                font-size: 0.8em; /* Giảm kích thước font của nút */
+                padding: 0.5rem 1rem; /* Giảm padding của nút */
+            }
+        }
     </style>
 </head>
 <body>
     <header>
+        <!-- Nút Trang chủ ở bên trái -->
+        <a href="https://vydnquang.github.io/phks" class="home-button inline-flex items-center space-x-2 px-4 py-2 bg-white text-indigo-600 font-semibold rounded-full shadow-lg hover:bg-indigo-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <!-- Icon Home từ thư viện Lucide Icons -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="hidden md:inline">Trang chủ</span>
+        </a>
+
+        <!-- Tiêu đề được căn giữa -->
         <h1 class="text-2xl md:text-4xl">Danh sách các loại Kháng Sinh</h1>
-        <!-- Nút Trang chủ với icon và link -->
-        <a href="https://vydnquang.github.io/phks" class="inline-flex items-center space-x-2 px-4 py-2 bg-white text-indigo-600 font-semibold rounded-full shadow-lg hover:bg-indigo-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-            <!-- Icon Home (Inline SVG) -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
-            <span>Trang chủ</span>
+        
+        <!-- Một thẻ a rỗng để giữ cân bằng, ẩn đi bằng opacity và pointer-events -->
+        <a href="#" class="home-button inline-flex items-center space-x-2 px-4 py-2 bg-white text-indigo-600 font-semibold rounded-full shadow-lg opacity-0 pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="hidden md:inline">Trang chủ</span>
         </a>
     </header>
 
-    <div class="max-w-4xl mx-auto p-8">
+    <div class="max-w-4xl mx-auto p-8 flex-grow">
         <!-- Container để chứa danh sách các nhóm kháng sinh -->
         <div id="antibiotics-container" class="space-y-2">
             <!-- Dữ liệu sẽ được chèn vào đây bằng JavaScript -->
@@ -93,7 +114,7 @@
                 'flucloxacillin', 'ampicillin', 'amoxycillin', 'pivampicillin',
                 'hetacillin', 'bacampicillin', 'metampicillin', 'talampicillin',
                 'epicillin', 'sulbenicillin', 'temocillin', 'carbenicilin',
-                'ticarcilin', 'carindacillin', 'mecillinam', 'amdinocillin',
+                'ticarcilin', 'carindacillin', 'mecillinam (amdinocillin)',
                 'mezlocillin', 'piperacillin', 'azlocillin', 'pivmecillinam'
             ],
             'cephalosporins': [
@@ -189,7 +210,7 @@
                 'sulfisomidine', 'sulfamoxole', 'sulfanitran',
                 'sulfamethoxypyridazine', 'sulfametoxydiazine', 'sulfadoxine',
                 'sulfametopyrazine', 'mafenid', 'sulfaclozine',
-                'sulfachloropyridazine', 'cotrimoxazol'
+                'cotrimoxazol'
             ],
             'oxazolidones': [
                 'cycloserine', 'linezolid', 'posizolid', 'tedizolid',
@@ -280,10 +301,15 @@
                 // Tạo một div cho mỗi nhóm kháng sinh
                 const groupDiv = document.createElement('div');
                 groupDiv.className = 'bg-white p-4 rounded-xl shadow-lg';
+                
+                // Sử dụng ID duy nhất cho mỗi phần tử có thể thu gọn để cải thiện khả năng truy cập
+                const uniqueId = `group-${group}`;
 
                 // Tạo tiêu đề cho nhóm, có thể nhấp vào
                 const groupTitle = document.createElement('h2');
                 groupTitle.className = 'text-xl font-semibold mb-1 capitalize text-indigo-600 group-item flex justify-between items-center';
+                groupTitle.setAttribute('aria-expanded', 'false'); // Thuộc tính accessibility
+                groupTitle.setAttribute('aria-controls', uniqueId);
                 groupTitle.innerHTML = `
                     <span>${group.replace(/-/g, ' ')}</span>
                     <svg class="h-5 w-5 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -296,11 +322,13 @@
                 const groupDescription = document.createElement('p');
                 groupDescription.className = 'text-sm text-slate-500 hidden mt-2 mb-3';
                 groupDescription.textContent = descriptions[group];
+                groupDescription.id = uniqueId; // Gán ID để aria-controls có thể tham chiếu
                 groupDiv.appendChild(groupDescription);
 
                 // Tạo danh sách (ul) cho các loại kháng sinh, ẩn ban đầu
                 const antibioticList = document.createElement('ul');
                 antibioticList.className = 'list-disc list-inside space-y-1 text-slate-700 hidden pl-4';
+                antibioticList.id = `${uniqueId}-list`; // Gán ID
                 
                 // Lấy danh sách kháng sinh, sắp xếp theo thứ tự bảng chữ cái và lặp qua
                 const sortedAntibiotics = antibioticsData[group].sort();
@@ -314,28 +342,34 @@
                 // Thêm nút "Thu gọn" vào cuối danh sách và căn giữa
                 const closeButton = document.createElement('button');
                 closeButton.textContent = 'Thu gọn';
-                closeButton.className = 'mt-3 px-3 py-1 bg-indigo-500 text-white rounded-lg text-sm font-medium shadow-md hover:bg-indigo-600 transition-colors duration-200 hidden mx-auto block';
+                closeButton.className = 'mt-3 px-3 py-1 bg-indigo-500 text-white rounded-lg text-sm font-medium shadow-md hover:bg-indigo-600 transition-colors duration-200 hidden';
                 
+                // Tạo một div để căn giữa nút "Thu gọn"
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'flex justify-center';
+                buttonContainer.appendChild(closeButton);
+
                 groupDiv.appendChild(antibioticList);
-                groupDiv.appendChild(closeButton);
+                groupDiv.appendChild(buttonContainer); // Thêm div chứa nút
                 container.appendChild(groupDiv);
 
                 // Thêm sự kiện click để ẩn/hiện danh sách và tóm tắt
                 groupTitle.addEventListener('click', () => {
-                    const icon = groupTitle.querySelector('svg');
+                    const isExpanded = groupTitle.getAttribute('aria-expanded') === 'true';
                     groupDescription.classList.toggle('hidden');
                     antibioticList.classList.toggle('hidden');
                     closeButton.classList.toggle('hidden');
-                    icon.classList.toggle('rotate-90');
+                    groupTitle.querySelector('svg').classList.toggle('rotate-90');
+                    groupTitle.setAttribute('aria-expanded', !isExpanded);
                 });
 
                 // Thêm sự kiện click cho nút "Thu gọn"
                 closeButton.addEventListener('click', () => {
-                    const icon = groupTitle.querySelector('svg');
                     groupDescription.classList.add('hidden');
                     antibioticList.classList.add('hidden');
                     closeButton.classList.add('hidden');
-                    icon.classList.remove('rotate-90');
+                    groupTitle.querySelector('svg').classList.remove('rotate-90');
+                    groupTitle.setAttribute('aria-expanded', 'false');
                 });
             }
         }
