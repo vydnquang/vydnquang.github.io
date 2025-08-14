@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự báo mức độ suy thận trên chó và mèo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Kiểm tra độ suy thận ở Chó/Mèo</h1>
+        
+        <!-- Ô nhập liệu: Loài vật nuôi -->
+        <div class="mb-4">
+            <label for="petSpecies" class="block text-gray-700 font-semibold mb-2">Loài vật nuôi:</label>
+            <select id="petSpecies" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="updateNormalCreatinine()">
+                <option value="">-- Chọn loài --</option>
+                <option value="dog">Chó</option>
+                <option value="cat">Mèo</option>
+            </select>
+        </div>
+
+        <!-- Ô nhập liệu: Trọng lượng -->
+        <div class="mb-4">
+            <label for="petWeight" class="block text-gray-700 font-semibold mb-2">Trọng lượng (kg):</label>
+            <input type="number" id="petWeight" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập trọng lượng" oninput="updateNormalCreatinine()">
+        </div>
+        
+        <!-- Ô hiển thị: Creatinin bình thường -->
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Creatinin bình thường sẽ là (µmol/L):</label>
+            <div id="normalCreatinineDisplay" class="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-700">
+                -- Giá trị sẽ được tính toán --
+            </div>
+        </div>
+        
+        <!-- Ô nhập liệu: Chỉ số xét nghiệm Creatinin hiện tại -->
+        <div class="mb-6">
+            <label for="currentCreatinine" class="block text-gray-700 font-semibold mb-2">Chỉ số Creatinin hiện tại (µmol/L):</label>
+            <input type="number" id="currentCreatinine" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập chỉ số hiện tại">
+        </div>
+        
+        <!-- Nút tính toán -->
+        <div class="flex justify-center mb-6">
+            <button onclick="calculateCreatinine()" class="px-6 py-2 text-white font-bold bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Dự báo mức độ suy thận</button>
+        </div>
+        
+        <!-- Kết quả -->
+        <div id="resultBox" class="mt-4 p-4 text-lg font-semibold text-gray-800 bg-gray-100 rounded-lg text-center shadow-inner hidden">
+            <!-- Kết quả và thông báo sẽ hiển thị ở đây -->
+        </div>
+    </div>
+
+    <script>
+        // Hàm cập nhật chỉ số Creatinin bình thường ngay khi người dùng nhập trọng lượng
+        function updateNormalCreatinine() {
+            const petSpecies = document.getElementById('petSpecies').value;
+            const petWeightInput = document.getElementById('petWeight');
+            const petWeight = parseFloat(petWeightInput.value);
+            const normalCreatinineDisplay = document.getElementById('normalCreatinineDisplay');
+            const resultBox = document.getElementById('resultBox');
+            
+            // Xóa thông báo lỗi cũ
+            resultBox.classList.add('hidden');
+
+            // Kiểm tra nếu là mèo và trọng lượng > 13kg
+            if (petSpecies === 'cat' && !isNaN(petWeight) && petWeight > 13) {
+                resultBox.innerHTML = '<span class="font-bold text-red-800">Cảnh báo:</span> Thông thường, trọng lượng của mèo không vượt quá 13kg.';
+                resultBox.className = 'mt-4 p-4 text-lg font-semibold rounded-lg text-center shadow-inner bg-red-100';
+                resultBox.classList.remove('hidden');
+                petWeightInput.value = ''; // Xóa giá trị nhập sai
+                normalCreatinineDisplay.textContent = '-- Giá trị sẽ được tính toán --';
+                return;
+            }
+
+            let normalCreatinine = 0;
+
+            if (!isNaN(petWeight) && petWeight > 0) {
+                // Công thức tính toán Creatinin bình thường ở đơn vị µmol/L
+                // theo yêu cầu mới: 70 + 1.2 * Trọng lượng
+                normalCreatinine = (70 + 1.2 * petWeight).toFixed(2);
+                normalCreatinineDisplay.textContent = normalCreatinine;
+            } else {
+                normalCreatinineDisplay.textContent = '-- Giá trị sẽ được tính toán --';
+            }
+        }
+
+        // Hàm chính để tính toán và hiển thị kết quả
+        function calculateCreatinine() {
+            // Lấy giá trị từ các ô nhập liệu
+            const petSpecies = document.getElementById('petSpecies').value;
+            const currentCreatinine = parseFloat(document.getElementById('currentCreatinine').value);
+            const resultBox = document.getElementById('resultBox');
+            
+            // Lấy giá trị Creatinin bình thường đã được tính toán
+            const normalCreatinine = parseFloat(document.getElementById('normalCreatinineDisplay').textContent);
+
+            // Kiểm tra các giá trị đầu vào
+            if (!petSpecies || isNaN(currentCreatinine) || isNaN(normalCreatinine)) {
+                resultBox.textContent = 'Vui lòng nhập đầy đủ và chính xác các thông tin.';
+                resultBox.className = 'mt-4 p-4 text-lg font-semibold rounded-lg text-center shadow-inner bg-gray-100 text-gray-800';
+                resultBox.classList.remove('hidden');
+                return;
+            }
+
+            let firstLine = '';
+            let secondLine = '';
+            let bgColor = '';
+            let speciesName = '';
+
+            if (petSpecies === 'dog') {
+                speciesName = 'Chó';
+                if (currentCreatinine < 125) {
+                    secondLine = 'Không có dấu hiệu suy thận';
+                    bgColor = 'bg-green-100 text-green-800';
+                } else if (currentCreatinine >= 125 && currentCreatinine <= 175) {
+                    secondLine = 'Cảnh báo suy thận Độ I';
+                    bgColor = 'bg-yellow-100 text-yellow-800';
+                } else if (currentCreatinine > 175 && currentCreatinine <= 444) {
+                    secondLine = 'Cảnh báo suy thận Độ II';
+                    bgColor = 'bg-red-100 text-red-800';
+                } else { // currentCreatinine > 444
+                    secondLine = 'Cảnh báo suy thận Độ III';
+                    bgColor = 'bg-red-100 text-red-800';
+                }
+            } else if (petSpecies === 'cat') {
+                speciesName = 'Mèo';
+                if (currentCreatinine < 144) {
+                    secondLine = 'Không có dấu hiệu suy thận';
+                    bgColor = 'bg-green-100 text-green-800';
+                } else if (currentCreatinine >= 144 && currentCreatinine <= 244) {
+                    secondLine = 'Cảnh báo suy thận Độ I';
+                    bgColor = 'bg-yellow-100 text-yellow-800';
+                } else if (currentCreatinine > 244 && currentCreatinine <= 444) {
+                    secondLine = 'Cảnh báo suy thận Độ II';
+                    bgColor = 'bg-red-100 text-red-800';
+                } else { // currentCreatinine > 444
+                    secondLine = 'Cảnh báo suy thận Độ III';
+                    bgColor = 'bg-red-100 text-red-800';
+                }
+            } else {
+                resultBox.textContent = 'Vui lòng chọn loài vật nuôi.';
+                resultBox.className = 'mt-4 p-4 text-lg font-semibold rounded-lg text-center shadow-inner bg-gray-100 text-gray-800';
+                resultBox.classList.remove('hidden');
+                return;
+            }
+
+            firstLine = `Creatinin trong máu của ${speciesName} hiện tại: ${currentCreatinine} µmol/L.`;
+
+            // Hiển thị kết quả trên hai dòng
+            resultBox.innerHTML = `${firstLine}<br>${secondLine}`;
+            resultBox.className = `mt-4 p-4 text-lg font-semibold rounded-lg text-center shadow-inner ${bgColor}`;
+            resultBox.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

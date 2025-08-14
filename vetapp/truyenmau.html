@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính toán truyền máu thú y</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tùy chỉnh font chữ Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Hiệu ứng focus */
+        .input-focus:focus {
+            outline: none;
+            border-color: #3b82f6; /* Xanh dương của Tailwind */
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        /* Class CSS mới để tô màu đỏ và in đậm */
+        .result-highlight {
+            color: #ef4444; /* red-500 */
+            font-weight: bold;
+        }
+        .text-red-highlight {
+            color: #ef4444; /* red-500 */
+            font-weight: bold;
+        }
+        /* Hiệu ứng cho nút bị vô hiệu hóa */
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 sm:p-8">
+
+    <!-- Container chính -->
+    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-lg border border-gray-200">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Công cụ tính toán lượng máu cần truyền cho Chó/Mèo</h1>
+        <p class="text-center text-red-600 mb-6 font-semibold">
+            <span class="font-bold">Lưu ý:</span> Công cụ này giúp các BSTY tham khảo nhanh về cách tính toán lượng máu cần truyền. Để một ca truyền máu diễn ra thành công, bạn cần xem xét nhiều nhiều yếu tố khác chứ không chỉ là các phép tính này. Do đó, bạn <span class="font-bold">nên tham khảo ý kiến của các chuyên gia</span> nhé.
+        </p>
+        
+        <form id="blood-calculator-form" class="space-y-4">
+
+            <!-- Khung khai báo -->
+            <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 shadow-sm">
+                <h2 class="text-xl font-semibold text-blue-800 mb-4">Khai báo thông tin của thú nhận và thú cho máu</h2>
+                
+                <!-- Hiển thị cảnh báo -->
+                <div id="warning-message" class="hidden bg-red-200 text-red-800 p-3 mb-4 rounded-md font-medium border border-red-300 whitespace-pre-wrap"></div>
+
+                <!-- Loài vật -->
+                <div class="mb-3">
+                    <label class="block text-gray-700 font-medium mb-2">Loài vật</label>
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6">
+                        <label class="inline-flex items-center text-gray-800">
+                            <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="species" value="dog" checked>
+                            <span class="ml-2">Chó</span>
+                        </label>
+                        <label class="inline-flex items-center text-gray-800">
+                            <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="species" value="cat">
+                            <span class="ml-2">Mèo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Cân nặng con nhận -->
+                <div class="mb-3">
+                    <label for="recipient-weight" class="block text-gray-700 font-medium mb-2">Cân nặng con nhận (kg)</label>
+                    <input type="number" id="recipient-weight" class="w-full p-3 border border-gray-300 rounded-md input-focus" placeholder="Nhập cân nặng (ví dụ: 10)">
+                </div>
+
+                <!-- HCT con nhận -->
+                <div class="mb-3">
+                    <label for="recipient-hct" class="block text-gray-700 font-medium mb-2">HCT con nhận (%)</label>
+                    <input type="number" id="recipient-hct" class="w-full p-3 border border-gray-300 rounded-md input-focus" placeholder="Nhập HCT (ví dụ: 15)">
+                </div>
+                
+                <!-- Cân nặng con cho -->
+                <div class="mb-3">
+                    <label for="donor-weight" class="block text-gray-700 font-medium mb-2">Cân nặng con cho (kg)</label>
+                    <input type="number" id="donor-weight" class="w-full p-3 border border-gray-300 rounded-md input-focus" placeholder="Nhập cân nặng (ví dụ: 25)">
+                </div>
+
+                <!-- HCT con cho -->
+                <div class="mb-3">
+                    <label for="donor-hct" class="block text-gray-700 font-medium mb-2">HCT con cho (%)</label>
+                    <input type="number" id="donor-hct" class="w-full p-3 border border-gray-300 rounded-md input-focus" placeholder="Nhập HCT (ví dụ: 45)">
+                </div>
+
+                <!-- Béo/gầy và Hệ số -->
+                <div class="flex flex-col sm:flex-row sm:space-x-4 items-center">
+                    <div class="flex-grow mb-3 sm:mb-0">
+                        <label class="block text-gray-700 font-medium mb-2">Điểm thể trạng của con cho</label>
+                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6" id="body-condition-container">
+                            <label class="inline-flex items-center text-gray-800">
+                                <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="body-condition" value="fat" checked>
+                                <span class="ml-2">Béo</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-800">
+                                <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="body-condition" value="normal">
+                                <span class="ml-2">Gầy/Bình thường</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex-grow text-center">
+                        <label for="he-so" class="block text-gray-700 font-medium mb-0">Hệ số điều chỉnh thể tích máu</label>
+                        <input type="text" id="he-so" class="w-full p-2 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khung CON NHẬN và kết quả -->
+            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 shadow-sm space-y-3">
+                <h2 class="text-xl font-semibold text-green-800 mb-2">CON NHẬN</h2>
+                <div class="text-center">
+                    <button type="button" id="calculate-recipient-btn" class="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                        Tính lượng máu cần truyền
+                    </button>
+                </div>
+                <div>
+                    <p class="text-sm italic text-gray-600 mb-2">Công thức tính như sau: <span class="font-bold">V (máu cần truyền) = (HCT đích - HCT con nhận) x Cân nặng x 2</span></p>
+                    <p class="text-sm text-gray-600 mb-4">
+                        HCT đích là HCT của con nhận muốn đạt sau khi truyền máu, mặc định là 43%.
+                    </p>
+                    <div class="flex items-center space-x-2">
+                        <label class="font-medium text-gray-700">Lượng máu cần truyền (ml):</label>
+                        <input type="text" id="result-volume" class="flex-grow p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg result-highlight" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khung CON CHO và kết quả -->
+            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 shadow-sm space-y-3">
+                <h2 class="text-xl font-semibold text-yellow-800 mb-2">CON CHO</h2>
+                <div class="text-center">
+                    <button type="button" id="calculate-donor-btn" class="w-full sm:w-auto px-8 py-3 bg-yellow-600 text-white font-semibold rounded-full shadow-lg hover:bg-yellow-700 transition duration-300 ease-in-out">
+                        Phân tích lượng máu con cho
+                    </button>
+                </div>
+                
+                <!-- Tổng số máu con cho -->
+                <div>
+                    <label for="donor-total-blood" class="block text-gray-700 font-medium mb-2">Tổng số máu lý tưởng của con cho</label>
+                    <input type="text" id="donor-total-blood" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
+                </div>
+
+                <!-- Báo cáo tình trạng HCT -->
+                <div>
+                    <label for="reference-range" class="block text-gray-700 font-medium mb-2">Báo cáo tình trạng HCT của con cho</label>
+                    <input type="text" id="reference-range" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
+                </div>
+
+                <!-- V máu thực tế (sẽ thay đổi nhãn) -->
+                <div>
+                    <label for="actual-blood-volume" id="actual-blood-volume-label" class="block text-gray-700 font-medium mb-2">=> Thể tích máu thực tế của con cho</label>
+                    <input type="text" id="actual-blood-volume" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
+                </div>
+
+                <!-- Số máu có thể cho -->
+                <div>
+                    <label for="available-blood-volume" class="block text-gray-700 font-medium mb-2">Số máu được phép lấy từ con cho</label>
+                    <input type="text" id="available-blood-volume" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg result-highlight" readonly>
+                </div>
+            </div>
+
+            <!-- Khung kết luận mới -->
+            <div id="conclusion" class="mt-4 p-6 rounded-xl shadow-inner border border-gray-300 hidden">
+                <h2 class="text-xl font-bold text-center text-blue-600 mb-2">KẾT LUẬN</h2>
+                <p id="conclusion-text" class="text-base text-center text-red-600"></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Các hằng số được định nghĩa ở đây để dễ dàng bảo trì và cập nhật
+        const TARGET_HCT = 43;
+        const RECIPIENT_CALC_MULTIPLIER = 2;
+        const DONOR_BLOOD_VOLUME_DOG = 77; // ml/kg
+        const DONOR_BLOOD_VOLUME_CAT = 66; // ml/kg
+        const FAT_BODY_CONDITION_FACTOR = 0.7;
+        const AVAILABLE_BLOOD_RATIO = 0.2;
+        const FLUID_CALC_MULTIPLIER = 2.4;
+
+        // Tập hợp các phần tử DOM để tránh truy cập lặp lại
+        const recipientWeightInput = document.getElementById('recipient-weight');
+        const recipientHctInput = document.getElementById('recipient-hct');
+        const resultVolumeInput = document.getElementById('result-volume');
+        const calculateRecipientBtn = document.getElementById('calculate-recipient-btn');
+
+        const donorWeightInput = document.getElementById('donor-weight');
+        const donorHctInput = document.getElementById('donor-hct');
+        const heSoInput = document.getElementById('he-so');
+        const bodyConditionContainer = document.getElementById('body-condition-container');
+        const donorTotalBloodInput = document.getElementById('donor-total-blood');
+        const refRangeInput = document.getElementById('reference-range');
+        const actualBloodVolumeInput = document.getElementById('actual-blood-volume');
+        const availableBloodVolumeInput = document.getElementById('available-blood-volume');
+        const actualBloodVolumeLabel = document.getElementById('actual-blood-volume-label');
+        const calculateDonorBtn = document.getElementById('calculate-donor-btn');
+        const speciesRadios = document.getElementsByName('species');
+        const bodyConditionRadios = document.getElementsByName('body-condition');
+        const warningMessageElement = document.getElementById('warning-message');
+        const recipientBtn = document.getElementById('calculate-recipient-btn');
+        const donorBtn = document.getElementById('calculate-donor-btn');
+        const conclusionDiv = document.getElementById('conclusion');
+        const conclusionText = document.getElementById('conclusion-text');
+        
+        /**
+         * @function showWarning
+         * @description Hiển thị một cảnh báo trong hộp tin nhắn.
+         * @param {string} message - Nội dung cảnh báo.
+         */
+        function showWarning(message) {
+            warningMessageElement.textContent = message;
+            warningMessageElement.classList.remove('hidden');
+        }
+
+        /**
+         * @function hideWarning
+         * @description Ẩn hộp tin nhắn cảnh báo.
+         */
+        function hideWarning() {
+            warningMessageElement.textContent = '';
+            warningMessageElement.classList.add('hidden');
+        }
+
+        /**
+         * @function toggleCalculationButtons
+         * @description Vô hiệu hóa hoặc kích hoạt các nút tính toán.
+         * @param {boolean} isDisabled - True để vô hiệu hóa, false để kích hoạt.
+         */
+        function toggleCalculationButtons(isDisabled) {
+            recipientBtn.disabled = isDisabled;
+            donorBtn.disabled = isDisabled;
+            if (isDisabled) {
+                recipientBtn.classList.add('btn-disabled');
+                donorBtn.classList.add('btn-disabled');
+            } else {
+                recipientBtn.classList.remove('btn-disabled');
+                donorBtn.classList.remove('btn-disabled');
+            }
+        }
+
+        /**
+         * @function validateInputs
+         * @description Kiểm tra các giá trị nhập vào và hiển thị cảnh báo nếu cần, đồng thời vô hiệu hóa nút.
+         */
+        function validateInputs() {
+            const species = document.querySelector('input[name="species"]:checked').value;
+            const recipientWeight = parseFloat(recipientWeightInput.value);
+            const donorWeight = parseFloat(donorWeightInput.value);
+            const recipientHct = parseFloat(recipientHctInput.value);
+            const donorHct = parseFloat(donorHctInput.value);
+            
+            let warnings = [];
+
+            // Cảnh báo 1: Trọng lượng mèo cho máu nên dưới 13kg
+            if (species === 'cat' && !isNaN(donorWeight) && donorWeight > 13) {
+                warnings.push('• Cảnh báo: Trọng lượng mèo thường là chỉ dưới 13kg.');
+            }
+
+            // Cảnh báo 2: Cân nặng con cho thấp hơn con nhận
+            if (!isNaN(donorWeight) && !isNaN(recipientWeight) && donorWeight < recipientWeight) {
+                warnings.push('• Cảnh báo: Cân nặng con CHO thấp hơn con NHẬN, dẫn đến không thể cho đủ số lượng máu cần điều trị.');
+            }
+
+            // Cảnh báo 3: HCT con nhận trên 20
+            if (!isNaN(recipientHct) && recipientHct > 20) {
+                warnings.push('• Cảnh báo: HCT con NHẬN trên 20. Có thể không cần truyền máu.');
+            }
+            
+            // Cảnh báo 4: HCT con cho thấp hơn HCT con nhận
+            if (!isNaN(donorHct) && !isNaN(recipientHct) && donorHct < recipientHct) {
+                warnings.push('• Cảnh báo: HCT của con CHO thấp hơn HCT con NHẬN. Không thể lấy máu từ con CHO này.');
+            }
+
+            // Cảnh báo 5: Cân nặng con nhận (mèo) trên 13kg
+            if (species === 'cat' && !isNaN(recipientWeight) && recipientWeight > 13) {
+                warnings.push('• Cảnh báo: Trọng lượng mèo thường là chỉ dưới 13kg.');
+            }
+
+            if (warnings.length > 0) {
+                showWarning(warnings.join('\n'));
+                toggleCalculationButtons(true);
+            } else {
+                hideWarning();
+                toggleCalculationButtons(false);
+            }
+        }
+        
+        /**
+         * @function updateHeSo
+         * @description Tính toán và cập nhật ô "Hệ số" dựa trên cân nặng và thể trạng của con cho.
+         */
+        function updateHeSo() {
+            const donorWeight = parseFloat(donorWeightInput.value);
+            const bodyCondition = document.querySelector('input[name="body-condition"]:checked').value;
+
+            // Kiểm tra dữ liệu đầu vào không hợp lệ
+            if (isNaN(donorWeight) || donorWeight <= 0) {
+                heSoInput.value = '';
+                return;
+            }
+
+            let heSo;
+            if (bodyCondition === 'fat') {
+                heSo = donorWeight * FAT_BODY_CONDITION_FACTOR;
+            } else { // normal
+                heSo = donorWeight;
+            }
+
+            // Hiển thị kết quả, làm tròn đến 2 chữ số thập phân
+            heSoInput.value = heSo.toFixed(2);
+        }
+
+        /**
+         * @function calculateRecipientBlood
+         * @description Tính toán lượng máu cần truyền cho con nhận dựa trên công thức đã cho.
+         */
+        function calculateRecipientBlood() {
+            // Không cần gọi validateInputs() ở đây vì nút đã bị vô hiệu hóa khi có lỗi
+            const recipientWeight = parseFloat(recipientWeightInput.value);
+            const recipientHct = parseFloat(recipientHctInput.value);
+
+            if (isNaN(recipientWeight) || isNaN(recipientHct) || recipientWeight <= 0 || recipientHct <= 0) {
+                resultVolumeInput.value = 'Dữ liệu không hợp lệ';
+                return;
+            }
+
+            const hctDeficit = TARGET_HCT - recipientHct;
+
+            if (hctDeficit <= 0) {
+                resultVolumeInput.value = 'Không cần truyền máu';
+                return;
+            }
+
+            const bloodVolume = hctDeficit * recipientWeight * RECIPIENT_CALC_MULTIPLIER;
+            resultVolumeInput.value = bloodVolume.toFixed(2) + ' ml';
+        }
+
+        /**
+         * @function calculateDonorBlood
+         * @description Tính toán các thông số liên quan đến con cho máu và đưa ra kết luận.
+         */
+        function calculateDonorBlood() {
+            // Không cần gọi validateInputs() ở đây vì nút đã bị vô hiệu hóa khi có lỗi
+            updateHeSo();
+            
+            const species = document.querySelector('input[name="species"]:checked').value;
+            const bodyCondition = document.querySelector('input[name="body-condition"]:checked').value;
+            const donorWeight = parseFloat(donorWeightInput.value);
+            const donorHct = parseFloat(donorHctInput.value);
+
+            if (isNaN(donorWeight) || isNaN(donorHct) || donorWeight <= 0 || donorHct <= 0) {
+                donorTotalBloodInput.value = 'Dữ liệu không hợp lệ';
+                refRangeInput.value = '';
+                actualBloodVolumeInput.value = '';
+                availableBloodVolumeInput.value = '';
+                actualBloodVolumeLabel.textContent = '=> Thể tích máu thực tế của con cho';
+                actualBloodVolumeLabel.classList.remove('text-red-highlight');
+                // Gọi hàm kết luận ngay cả khi có lỗi để hiển thị thông báo phù hợp
+                checkConclusion();
+                return;
+            }
+            
+            let totalBlood;
+            const baseBloodVolume = species === 'dog' ? DONOR_BLOOD_VOLUME_DOG : DONOR_BLOOD_VOLUME_CAT;
+
+            if (bodyCondition === 'fat') {
+                totalBlood = donorWeight * baseBloodVolume * FAT_BODY_CONDITION_FACTOR;
+            } else { // normal
+                totalBlood = donorWeight * baseBloodVolume;
+            }
+
+            donorTotalBloodInput.value = totalBlood.toFixed(2) + ' ml';
+
+            let refRangeText;
+            if (donorHct > TARGET_HCT) {
+                refRangeText = 'HCT tăng';
+            } else if (donorHct === TARGET_HCT) {
+                refRangeText = 'HCT bình thường';
+            } else {
+                refRangeText = 'HCT giảm';
+            }
+            refRangeInput.value = refRangeText;
+
+            if (refRangeText === 'HCT tăng') {
+                actualBloodVolumeLabel.textContent = '=> Để đưa HCT của con cho về 43% thì cần truyền dịch với thể tích bằng:';
+                actualBloodVolumeLabel.classList.add('text-red-highlight');
+            } else {
+                actualBloodVolumeLabel.textContent = '=> Thể tích máu thực tế của con cho';
+                actualBloodVolumeLabel.classList.remove('text-red-highlight');
+            }
+
+            let actualBloodVolume;
+            const heSo = parseFloat(heSoInput.value);
+
+            if (refRangeText === 'HCT tăng') {
+                actualBloodVolume = (donorHct - TARGET_HCT) * heSo * FLUID_CALC_MULTIPLIER;
+            } else { // HCT bình thường hoặc HCT giảm
+                actualBloodVolume = totalBlood - (TARGET_HCT - donorHct) * heSo * RECIPIENT_CALC_MULTIPLIER;
+            }
+            actualBloodVolumeInput.value = actualBloodVolume.toFixed(2) + ' ml';
+
+            let availableBloodVolume;
+            if (refRangeText === 'HCT tăng') {
+                availableBloodVolume = totalBlood * AVAILABLE_BLOOD_RATIO;
+            } else { // HCT bình thường hoặc HCT giảm
+                availableBloodVolume = actualBloodVolume * AVAILABLE_BLOOD_RATIO;
+            }
+            
+            availableBloodVolumeInput.value = availableBloodVolume.toFixed(2) + ' ml';
+
+            // Gọi hàm kết luận ngay sau khi tính toán xong
+            checkConclusion();
+        }
+        
+        /**
+         * @function checkConclusion
+         * @description So sánh lượng máu cho và cần truyền để đưa ra kết luận.
+         */
+        function checkConclusion() {
+            const requiredBloodString = resultVolumeInput.value;
+            const availableBloodString = availableBloodVolumeInput.value;
+
+            // Kiểm tra xem đã có kết quả chưa
+            if (!requiredBloodString || !availableBloodString || requiredBloodString.includes('Dữ liệu') || availableBloodString.includes('Dữ liệu')) {
+                conclusionText.innerHTML = "Vui lòng tính toán lượng máu con nhận và con cho trước khi đưa ra kết luận.";
+                conclusionDiv.classList.add('hidden');
+                conclusionDiv.classList.remove('bg-green-100', 'bg-red-100');
+                return;
+            }
+
+            // Trích xuất giá trị số từ chuỗi
+            const requiredBlood = parseFloat(requiredBloodString);
+            const availableBlood = parseFloat(availableBloodString);
+
+            conclusionDiv.classList.remove('hidden');
+
+            if (availableBlood >= requiredBlood) {
+                conclusionDiv.classList.remove('bg-red-100', 'text-red-800');
+                conclusionDiv.classList.add('bg-green-100', 'text-green-800');
+                conclusionText.innerHTML = `
+                    CHỈ SỐ MÁU CỦA CON CHO ĐẠT YÊU CẦU. <br/>
+                    Bạn có thể tiến hành thực hiện việc truyền máu.
+                `;
+            } else {
+                conclusionDiv.classList.remove('bg-green-100', 'text-green-800');
+                conclusionDiv.classList.add('bg-red-100', 'text-red-800');
+                conclusionText.innerHTML = `
+                    CHỈ SỐ MÁU CỦA CON CHO KHÔNG ĐẠT YÊU CẦU. <br/>
+                    Bạn không thể tiến hành việc truyền máu được, nên chọn một con khác để cho máu.
+                `;
+            }
+        }
+
+        // Lắng nghe các sự kiện
+        calculateRecipientBtn.addEventListener('click', calculateRecipientBlood);
+        calculateDonorBtn.addEventListener('click', calculateDonorBlood);
+
+        // Tự động cập nhật ô "Hệ số" và tính toán khi có thay đổi
+        donorWeightInput.addEventListener('input', () => { updateHeSo(); validateInputs(); });
+        bodyConditionContainer.addEventListener('change', () => { updateHeSo(); validateInputs(); });
+
+        // Chạy lần đầu để hiển thị giá trị mặc định khi trang được tải
+        document.addEventListener('DOMContentLoaded', () => { updateHeSo(); validateInputs(); });
+
+        // Lắng nghe các sự kiện nhập liệu để kiểm tra và hiển thị cảnh báo
+        recipientWeightInput.addEventListener('input', validateInputs);
+        recipientHctInput.addEventListener('input', validateInputs);
+        donorWeightInput.addEventListener('input', validateInputs);
+        donorHctInput.addEventListener('input', validateInputs);
+        for (const radio of speciesRadios) {
+            radio.addEventListener('change', validateInputs);
+        }
+    </script>
+</body>
+</html>

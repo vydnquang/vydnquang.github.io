@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy tính năng lượng cho thú cưng</title>
+    <!-- Tải Tailwind CSS để tạo giao diện hiện đại, đẹp mắt và responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tùy chỉnh font chữ cho toàn bộ trang */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        /* CSS cho popup chú thích */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        /* Ẩn chú thích theo mặc định */
+        .tooltip-text {
+            visibility: hidden;
+            background-color: #e0e7ff; /* Đã đổi màu nền thành indigo-100 */
+            color: #3730a3; /* Đã đổi màu chữ thành indigo-900 để dễ đọc */
+            text-align: left;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            top: 125%; /* Hiển thị ở dưới */
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: normal;
+            width: 250px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: opacity 0.3s;
+            opacity: 0;
+            pointer-events: none; /* Ngăn chặn việc click vào tooltip */
+            
+            /* Cấu hình mới cho kích thước chữ và thanh cuộn */
+            font-size: 0.875rem; /* Kích thước chữ nhỏ hơn */
+            max-height: 150px; /* Chiều cao tối đa */
+            overflow-y: auto; /* Thêm thanh cuộn dọc nếu nội dung quá dài */
+        }
+        
+        /* Hiển thị chú thích khi hover (cho PC) */
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto; /* Cho phép tương tác khi hover */
+        }
+
+        /* Hiển thị chú thích khi được kích hoạt bằng JS (cho mobile) */
+        .tooltip-container.active .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto; /* Cho phép tương tác khi active */
+        }
+
+        /* Mũi tên của popup */
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            bottom: 100%; /* Đặt mũi tên ở trên */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #e0e7ff transparent; /* Đã đổi màu mũi tên */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg border border-gray-200">
+        <!-- Tiêu đề và công thức -->
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Tính chỉ số năng lượng của Chó/Mèo</h1>
+        <div class="bg-gray-50 p-4 rounded-xl mb-6 text-center">
+            <p class="text-lg font-semibold text-gray-700">Công thức:</p>
+            <p class="text-xl font-bold text-indigo-600 mt-2">
+                <!-- Chú thích MER -->
+                <span id="mer-container" class="tooltip-container">
+                    <span id="mer-trigger">MER</span>
+                    <span class="tooltip-text">
+                        <strong>MER (Maintenance Energy Requirement):</strong> Lượng calo cần thiết để duy trì mức cân nặng theo yêu cầu. Đây là chỉ số quan trọng trong dinh dưỡng, giúp BSTY biết nên cho thú cưng ăn bao nhiêu calo để đạt cân nặng như mong muốn.
+                    </span>
+                </span>
+                = [Tổng hệ số] x
+                <!-- Chú thích RMR -->
+                <span id="rmr-container" class="tooltip-container">
+                    <span id="rmr-trigger">RMR</span>
+                    <span class="tooltip-text">
+                        <strong>RMR (Resting Metabolic Rate):</strong> Là lượng calo mà cơ thể đốt cháy trong trạng thái nghỉ ngơi. Nó đo lường năng lượng cần thiết để duy trì các chức năng sống cơ bản như hô hấp, tuần hoàn máu và hoạt động của các cơ quan nội tạng khi bạn ở trạng thái nghỉ ngơi.
+                    </span>
+                </span>
+            </p>
+        </div>
+
+        <form id="calculator-form">
+            <!-- Hàng 1: Trọng lượng & RMR -->
+            <div class="mb-4 flex space-x-4 items-end">
+                <div class="flex-1">
+                    <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">Trọng lượng (kg)</label>
+                    <input type="number" id="weight" name="weight" placeholder="Nhập trọng lượng (kg)" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                </div>
+                <div class="w-2/5 md:w-1/3">
+                    <label for="rer" class="block text-sm font-medium text-gray-700 mb-1">RMR</label>
+                    <input type="text" id="rer" name="rer" placeholder="Kết quả RMR" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 text-gray-700 cursor-not-allowed">
+                </div>
+            </div>
+
+            <!-- Hàng 2: Độ tuổi & Hệ số tuổi -->
+            <div class="mb-4 flex space-x-4">
+                <div class="flex-1">
+                    <label for="age" class="block text-sm font-medium text-gray-700 mb-1">Độ tuổi (tháng)</label>
+                    <select id="age" name="age" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                        <option value="" disabled selected>Chọn độ tuổi</option>
+                        <option value="under_4">Dưới 4 tháng</option>
+                        <option value="over_4">Từ 4 tháng trở lên</option>
+                        <option value="over_1_year">Trên 1 năm</option>
+                    </select>
+                </div>
+                <div class="w-2/5 md:w-1/3">
+                    <label for="age_coefficient" class="block text-sm font-medium text-gray-700 mb-1">Hệ số</label>
+                    <input type="text" id="age_coefficient" name="age_coefficient" placeholder="Hệ số tuổi" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 text-gray-700 cursor-not-allowed">
+                </div>
+            </div>
+            
+            <!-- Hàng 3: Nhu cầu cân nặng & Hệ số nhu cầu cân nặng -->
+            <div class="mb-4 flex space-x-4">
+                <div class="flex-1">
+                    <label for="weight_goal" class="block text-sm font-medium text-gray-700 mb-1">Nhu cầu cân nặng</label>
+                    <select id="weight_goal" name="weight_goal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                        <option value="" disabled selected>Chọn nhu cầu</option>
+                        <option value="gain">Cần tăng cân</option>
+                        <option value="lose">Cần giảm cân</option>
+                        <option value="maintain">Không</option>
+                    </select>
+                </div>
+                <div class="w-2/5 md:w-1/3">
+                    <label for="weight_goal_coefficient" class="block text-sm font-medium text-gray-700 mb-1">Hệ số</label>
+                    <input type="text" id="weight_goal_coefficient" name="weight_goal_coefficient" placeholder="Hệ số cân nặng" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 text-gray-700 cursor-not-allowed">
+                </div>
+            </div>
+
+            <!-- Hàng 4: Nhu cầu vận động & Hệ số nhu cầu vận động -->
+            <div class="mb-4 flex space-x-4">
+                <div class="flex-1">
+                    <label for="activity_level" class="block text-sm font-medium text-gray-700 mb-1">Nhu cầu vận động</label>
+                    <select id="activity_level" name="activity_level" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                        <option value="" disabled selected>Chọn mức độ</option>
+                        <option value="high">Nhiều</option>
+                        <option value="none">Không</option>
+                    </select>
+                </div>
+                <div class="w-2/5 md:w-1/3">
+                    <label for="activity_level_coefficient" class="block text-sm font-medium text-gray-700 mb-1">Hệ số</label>
+                    <input type="text" id="activity_level_coefficient" name="activity_level_coefficient" placeholder="Hệ số vận động" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 text-gray-700 cursor-not-allowed">
+                </div>
+            </div>
+
+            <!-- Hàng 5: Tình trạng mang thai & Hệ số mang thai -->
+            <div class="mb-4 flex space-x-4">
+                <div class="flex-1">
+                    <label for="pregnancy_status" class="block text-sm font-medium text-gray-700 mb-1">Tình trạng mang thai</label>
+                    <select id="pregnancy_status" name="pregnancy_status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                        <option value="" disabled selected>Chọn tình trạng</option>
+                        <option value="none">Không</option>
+                        <option value="0_30">Từ 0 - 30 mấy ngày</option>
+                        <option value="40">Tầm 40 mấy ngày</option>
+                        <option value="50">Tầm 50 mấy ngày</option>
+                        <option value="nursing">Đang nuôi con</option>
+                    </select>
+                </div>
+                <div class="w-2/5 md:w-1/3">
+                    <label for="pregnancy_coefficient" class="block text-sm font-medium text-gray-700 mb-1">Hệ số</label>
+                    <input type="text" id="pregnancy_coefficient" name="pregnancy_coefficient" placeholder="Hệ số mang thai" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 text-gray-700 cursor-not-allowed">
+                </div>
+            </div>
+
+            <!-- Hàng 6: Số thai & Hệ số thai -->
+            <div class="mb-4 flex space-x-4">
+                <div class="flex-1">
+                    <label for="number_of_fetuses" class="block text-sm font-medium text-gray-700 mb-1">Số thai (con)</label>
+                    <input type="number" id="number_of_fetuses" name="number_of_fetuses" placeholder="Nhập số lượng thai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                </div>
+                <div class="w-2/5 md:w-1/3">
+                    <label for="fetal_coefficient" class="block text-sm font-medium text-gray-700 mb-1">Hệ số</label>
+                    <input type="text" id="fetal_coefficient" name="fetal_coefficient" placeholder="Hệ số thai" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 text-gray-700 cursor-not-allowed">
+                </div>
+            </div>
+            
+            <!-- Ô kết quả MER -->
+            <div class="mt-6 mb-4">
+                <label for="mer" class="block text-sm font-medium text-gray-700 mb-1">Kết quả MER (Kcal/ngày)</label>
+                <input type="text" id="mer" name="mer" placeholder="Kết quả MER" readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-indigo-100 text-indigo-700 font-bold cursor-not-allowed">
+            </div>
+
+            <!-- Nút Reset mới -->
+            <button type="button" id="reset-button" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-200 shadow-md hover:shadow-lg">
+                Tính toán cho thú cưng khác 
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Lấy các phần tử từ DOM
+        const weightInput = document.getElementById('weight');
+        const rerInput = document.getElementById('rer');
+        const merInput = document.getElementById('mer');
+        const ageSelect = document.getElementById('age');
+        const ageCoefficientInput = document.getElementById('age_coefficient');
+        const weightGoalSelect = document.getElementById('weight_goal');
+        const weightGoalCoefficientInput = document.getElementById('weight_goal_coefficient');
+        const activityLevelSelect = document.getElementById('activity_level');
+        const activityLevelCoefficientInput = document.getElementById('activity_level_coefficient');
+        const pregnancyStatusSelect = document.getElementById('pregnancy_status');
+        const pregnancyCoefficientInput = document.getElementById('pregnancy_coefficient');
+        const numberOfFetusesInput = document.getElementById('number_of_fetuses');
+        const fetalCoefficientInput = document.getElementById('fetal_coefficient');
+        const resetButton = document.getElementById('reset-button');
+        const merContainer = document.getElementById('mer-container');
+        const rmrContainer = document.getElementById('rmr-container');
+
+        // Định nghĩa các hệ số
+        const ageCoefficients = {
+            'under_4': 2.6,
+            'over_4': 1.8,
+            'over_1_year': 1.5
+        };
+
+        const weightGoalCoefficients = {
+            'gain': 0.6, 
+            'lose': -0.2, 
+            'maintain': 0
+        };
+
+        const activityLevelCoefficients = {
+            'high': 0.6, 
+            'none': 0 
+        };
+
+        const pregnancyCoefficients = {
+            'none': 0,
+            '0_30': 0.3,
+            '40': 0.4,
+            '50': 0.5,
+            'nursing': 2
+        };
+
+        // Hàm tính RMR
+        function calculateRer(weight) {
+            if (weight >= 2 && weight <= 45) {
+                return 30 * weight + 70;
+            } else if (weight > 0 && weight < 2) {
+                return 70 * Math.pow(weight, 0.75);
+            } else if (weight > 45) {
+                return 70 * Math.pow(weight, 0.75);
+            }
+            return 0;
+        }
+
+        // Hàm tính tổng hệ số
+        function calculateTotalCoefficient() {
+            // Lấy hệ số tuổi
+            const ageValue = ageSelect.value;
+            let ageCoefficient = 0;
+            if (ageValue in ageCoefficients) {
+                ageCoefficient = ageCoefficients[ageValue];
+            }
+            ageCoefficientInput.value = ageCoefficient.toFixed(2);
+            
+            // Lấy hệ số nhu cầu cân nặng
+            const weightGoalValue = weightGoalSelect.value;
+            let weightGoalCoefficient = 0;
+            if (weightGoalValue in weightGoalCoefficients) {
+                weightGoalCoefficient = weightGoalCoefficients[weightGoalValue];
+            }
+            weightGoalCoefficientInput.value = weightGoalCoefficient.toFixed(2);
+            
+            // Lấy hệ số nhu cầu vận động
+            const activityLevelValue = activityLevelSelect.value;
+            let activityLevelCoefficient = 0;
+            if (activityLevelValue in activityLevelCoefficients) {
+                activityLevelCoefficient = activityLevelCoefficients[activityLevelValue];
+            }
+            activityLevelCoefficientInput.value = activityLevelCoefficient.toFixed(2);
+            
+            // Lấy hệ số tình trạng mang thai
+            const pregnancyValue = pregnancyStatusSelect.value;
+            let pregnancyCoefficient = 0;
+            if (pregnancyValue in pregnancyCoefficients) {
+                pregnancyCoefficient = pregnancyCoefficients[pregnancyValue];
+            }
+            pregnancyCoefficientInput.value = pregnancyCoefficient.toFixed(2);
+            
+            // Tính toán hệ số thai
+            const numberOfFetuses = parseInt(numberOfFetusesInput.value);
+            let fetalCoefficient = 0;
+            // Chỉ tính hệ số thai nếu không phải là dưới 4 tháng và số thai hợp lệ
+            if (ageSelect.value !== 'under_4' && !isNaN(numberOfFetuses) && numberOfFetuses > 0) {
+                fetalCoefficient = pregnancyCoefficient * numberOfFetuses;
+            }
+            fetalCoefficientInput.value = fetalCoefficient.toFixed(2);
+            
+            // Tính tổng hệ số theo công thức mới
+            const totalCoefficient = ageCoefficient + weightGoalCoefficient + activityLevelCoefficient + fetalCoefficient;
+
+            return totalCoefficient;
+        }
+
+        // Hàm chính để tính toán và hiển thị kết quả
+        function calculateAndDisplay() {
+            const weight = parseFloat(weightInput.value);
+            
+            if (isNaN(weight) || weight <= 0) {
+                // Nếu trọng lượng không hợp lệ, xóa tất cả các trường
+                resetOutputs();
+                return;
+            }
+
+            // Tính RMR
+            const rer = calculateRer(weight);
+            rerInput.value = rer.toFixed(2);
+
+            // Tính MER
+            const totalCoefficient = calculateTotalCoefficient();
+            const mer = totalCoefficient * rer;
+            merInput.value = mer.toFixed(2);
+        }
+
+        // Hàm để xóa tất cả các trường đầu vào và đầu ra
+        function resetForm() {
+            weightInput.value = '';
+            numberOfFetusesInput.value = '';
+            
+            // Đặt lại các select về trạng thái ban đầu
+            ageSelect.value = '';
+            weightGoalSelect.value = '';
+            activityLevelSelect.value = '';
+            pregnancyStatusSelect.value = '';
+            
+            // Xóa các trường kết quả
+            resetOutputs();
+            // Đảm bảo các ô mang thai được bật lại
+            pregnancyStatusSelect.disabled = false;
+            numberOfFetusesInput.disabled = false;
+        }
+
+        function resetOutputs() {
+            rerInput.value = '';
+            merInput.value = '';
+            ageCoefficientInput.value = '';
+            weightGoalCoefficientInput.value = '';
+            activityLevelCoefficientInput.value = '';
+            pregnancyCoefficientInput.value = '';
+            fetalCoefficientInput.value = '';
+        }
+
+        // Hàm để xử lý logic khóa/mở các ô liên quan đến mang thai
+        function handlePregnancyFields() {
+            const ageValue = ageSelect.value;
+            const pregnancyStatusValue = pregnancyStatusSelect.value;
+
+            // Logic khóa/mở dựa trên độ tuổi
+            if (ageValue === 'under_4') {
+                pregnancyStatusSelect.disabled = true;
+                numberOfFetusesInput.disabled = true;
+                pregnancyStatusSelect.value = '';
+                numberOfFetusesInput.value = '';
+            } else {
+                pregnancyStatusSelect.disabled = false;
+                // Logic khóa/mở số thai dựa trên tình trạng mang thai
+                if (pregnancyStatusValue === 'none' || pregnancyStatusValue === '') {
+                    numberOfFetusesInput.disabled = true;
+                    numberOfFetusesInput.value = '';
+                } else {
+                    numberOfFetusesInput.disabled = false;
+                }
+            }
+            
+            calculateAndDisplay();
+        }
+
+        // Thêm event listener cho các trường nhập liệu để tính toán tự động
+        weightInput.addEventListener('input', calculateAndDisplay);
+        ageSelect.addEventListener('change', handlePregnancyFields);
+        ageSelect.addEventListener('change', calculateAndDisplay);
+        weightGoalSelect.addEventListener('change', calculateAndDisplay);
+        activityLevelSelect.addEventListener('change', calculateAndDisplay);
+        pregnancyStatusSelect.addEventListener('change', handlePregnancyFields);
+        pregnancyStatusSelect.addEventListener('change', calculateAndDisplay);
+        numberOfFetusesInput.addEventListener('input', calculateAndDisplay);
+
+        // Thêm event listener cho nút "Reset"
+        resetButton.addEventListener('click', resetForm);
+
+        // --- Logic mới cho Tooltip (chú thích) ---
+        function toggleTooltip(event) {
+            // Ngăn chặn sự kiện nổi bọt để tránh việc đóng tooltip ngay lập tức
+            event.stopPropagation(); 
+            const container = event.currentTarget;
+            
+            // Nếu container này đã có class 'active', gỡ nó ra
+            if (container.classList.contains('active')) {
+                container.classList.remove('active');
+            } else {
+                // Nếu chưa, trước tiên hãy ẩn tất cả các tooltip khác
+                document.querySelectorAll('.tooltip-container').forEach(c => c.classList.remove('active'));
+                // Sau đó, thêm class 'active' vào container hiện tại để hiển thị tooltip
+                container.classList.add('active');
+            }
+        }
+
+        // Thêm sự kiện click cho các container tooltip
+        merContainer.addEventListener('click', toggleTooltip);
+        rmrContainer.addEventListener('click', toggleTooltip);
+        
+        // Thêm sự kiện click cho body để ẩn tooltip khi nhấn ra ngoài
+        document.body.addEventListener('click', () => {
+            document.querySelectorAll('.tooltip-container').forEach(c => c.classList.remove('active'));
+        });
+    </script>
+</body>
+</html>
