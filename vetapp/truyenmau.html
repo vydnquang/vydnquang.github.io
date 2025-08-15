@@ -37,16 +37,16 @@
 
     <!-- Container chính -->
     <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-lg border border-gray-200">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Công cụ tính toán lượng máu cần truyền cho Chó/Mèo</h1>
-        <p class="text-center text-red-600 mb-6 font-semibold">
-            <span class="font-bold">Lưu ý:</span> Công cụ này giúp các BSTY tham khảo nhanh về cách tính toán lượng máu cần truyền. Để một ca truyền máu diễn ra thành công, bạn cần xem xét nhiều nhiều yếu tố khác chứ không chỉ là các phép tính này. Do đó, bạn <span class="font-bold">nên tham khảo ý kiến của các chuyên gia</span> nhé.
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Công cụ tính lượng máu cần truyền cho Chó/Mèo</h1>
+        <p class="text-justify text-red-600 mb-6 font-semibold">
+            <span class="font-bold">LƯU Ý !:</span> Công cụ này giúp các BSTY tham khảo nhanh về cách tính toán lượng máu cần truyền. Để một ca truyền máu diễn ra thành công, bạn cần kiểm tra thêm nhiều yếu tố khác của máu chứ không chỉ là các phép tính này. Do đó, bạn <span class="font-bold">nên tham khảo ý kiến của các chuyên gia</span> nhé.
         </p>
         
         <form id="blood-calculator-form" class="space-y-4">
 
             <!-- Khung khai báo -->
             <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 shadow-sm">
-                <h2 class="text-xl font-semibold text-blue-800 mb-4">Khai báo thông tin của thú nhận và thú cho máu</h2>
+                <h2 class="text-xl font-semibold text-center text-blue-800 mb-4">Khai báo thông tin của thú nhận và thú cho máu</h2>
                 
                 <!-- Hiển thị cảnh báo -->
                 <div id="warning-message" class="hidden bg-red-200 text-red-800 p-3 mb-4 rounded-md font-medium border border-red-300 whitespace-pre-wrap"></div>
@@ -69,25 +69,25 @@
                 <!-- Cân nặng con nhận -->
                 <div class="mb-3">
                     <label for="recipient-weight" class="block text-gray-700 font-medium mb-2">Cân nặng con nhận (kg)</label>
-                    <input type="number" id="recipient-weight" class="w-full p-3 border border-gray-300 rounded-md input-focus" placeholder="Nhập cân nặng (ví dụ: 10)">
+                    <input type="number" id="recipient-weight" class="w-full p-2 border border-gray-300 rounded-md input-focus" placeholder="Nhập cân nặng (ví dụ: 10)">
                 </div>
 
                 <!-- HCT con nhận -->
                 <div class="mb-3">
                     <label for="recipient-hct" class="block text-gray-700 font-medium mb-2">HCT con nhận (%)</label>
-                    <input type="number" id="recipient-hct" class="w-full p-3 border border-gray-300 rounded-md input-focus" placeholder="Nhập HCT (ví dụ: 15)">
+                    <input type="number" id="recipient-hct" class="w-full p-2 border border-gray-300 rounded-md input-focus" placeholder="Nhập HCT (ví dụ: 15)">
                 </div>
                 
                 <!-- Cân nặng con cho -->
                 <div class="mb-3">
                     <label for="donor-weight" class="block text-gray-700 font-medium mb-2">Cân nặng con cho (kg)</label>
-                    <input type="number" id="donor-weight" class="w-full p-3 border border-gray-300 rounded-md input-focus" placeholder="Nhập cân nặng (ví dụ: 25)">
+                    <input type="number" id="donor-weight" class="w-full p-2 border border-gray-300 rounded-md input-focus" placeholder="Nhập cân nặng (ví dụ: 25)">
                 </div>
 
                 <!-- HCT con cho -->
                 <div class="mb-3">
                     <label for="donor-hct" class="block text-gray-700 font-medium mb-2">HCT con cho (%)</label>
-                    <input type="number" id="donor-hct" class="w-full p-3 border border-gray-300 rounded-md input-focus" placeholder="Nhập HCT (ví dụ: 45)">
+                    <input type="number" id="donor-hct" class="w-full p-2 border border-gray-300 rounded-md input-focus" placeholder="Nhập HCT (ví dụ: 45)">
                 </div>
 
                 <!-- Béo/gầy và Hệ số -->
@@ -114,30 +114,29 @@
 
             <!-- Khung CON NHẬN và kết quả -->
             <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 shadow-sm space-y-3">
-                <h2 class="text-xl font-semibold text-green-800 mb-2">CON NHẬN</h2>
+                <h2 class="text-xl font-semibold text-center text-green-800 mb-2">CON NHẬN</h2>
                 <div class="text-center">
-                    <button type="button" id="calculate-recipient-btn" class="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                    <button type="button" id="calculate-recipient-btn" class="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ease-in-out">
                         Tính lượng máu cần truyền
                     </button>
                 </div>
                 <div>
-                    <p class="text-sm italic text-gray-600 mb-2">Công thức tính như sau: <span class="font-bold">V (máu cần truyền) = (HCT đích - HCT con nhận) x Cân nặng x 2</span></p>
-                    <p class="text-sm text-gray-600 mb-4">
+                    <p class="text-sm font-bold text-center text-red-600 mb-2">Công thức tính như sau: <span class="font-bold">V (máu cần truyền) = (HCT đích - HCT con nhận) x Cân nặng x 2</span></p>
+                    <p class="text-sm italic text-center text-gray-600 mb-4">
                         HCT đích là HCT của con nhận muốn đạt sau khi truyền máu, mặc định là 43%.
                     </p>
-                    <!-- Sửa lỗi hiển thị trên điện thoại -->
                     <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
                         <label class="font-medium text-gray-700">Lượng máu cần truyền (ml):</label>
-                        <input type="text" id="result-volume" class="w-full mt-2 sm:mt-0 p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg result-highlight" readonly>
+                        <input type="text" id="result-volume" class="w-full mt-2 sm:mt-0 p-2 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg result-highlight" readonly>
                     </div>
                 </div>
             </div>
 
             <!-- Khung CON CHO và kết quả -->
             <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 shadow-sm space-y-3">
-                <h2 class="text-xl font-semibold text-yellow-800 mb-2">CON CHO</h2>
+                <h2 class="text-xl font-semibold text-center text-yellow-800 mb-2">CON CHO</h2>
                 <div class="text-center">
-                    <button type="button" id="calculate-donor-btn" class="w-full sm:w-auto px-8 py-3 bg-yellow-600 text-white font-semibold rounded-full shadow-lg hover:bg-yellow-700 transition duration-300 ease-in-out">
+                    <button type="button" id="calculate-donor-btn" class="w-full sm:w-auto px-8 py-3 bg-yellow-600 text-white font-semibold rounded-full shadow-lg hover:bg-yellow-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-offset-2 ease-in-out">
                         Phân tích lượng máu con cho
                     </button>
                 </div>
@@ -145,25 +144,25 @@
                 <!-- Tổng số máu con cho -->
                 <div>
                     <label for="donor-total-blood" class="block text-gray-700 font-medium mb-2">Tổng số máu lý tưởng của con cho</label>
-                    <input type="text" id="donor-total-blood" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
+                    <input type="text" id="donor-total-blood" class="w-full p-2 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
                 </div>
 
                 <!-- Báo cáo tình trạng HCT -->
                 <div>
                     <label for="reference-range" class="block text-gray-700 font-medium mb-2">Báo cáo tình trạng HCT của con cho</label>
-                    <input type="text" id="reference-range" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
+                    <input type="text" id="reference-range" class="w-full p-2 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
                 </div>
 
                 <!-- V máu thực tế (sẽ thay đổi nhãn) -->
                 <div>
                     <label for="actual-blood-volume" id="actual-blood-volume-label" class="block text-gray-700 font-medium mb-2">=> Thể tích máu thực tế của con cho</label>
-                    <input type="text" id="actual-blood-volume" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
+                    <input type="text" id="actual-blood-volume" class="w-full p-2 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg" readonly>
                 </div>
 
                 <!-- Số máu có thể cho -->
                 <div>
                     <label for="available-blood-volume" class="block text-gray-700 font-medium mb-2">Số máu được phép lấy từ con cho</label>
-                    <input type="text" id="available-blood-volume" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg result-highlight" readonly>
+                    <input type="text" id="available-blood-volume" class="w-full p-2 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg result-highlight" readonly>
                 </div>
             </div>
 
@@ -212,11 +211,19 @@
         /**
          * @function showWarning
          * @description Hiển thị một cảnh báo trong hộp tin nhắn.
-         * @param {string} message - Nội dung cảnh báo.
+         * @param {string} messages - Nội dung cảnh báo.
+         * @param {boolean} isCritical - True nếu là cảnh báo nghiêm trọng, false nếu là thông tin.
          */
-        function showWarning(message) {
-            warningMessageElement.textContent = message;
+        function showWarning(messages, isCritical) {
+            warningMessageElement.innerHTML = messages.join('<br>');
             warningMessageElement.classList.remove('hidden');
+            if (isCritical) {
+                warningMessageElement.classList.remove('bg-yellow-200', 'text-yellow-800', 'border-yellow-300');
+                warningMessageElement.classList.add('bg-red-200', 'text-red-800', 'border-red-300');
+            } else {
+                warningMessageElement.classList.remove('bg-red-200', 'text-red-800', 'border-red-300');
+                warningMessageElement.classList.add('bg-yellow-200', 'text-yellow-800', 'border-yellow-300');
+            }
         }
 
         /**
@@ -224,7 +231,7 @@
          * @description Ẩn hộp tin nhắn cảnh báo.
          */
         function hideWarning() {
-            warningMessageElement.textContent = '';
+            warningMessageElement.innerHTML = '';
             warningMessageElement.classList.add('hidden');
         }
 
@@ -256,40 +263,57 @@
             const recipientHct = parseFloat(recipientHctInput.value);
             const donorHct = parseFloat(donorHctInput.value);
             
-            let warnings = [];
+            let allWarnings = [];
+            let hasCriticalWarning = false;
 
             // Cảnh báo 1: Trọng lượng mèo cho máu nên dưới 13kg
             if (species === 'cat' && !isNaN(donorWeight) && donorWeight > 13) {
-                warnings.push('• Cảnh báo: Trọng lượng mèo thường là chỉ dưới 13kg.');
+                allWarnings.push('• Cảnh báo: Trọng lượng mèo thường là chỉ dưới 13kg.');
+                hasCriticalWarning = true;
             }
 
             // Cảnh báo 2: Cân nặng con cho thấp hơn con nhận
             if (!isNaN(donorWeight) && !isNaN(recipientWeight) && donorWeight < recipientWeight) {
-                warnings.push('• Cảnh báo: Cân nặng con CHO thấp hơn con NHẬN, dẫn đến không thể cho đủ số lượng máu cần điều trị.');
-            }
-
-            // Cảnh báo 3: HCT con nhận trên 20
-            if (!isNaN(recipientHct) && recipientHct > 20) {
-                warnings.push('• Cảnh báo: HCT con NHẬN trên 20. Có thể không cần truyền máu.');
+                allWarnings.push('• Cảnh báo: Cân nặng con CHO thấp hơn con NHẬN, dẫn đến không thể cho đủ số lượng máu cần điều trị.');
+                hasCriticalWarning = true;
             }
             
-            // Cảnh báo 4: HCT con cho thấp hơn HCT con nhận
+            // Cảnh báo 3: HCT con cho thấp hơn HCT con nhận
             if (!isNaN(donorHct) && !isNaN(recipientHct) && donorHct < recipientHct) {
-                warnings.push('• Cảnh báo: HCT của con CHO thấp hơn HCT con NHẬN. Không thể lấy máu từ con CHO này.');
+                allWarnings.push('• Cảnh báo: HCT của con CHO thấp hơn HCT con NHẬN. Không thể lấy máu từ con CHO này.');
+                hasCriticalWarning = true;
             }
 
-            // Cảnh báo 5: Cân nặng con nhận (mèo) trên 13kg
+            // Cảnh báo 4: Cân nặng con nhận (mèo) trên 13kg
             if (species === 'cat' && !isNaN(recipientWeight) && recipientWeight > 13) {
-                warnings.push('• Cảnh báo: Trọng lượng mèo thường là chỉ dưới 13kg.');
+                allWarnings.push('• Cảnh báo: Trọng lượng mèo thường là chỉ dưới 13kg.');
+                hasCriticalWarning = true;
             }
 
-            if (warnings.length > 0) {
-                showWarning(warnings.join('\n'));
-                toggleCalculationButtons(true);
+            // Cảnh báo 5: HCT con nhận trên 20% - chỉ hiển thị, không khóa nút
+            if (!isNaN(recipientHct) && recipientHct > 20) {
+                allWarnings.push('• Lưu ý: HCT con NHẬN trên 20%. Có thể không cần truyền máu.');
+            }
+
+            // Cảnh báo mới: HCT con cho dưới 40% - chỉ hiển thị, không khóa nút
+            if (!isNaN(donorHct) && donorHct < 40 && donorHct >= 35) {
+                allWarnings.push('• Lưu ý: HCT của con CHO dưới 40%. Cần cân nhắc về việc lấy máu từ con cho này.');
+            }
+
+            // Cảnh báo mới: HCT con cho dưới 35% - nghiêm trọng, khóa nút
+            if (!isNaN(donorHct) && donorHct < 35) {
+                allWarnings.push('• Cảnh báo: HCT của con CHO dưới 35%. Không an toàn để lấy máu. Vui lòng chọn con cho khác.');
+                hasCriticalWarning = true;
+            }
+
+            // Hiển thị tất cả cảnh báo và vô hiệu hóa/kích hoạt nút dựa trên cảnh báo nghiêm trọng
+            if (allWarnings.length > 0) {
+                showWarning(allWarnings, hasCriticalWarning);
             } else {
                 hideWarning();
-                toggleCalculationButtons(false);
             }
+            
+            toggleCalculationButtons(hasCriticalWarning);
         }
         
         /**
@@ -333,6 +357,7 @@
 
             const hctDeficit = TARGET_HCT - recipientHct;
 
+            // Nếu HCT đích thấp hơn HCT con nhận thì không cần truyền
             if (hctDeficit <= 0) {
                 resultVolumeInput.value = 'Không cần truyền máu';
                 return;
@@ -434,7 +459,7 @@
                 conclusionDiv.classList.remove('bg-green-100', 'bg-red-100');
                 return;
             }
-
+            
             // Trích xuất giá trị số từ chuỗi
             const requiredBlood = parseFloat(requiredBloodString);
             const availableBlood = parseFloat(availableBloodString);
@@ -453,7 +478,7 @@
                 conclusionDiv.classList.add('bg-red-100', 'text-red-800');
                 conclusionText.innerHTML = `
                     CHỈ SỐ MÁU CỦA CON CHO KHÔNG ĐẠT YÊU CẦU. <br/>
-                    Bạn không thể tiến hành việc truyền máu được, nên chọn một con khác để cho máu.
+                    Bạn cần cân nhắc việc lấy máu của con CHO này vì thể tích máu lấy được sẽ không đủ theo yêu cầu điều trị. Nếu được, bạn nên thử với một con CHO khác xem có phù hợp không!?.
                 `;
             }
         }
