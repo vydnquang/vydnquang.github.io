@@ -125,9 +125,10 @@
                     <p class="text-sm text-gray-600 mb-4">
                         HCT đích là HCT của con nhận muốn đạt sau khi truyền máu, mặc định là 43%.
                     </p>
-                    <div class="flex items-center space-x-2">
+                    <!-- Sửa lỗi hiển thị trên điện thoại -->
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
                         <label class="font-medium text-gray-700">Lượng máu cần truyền (ml):</label>
-                        <input type="text" id="result-volume" class="flex-grow p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg result-highlight" readonly>
+                        <input type="text" id="result-volume" class="w-full mt-2 sm:mt-0 p-3 border border-gray-300 rounded-md bg-gray-50 text-center font-bold text-lg result-highlight" readonly>
                     </div>
                 </div>
             </div>
