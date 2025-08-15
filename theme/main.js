@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    loadComponent('header2.html', 'header-placeholder');
+    loadComponent('header.html', 'header-placeholder');
     loadComponent('footer.html', 'footer-placeholder');
+
 });
