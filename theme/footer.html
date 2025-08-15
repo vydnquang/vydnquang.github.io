@@ -1,3 +1,30 @@
-<footer class="mt-auto bg-[#FFD700] text-[#1a237e] p-4 text-center text-sm shadow-inner">
-    <p class="font-bold">Copyright &copy; 2025 by nh@tqu@ng</p>
+<footer class="bg-yellow-400 text-blue-900 py-4 mt-auto shadow-md">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 text-sm">
+            <div class="relative group">
+                <a href="#" id="searchDropdownBtn" class="flex items-center gap-2 px-3 py-1 rounded-full border border-blue-900 hover:bg-yellow-500 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search"></i>
+                    <span>Tra cứu tương tác</span>
+                </a>
+                <div id="searchDropdownMenu" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-yellow-700 text-white rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-300">
+                    <div class="flex flex-col p-2">
+                        <a href="https://go.drugbank.com/drug-interaction-checker" class="px-4 py-2 hover:bg-yellow-600 rounded-md whitespace-nowrap">Tra cứu tại DrugBank</a>
+                        <a href="https://tuongtacthuoc.nhic.vn/Home/CSDLTuongTacThuoc" class="px-4 py-2 hover:bg-yellow-600 rounded-md whitespace-nowrap">Tra cứu tại NHIC VN</a>
+                        <a href="https://www.drugs.com/drug_interactions.html" class="px-4 py-2 hover:bg-yellow-600 rounded-md whitespace-nowrap">Tra cứu tại Drugs.com</a>
+                    </div>
+                </div>
+            </div>
+
+            <button id="aboutBtn" class="flex items-center gap-2 px-3 py-1 rounded-full border border-blue-900 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300">
+                <i class="fas fa-info-circle"></i>
+                <span>Giới thiệu</span>
+            </button>
+            
+            <button id="contactBtn" class="flex items-center gap-2 px-3 py-1 rounded-full border border-blue-900 hover:bg-yellow-500 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-envelope"></i>
+                <span>Liên hệ</span>
+            </button>
+        </div>
+        <p class="text-center text-base mt-3 text-blue-700">Copyright &copy; 2025 by nh@tqu@ng</p>
+    </div>
 </footer>
