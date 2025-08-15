@@ -23,14 +23,14 @@
         /* Ẩn chú thích theo mặc định */
         .tooltip-text {
             visibility: hidden;
-            background-color: #e0e7ff; /* Đã đổi màu nền thành indigo-100 */
-            color: #3730a3; /* Đã đổi màu chữ thành indigo-900 để dễ đọc */
+            background-color: #e0e7ff;
+            color: #3730a3;
             text-align: left;
             border-radius: 8px;
             padding: 10px;
             position: absolute;
-            z-index: 1;
-            top: 125%; /* Hiển thị ở dưới */
+            z-index: 10; /* Tăng z-index để chú thích hiển thị trên cùng */
+            top: 125%;
             left: 50%;
             transform: translateX(-50%);
             white-space: normal;
@@ -38,38 +38,58 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             transition: opacity 0.3s;
             opacity: 0;
-            pointer-events: none; /* Ngăn chặn việc click vào tooltip */
+            pointer-events: none;
             
             /* Cấu hình mới cho kích thước chữ và thanh cuộn */
-            font-size: 0.875rem; /* Kích thước chữ nhỏ hơn */
-            max-height: 150px; /* Chiều cao tối đa */
-            overflow-y: auto; /* Thêm thanh cuộn dọc nếu nội dung quá dài */
+            font-size: 0.875rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        /* Mũi tên của popup */
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #e0e7ff transparent;
         }
         
         /* Hiển thị chú thích khi hover (cho PC) */
         .tooltip-container:hover .tooltip-text {
             visibility: visible;
             opacity: 1;
-            pointer-events: auto; /* Cho phép tương tác khi hover */
+            pointer-events: auto;
         }
 
         /* Hiển thị chú thích khi được kích hoạt bằng JS (cho mobile) */
         .tooltip-container.active .tooltip-text {
             visibility: visible;
             opacity: 1;
-            pointer-events: auto; /* Cho phép tương tác khi active */
+            pointer-events: auto;
         }
 
-        /* Mũi tên của popup */
-        .tooltip-text::after {
-            content: "";
-            position: absolute;
-            bottom: 100%; /* Đặt mũi tên ở trên */
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: transparent transparent #e0e7ff transparent; /* Đã đổi màu mũi tên */
+        /* --- SỬA ĐỔI CHO MÀN HÌNH ĐIỆN THOẠI (Dưới 640px) --- */
+        @media (max-width: 640px) {
+            .tooltip-container.active .tooltip-text {
+                /* Căn giữa màn hình */
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%; /* Chiều rộng 90% để tránh tràn lề */
+                max-width: 300px;
+                padding: 1rem;
+                border: 2px solid #a5b4fc; /* Thêm viền màu nhạt để nổi bật */
+            }
+
+            /* Ẩn mũi tên khi ở chế độ mobile */
+            .tooltip-container.active .tooltip-text::after {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -92,7 +112,7 @@
                 <span id="rmr-container" class="tooltip-container">
                     <span id="rmr-trigger">RMR</span>
                     <span class="tooltip-text">
-                        <strong>RMR (Resting Metabolic Rate):</strong> Là lượng calo mà cơ thể đốt cháy trong trạng thái nghỉ ngơi. Nó đo lường năng lượng cần thiết để duy trì các chức năng sống cơ bản như hô hấp, tuần hoàn máu và hoạt động của các cơ quan nội tạng khi bạn ở trạng thái nghỉ ngơi.
+                        <strong>RMR (Resting Metabolic Rate):</strong> Là lượng calo mà cơ thể đốt cháy trong trạng thái nghỉ ngơi. Nó đo lường năng lượng cần thiết để duy trì các chức năng sống cơ bản như hô hấp, tuần hoàn máu và hoạt động của các cơ quan nội tạng khi con vật ở trạng thái nghỉ ngơi.
                     </span>
                 </span>
             </p>
