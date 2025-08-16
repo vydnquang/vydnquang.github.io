@@ -21,9 +21,9 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    loadComponent('header.html', 'header-placeholder');
-    loadComponent('footer.html', 'footer-placeholder', () => {
-        loadComponent('modals.html', 'modals-placeholder', () => {
+    loadComponent('theme/header.html', 'header-placeholder');
+    loadComponent('theme/footer.html', 'footer-placeholder', () => {
+        loadComponent('theme/modals.html', 'modals-placeholder', () => {
             const aboutBtn = document.getElementById('aboutBtn');
             const contactBtn = document.getElementById('contactBtn');
             const aboutModal = document.getElementById('aboutModal');
@@ -96,3 +96,4 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
