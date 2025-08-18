@@ -56,11 +56,37 @@
             border-color: #007bff;
             outline: none;
         }
+        .input-with-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .input-with-button input {
+            flex-grow: 1;
+        }
+        .input-with-button button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+        .input-with-button button:hover {
+            background-color: #0056b3;
+        }
         .input-group .note {
             font-size: 0.9em;
             color: #6c757d;
             margin-top: 5px;
             display: block;
+        }
+        .note.highlight {
+           color: blue;
+           text-align: center;
         }
         .result-group {
             margin-top: 15px;
@@ -112,6 +138,13 @@
         .button-group button:hover {
             background-color: #0056b3;
         }
+        .drip-counter-display {
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -134,7 +167,7 @@
     <div class="input-group">
         <label for="dehydration-percent">Phần trăm mất nước (%):</label>
         <select id="dehydration-percent">
-            <option value="5">5% (bt)</option>
+            <option value="5">5% (bình thường)</option>
             <option value="6">6%</option>
             <option value="9">9%</option>
             <option value="12">12%</option>
@@ -159,7 +192,7 @@
 
     <div class="result-group">
         <label for="arrival-volume-12h">Thể tích dịch truyền trong 12H (ml):</label>
-        <span class="note">= % mất nước x "cân nặng" x 10</span>
+        <span class="note">= % mất nước x "cân nặng trừ mỡ" x 10</span>
         <input type="text" id="arrival-volume-12h" readonly>
     </div>
 
@@ -198,10 +231,12 @@
     <div class="divider"></div>
 
     <div class="section-header">3. KHI BỆNH THÚ NẰM VIỆN</div>
+        <span class="note highlight">Bước này sẽ bắt đầu khi BSTY đã hoàn thành việc truyền đủ nước cho bệnh thú ở bước trên, có nghĩa là "Phần trăm mất nước" đã về mức Bình thường. Nếu tình trạng mất nước chưa được cải thiện, BSTY vẫn phải truyền theo liều lượng ở bước 2."</span>
+        <p>
     <button onclick="calculateHospitalFluid()" style="width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer;">Tính toán</button>
     <div class="result-group">
         <label for="hospital-volume-24h">Tổng thể tích dịch truyền trong 1 ngày (ml):</label>
-        <span class="note">= 97 x "cân nặng trừ mỡ" lũy thừa 0.655 + V hô hấp + V tiêu hóa</span>
+        <span class="note">= 97 x ("cân nặng trừ mỡ" lũy thừa 0.655) + V hô hấp + V tiêu hóa</span>
         <input type="text" id="hospital-volume-24h" readonly>
     </div>
 
@@ -239,7 +274,7 @@
 
     <div class="divider"></div>
 
-    <div class="section-header">4. TỐC ĐỘ & THỜI GIAN TRUYỀN DỊCH</div>
+    <div class="section-header">4. THỜI GIAN TRUYỀN DỰA VÀO TỐC ĐỘ NHỎ GIỌT</div>
     <div class="input-group">
         <label for="drip-factor">Thông số dây:</label>
         <span class="note">Xem trên bao bì nhà sản xuất ghi bao nhiêu giọt/1ml ?</span>
@@ -260,7 +295,10 @@
     </div>
     <div class="input-group">
         <label for="start-time">Giờ bắt đầu truyền:</label>
-        <input type="text" id="start-time" placeholder="nhập theo định dạng 13:33">
+        <div class="input-with-button">
+            <input type="text" id="start-time" placeholder="nhập theo định dạng 13:33">
+            <button onclick="getCurrentTime()">Lấy giờ</button>
+        </div>
     </div>
 
     <button onclick="calculateInfusion()" style="width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer;">Tính toán</button>
@@ -278,10 +316,12 @@
     <div class="divider"></div>
 
     <div class="section-header">5. ƯỚC LƯỢNG</div>
+        <span class="note highlight">Công cụ này giúp BSTY ước lượng 1 cách tương đối lượng dịch đã được truyền vào cơ thể bệnh thú, vì bỏ qua các vấn đề có thể làm sai lệch kết quả do thú bệnh gây ra như: xoắn/gập ống truyền dịch, con thú gập chân dẫn đến ven không thông hoặc các vấn đề gây rò rỉ dịch truyền...</span>
+        <p>
     <button onclick="calculateEstimation()" style="width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer;">Ước lượng</button>
     <div class="input-group">
         <label for="start-time-estimation">Thời gian bắt đầu truyền:</label>
-        <span class="note">Tự động lấy từ ô "Giờ bắt đầu truyền" ở khung "4. TỐC ĐỘ & THỜI GIAN TRUYỀN DỊCH"</span>
+        <span class="note">Tự động lấy từ ô "Giờ bắt đầu truyền" ở khung "4. THỜI GIAN TRUYỀN DỰA VÀO TỐC ĐỘ NHỎ GIỌT"</span>
         <input type="text" id="start-time-estimation" readonly>
 
     </div>
@@ -294,9 +334,74 @@
         <label for="estimated-volume">Ước lượng tổng thể tích đã truyền (ml):</label>
         <input type="text" id="estimated-volume" readonly>
     </div>
+
+<div class="divider"></div>
+
+    <div class="section-header">6. CÔNG CỤ TÍNH TỐC ĐỘ NHỎ GIỌT</div>
+        <span class="note highlight">Công cụ này giúp BSTY có được thông số tốc độ nhỏ giọt trung bình, mà không cần phải quan sát trong 1 phút có bao nhiêu giọt nhỏ xuống. Công cụ này dựa trên việc cứ thấy 1 giọt nhỏ xuống thì bấm vào nút "Đếm giọt" 1 lần, nó sẽ dựa vào thời gian đã trôi qua để suy ra tốc độ.</span>
+    <p>
+    <div class="flex-container">
+        <div class="flex-item">
+            <button onclick="startStopTimer()" id="timer-button" style="width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer;">Bắt đầu</button>
+        </div>
+        <div class="flex-item">
+            <button onclick="countDrop()" id="count-button" disabled style="width: 100%; padding: 12px; background-color: #6c757d; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: not-allowed;">Đếm giọt</button>
+        </div>
+        <div class="flex-item">
+            <button onclick="resetTimer()" id="reset-button" style="width: 100%; padding: 12px; background-color: #dc3545; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer;">Đặt lại</button>
+        </div>
+    </div>
+    
+    <div class="result-group">
+        <label>Thời gian đã trôi qua:</label>
+        <div id="elapsed-time" class="drip-counter-display">00:00</div>
+    </div>
+    <div class="result-group">
+        <label>Tổng số giọt đã đếm:</label>
+        <div id="drip-count" class="drip-counter-display">0</div>
+    </div>
+    <div class="result-group">
+        <label>=> Tốc độ nhỏ giọt (giọt/phút):</label>
+        <input type="text" id="calculated-drip-rate" readonly>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-header">7. CÔNG CỤ TÍNH TỐC ĐỘ NHỎ GIỌT THEO THỜI GIAN</div>
+        <span class="note highlight">Công cụ này giúp BSTY tính ra tốc độ nhỏ giọt là bao nhiêu để truyền hết một thể tích cần thiết trong một khoảng thời gian mong muốn.</span>
+    <p>
+    <div class="input-group">
+        <label for="volume-predetermined">Thể tích muốn truyền (ml):</label>
+        <input type="number" id="volume-predetermined" placeholder="ví dụ: 500">
+    </div>
+    <div class="input-group">
+        <label for="time-predetermined">Thời gian truyền dự kiến (phút):</label>
+        <input type="number" id="time-predetermined" placeholder="ví dụ: 60">
+    </div>
+    <div class="input-group">
+        <label for="drip-factor-predetermined">Thông số dây:</label>
+        <span class="note">Xem trên bao bì nhà sản xuất ghi bao nhiêu giọt/1ml ?</span>
+        <select id="drip-factor-predetermined">
+            <option value="20">20</option>
+            <option value="15">15</option>
+        </select>
+    </div>
+    <button onclick="calculatePredeterminedDripRate()" style="width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer;">Tính toán</button>
+    <div class="result-group">
+        <label for="result-drip-rate">=> Tốc độ nhỏ giọt cần thiết (giọt/phút):</label>
+        <input type="text" id="result-drip-rate" readonly>
+    </div>
+
 </div>
 
 <script>
+    function getCurrentTime() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('start-time').value = `${hours}:${minutes}`;
+    }
+
     function calculateArrivalFluid() {
         const weight = parseFloat(document.getElementById('weight').value);
         const dehydrationPercent = parseFloat(document.getElementById('dehydration-percent').value);
@@ -450,6 +555,83 @@
         
         document.getElementById('estimated-minutes').value = `${hours} giờ ${minutes} phút`;
         document.getElementById('estimated-volume').value = `${estimatedVolume.toFixed(2)} ml`;
+    }
+
+// hàm đếm nhỏ giọt
+let timer;
+    let startTime;
+    let drops = 0;
+    let isRunning = false;
+
+    function startStopTimer() {
+        const timerButton = document.getElementById('timer-button');
+        const countButton = document.getElementById('count-button');
+
+        if (!isRunning) {
+            startTime = new Date();
+            timer = setInterval(updateTime, 1000);
+            timerButton.textContent = 'Dừng';
+            timerButton.style.backgroundColor = '#dc3545';
+            countButton.disabled = false;
+            countButton.style.backgroundColor = '#28a745';
+            countButton.style.cursor = 'pointer';
+            isRunning = true;
+        } else {
+            clearInterval(timer);
+            timerButton.textContent = 'Bắt đầu';
+            timerButton.style.backgroundColor = '#007bff';
+            countButton.disabled = true;
+            countButton.style.backgroundColor = '#6c757d';
+            countButton.style.cursor = 'not-allowed';
+            isRunning = false;
+        }
+    }
+
+    function updateTime() {
+        const now = new Date();
+        const elapsedTime = (now - startTime) / 1000;
+        const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+        const seconds = Math.floor(elapsedTime % 60).toString().padStart(2, '0');
+        document.getElementById('elapsed-time').textContent = `${minutes}:${seconds}`;
+
+        // Update drip rate in real-time
+        if (elapsedTime > 0) {
+            const dripRate = (drops / elapsedTime) * 60;
+            document.getElementById('calculated-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
+        }
+    }
+
+    function countDrop() {
+        drops++;
+        document.getElementById('drip-count').textContent = drops;
+    }
+
+    function resetTimer() {
+        clearInterval(timer);
+        isRunning = false;
+        drops = 0;
+        document.getElementById('timer-button').textContent = 'Bắt đầu';
+        document.getElementById('timer-button').style.backgroundColor = '#007bff';
+        document.getElementById('count-button').disabled = true;
+        document.getElementById('count-button').style.backgroundColor = '#6c757d';
+        document.getElementById('count-button').style.cursor = 'not-allowed';
+        document.getElementById('elapsed-time').textContent = '00:00';
+        document.getElementById('drip-count').textContent = '0';
+        document.getElementById('calculated-drip-rate').value = '';
+    }
+
+    function calculatePredeterminedDripRate() {
+        const volume = parseFloat(document.getElementById('volume-predetermined').value);
+        const time = parseFloat(document.getElementById('time-predetermined').value);
+        const dripFactor = parseFloat(document.getElementById('drip-factor-predetermined').value);
+
+        if (isNaN(volume) || isNaN(time) || volume <= 0 || time <= 0) {
+            alert('Vui lòng nhập Thể tích và Thời gian truyền hợp lệ.');
+            return;
+        }
+
+        const dripRate = (volume * dripFactor) / time;
+        document.getElementById('result-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
     }
 </script>
 
