@@ -3,16 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Công cụ tính toán dịch truyền cho chó/mèo</title>
+    <title>Phần mềm dành cho bác sĩ thú y</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 20px;
-            background-color: #f0f2f5;
-            color: #333;
+            background-color: #e0f2f7;
+            color: ;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
             line-height: 1.6;
         }
-        .container {
+        main {
+            flex-grow: 1;
+        }
+
+main .container {
             max-width: 800px;
             margin: auto;
             background: #ffffff;
@@ -20,11 +32,14 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        h1 {
+
+.container h1 {
             text-align: center;
             color: #007bff;
             margin-bottom: 25px;
+font-size: 2.2rem;
         }
+
         .section-header {
             font-size: 1.5em;
             color: #495057;
@@ -82,11 +97,15 @@
             font-size: 0.9em;
             color: #6c757d;
             margin-top: 5px;
+            margin-bottom: 0px; /* đặt khoảng cách lề dưới của dòng chú thích ô nhập liệu */
             display: block;
+
         }
         .note.highlight {
            color: blue;
            text-align: center;
+           margin-bottom: 2px; /* đặt khoảng cách lề dưới của dòng chú thích tiêu đề */
+           display: block;
         }
         .result-group {
             margin-top: 15px;
@@ -104,6 +123,13 @@
             border-radius: 6px;
             font-size: 1em;
             cursor: default;
+        }
+        .result-group .note {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+            margin-bottom: 0px; /* đặt khoảng cách lề dưới của dòng chú thích ô kết quả */
+            display: block;
         }
         .divider {
             margin: 25px 0;
@@ -145,12 +171,25 @@
             margin-top: 10px;
             color: #dc3545;
         }
+
+#footer-placeholder {
+    background-color: #facc15; /* Hoặc thay bằng màu bạn muốn */
+}
+.modal-content-scrollable {
+    max-height: 80vh; /* Chiều cao tối đa 80% chiều cao màn hình */
+    overflow-y: auto; /* Tự động cuộn theo chiều dọc */
+}
+
     </style>
 </head>
 <body>
+    <div id="header-placeholder"></div>
 
-<div class="container">
-    <h1>Công cụ tính toán dịch truyền cho chó/mèo 🐶🐱</h1>
+
+    <main class="max-w-4xl mx-auto p-4">
+
+      <div class="container">
+    <h1>Công cụ tính Thể tích dịch truyền cho Chó/Mèo</h1>
 
     <div class="section-header">1. KHAI BÁO</div>
     <div class="input-group">
@@ -231,8 +270,8 @@
     <div class="divider"></div>
 
     <div class="section-header">3. KHI BỆNH THÚ NẰM VIỆN</div>
-        <span class="note highlight">Bước này sẽ bắt đầu khi BSTY đã hoàn thành việc truyền đủ nước cho bệnh thú ở bước trên, có nghĩa là "Phần trăm mất nước" đã về mức Bình thường. Nếu tình trạng mất nước chưa được cải thiện, BSTY vẫn phải truyền theo liều lượng ở bước 2."</span>
-        <p>
+        <span class="note highlight">Bước này sẽ bắt đầu khi BSTY đã hoàn thành việc truyền đủ nước cho bệnh thú ở bước trên, có nghĩa là "Phần trăm mất nước" đã về mức Bình thường. Nếu tình trạng mất nước chưa được cải thiện, BSTY vẫn phải truyền theo liều lượng ở bước 2.</span>
+        <br>
     <button onclick="calculateHospitalFluid()" style="width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer;">Tính toán</button>
     <div class="result-group">
         <label for="hospital-volume-24h">Tổng thể tích dịch truyền trong 1 ngày (ml):</label>
@@ -317,7 +356,7 @@
 
     <div class="section-header">5. ƯỚC LƯỢNG</div>
         <span class="note highlight">Công cụ này giúp BSTY ước lượng 1 cách tương đối lượng dịch đã được truyền vào cơ thể bệnh thú, vì bỏ qua các vấn đề có thể làm sai lệch kết quả do thú bệnh gây ra như: xoắn/gập ống truyền dịch, con thú gập chân dẫn đến ven không thông hoặc các vấn đề gây rò rỉ dịch truyền...</span>
-        <p>
+        <br>
     <button onclick="calculateEstimation()" style="width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer;">Ước lượng</button>
     <div class="input-group">
         <label for="start-time-estimation">Thời gian bắt đầu truyền:</label>
@@ -339,7 +378,7 @@
 
     <div class="section-header">6. CÔNG CỤ TÍNH TỐC ĐỘ NHỎ GIỌT</div>
         <span class="note highlight">Công cụ này giúp BSTY có được thông số tốc độ nhỏ giọt trung bình, mà không cần phải quan sát trong 1 phút có bao nhiêu giọt nhỏ xuống. Công cụ này dựa trên việc cứ thấy 1 giọt nhỏ xuống thì bấm vào nút "Đếm giọt" 1 lần, nó sẽ dựa vào thời gian đã trôi qua để suy ra tốc độ.</span>
-    <p>
+    <br>
     <div class="flex-container">
         <div class="flex-item">
             <button onclick="startStopTimer()" id="timer-button" style="width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer;">Bắt đầu</button>
@@ -369,7 +408,7 @@
 
     <div class="section-header">7. CÔNG CỤ TÍNH TỐC ĐỘ NHỎ GIỌT THEO THỜI GIAN</div>
         <span class="note highlight">Công cụ này giúp BSTY tính ra tốc độ nhỏ giọt là bao nhiêu để truyền hết một thể tích cần thiết trong một khoảng thời gian mong muốn.</span>
-    <p>
+    <br>
     <div class="input-group">
         <label for="volume-predetermined">Thể tích muốn truyền (ml):</label>
         <input type="number" id="volume-predetermined" placeholder="ví dụ: 500">
@@ -635,5 +674,11 @@ let timer;
     }
 </script>
 
+    </main>
+
+
+    <div id="footer-placeholder"></div>
+    <div id="modals-placeholder"></div>
+    <script src="theme/main.js"></script>
 </body>
 </html>
