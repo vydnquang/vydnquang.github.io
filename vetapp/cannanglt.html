@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính Cân Nặng Lý Tưởng Của Chó</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 5px; /* Giảm khoảng cách để dòng chú thích gần hơn */
+        }
+        .subtitle {
+            text-align: center;
+            color: #555;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-bottom: 25px; /* Tăng khoảng cách dưới dòng chú thích */
+        }
+        .form-section {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .input-group, .calculation-group {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        label {
+            display: block;
+            color: #34495e;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+            margin-top: 5px;
+        }
+        .calculation-step {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .calculation-step .step-label {
+            font-weight: 500;
+            color: #555;
+        }
+        .calculation-step .step-value {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .final-result-box {
+            background-color: #f0f4f7;
+            border: 2px dashed #a9cce3;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .final-result-box p {
+            margin: 0;
+            font-size: 1.1em;
+            color: #34495e;
+        }
+        #idealWeightResult {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #conclusion {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Công cụ Tính Cân Nặng Lý Tưởng Cho Chó</h1>
+    <p class="subtitle">Dựa theo phương pháp tính của các nhà nghiên cứu tại Đại học Liverpool và Royal Canin</p>
+    
+    <div class="form-section">
+        <div class="input-group">
+            <label for="currentWeight">Cân nặng hiện tại (kg):</label>
+            <input type="number" id="currentWeight" placeholder="Nhập cân nặng hiện tại" required>
+        </div>
+        <div class="input-group">
+            <label for="bcsScore">Điểm BCS (Body Condition Score):</label>
+            <select id="bcsScore" required>
+                <option value="" disabled selected>Chọn điểm BCS</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="calculation-group">
+        <div class="calculation-step">
+            <span class="step-label">Bước 1: Lấy điểm BCS trừ đi 5</span>
+            <span class="step-value" id="step1_result"></span>
+        </div>
+        <div class="calculation-step">
+            <span class="step-label">Bước 2: Nhân với 10</span>
+            <span class="step-value" id="step2_result"></span>
+        </div>
+        <div class="calculation-step">
+            <span class="step-label">Bước 3: Cộng 100</span>
+            <span class="step-value" id="step3_result"></span>
+        </div>
+        <div class="calculation-step">
+            <span class="step-label">Bước 4: Lấy 100 chia cho kết quả ở bước 3 (Làm tròn 3 chữ số)</span>
+            <span class="step-value" id="step4_result"></span>
+        </div>
+        <div class="calculation-step">
+            <span class="step-label">Bước 5: Nhân kết quả ở bước 4 với cân nặng hiện tại</span>
+            <span class="step-value" id="step5_result"></span>
+        </div>
+    </div>
+    
+    <button onclick="calculateIdealWeight()">Tính toán</button>
+    
+    <div class="final-result-box" style="display: none;" id="resultBox">
+        <p>Cân nặng lý tưởng sẽ là:</p>
+        <p id="idealWeightResult"></p>
+    </div>
+    
+    <div id="conclusion" style="display: none;"></div>
+
+</div>
+
+<script>
+    function calculateIdealWeight() {
+        const currentWeight = parseFloat(document.getElementById('currentWeight').value);
+        const bcsScore = parseInt(document.getElementById('bcsScore').value);
+        const resultBox = document.getElementById('resultBox');
+        const conclusionDiv = document.getElementById('conclusion');
+
+        // Reset display
+        document.getElementById('step1_result').textContent = '';
+        document.getElementById('step2_result').textContent = '';
+        document.getElementById('step3_result').textContent = '';
+        document.getElementById('step4_result').textContent = '';
+        document.getElementById('step5_result').textContent = '';
+        resultBox.style.display = 'none';
+        conclusionDiv.style.display = 'none';
+
+        if (isNaN(currentWeight) || currentWeight <= 0 || isNaN(bcsScore) || bcsScore < 1 || bcsScore > 9) {
+            document.getElementById('step1_result').textContent = 'Vui lòng nhập đầy đủ và chính xác dữ liệu.';
+            return;
+        }
+        
+        // BƯỚC 1: Lấy điểm BCS trừ đi 5
+        const step1 = bcsScore - 5;
+        document.getElementById('step1_result').textContent = step1;
+        
+        // BƯỚC 2: Nhân với 10
+        const step2 = step1 * 10;
+        document.getElementById('step2_result').textContent = step2;
+        
+        // BƯỚC 3: Cộng 100
+        const step3 = step2 + 100;
+        document.getElementById('step3_result').textContent = step3;
+        
+        // BƯỚC 4: Lấy 100 chia cho kết quả ở bước 3, làm tròn 3 chữ số
+        const step4 = (100 / step3).toFixed(3);
+        document.getElementById('step4_result').textContent = step4;
+        
+        // BƯỚC 5: Nhân kết quả ở bước 4 với cân nặng hiện tại
+        const idealWeight = (step4 * currentWeight).toFixed(2);
+        document.getElementById('step5_result').textContent = idealWeight + ' kg';
+
+        // Hiển thị kết quả cuối cùng
+        document.getElementById('idealWeightResult').textContent = idealWeight + ' kg';
+        resultBox.style.display = 'block';
+
+        // Kết luận và lời khuyên
+        let advice;
+        let diff = Math.abs(currentWeight - idealWeight);
+        let tolerance = 0.5; // Dung sai 0.5kg
+        
+        if (Math.abs(currentWeight - idealWeight) <= tolerance) {
+            advice = 'Cân nặng hiện tại của chó đang ở mức lý tưởng. Hãy duy trì chế độ ăn uống và tập luyện này!';
+            conclusionDiv.style.backgroundColor = '#d4edda';
+            conclusionDiv.style.color = '#155724';
+        } else if (currentWeight < idealWeight) {
+            advice = `Cân nặng của chó đang thấp hơn mức lý tưởng ${diff.toFixed(2)} kg. Bạn nên cân nhắc điều chỉnh chế độ ăn uống để chó tăng cân dần dần.`;
+            conclusionDiv.style.backgroundColor = '#fff3cd';
+            conclusionDiv.style.color = '#856404';
+        } else {
+            advice = `Cân nặng của chó đang vượt quá mức lý tưởng ${diff.toFixed(2)} kg. Bạn nên tham khảo ý kiến bác sĩ thú y để có kế hoạch giảm cân an toàn cho chó.`;
+            conclusionDiv.style.backgroundColor = '#f8d7da';
+            conclusionDiv.style.color = '#721c24';
+        }
+
+        conclusionDiv.innerHTML = `<p><b>Kết luận:</b> ${advice}</p>`;
+        conclusionDiv.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
