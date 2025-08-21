@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     loadComponent('theme/header.html', 'header-placeholder');
+    loadComponent('theme/donatebt.html', 'donate-placeholder');
     loadComponent('theme/footer.html', 'footer-placeholder', () => {
         loadComponent('theme/modals.html', 'modals-placeholder', () => {
             const aboutBtn = document.getElementById('aboutBtn');
@@ -95,4 +96,5 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
+
 });
