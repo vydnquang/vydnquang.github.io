@@ -52,10 +52,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 modalElement.classList.remove('opacity-100');
                 modalElement.classList.add('opacity-0');
                 const contentElement = modalElement.querySelector('div.bg-white');
-                    if (contentElement) {
-                        contentElement.classList.remove('scale-100');
-                        contentElement.classList.add('scale-95');
-                    }
+                if (contentElement) {
+                    contentElement.classList.remove('scale-100');
+                    contentElement.classList.add('scale-95');
+                }
                 setTimeout(() => {
                     modalElement.classList.add('hidden');
                 }, 300);
@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
             if (aboutBtn) {
                 aboutBtn.addEventListener('click', () => {
-                    // Đóng menu trượt trước khi mở modal
                     offCanvasMenu.classList.remove('active'); 
                     openModal(aboutModal);
                 });
@@ -77,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
             if (contactBtn) {
                 contactBtn.addEventListener('click', () => {
-                    // Đóng menu trượt trước khi mở modal
                     offCanvasMenu.classList.remove('active');
                     openModal(contactModal);
                 });
@@ -90,10 +88,12 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             if (menuBtn) {
-                menuBtn.addEventListener('click', () => {
+                menuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     offCanvasMenu.classList.toggle('active');
                 });
             }
+
             if (offCanvasMenuCloseBtn) {
                 offCanvasMenuCloseBtn.addEventListener('click', () => {
                     offCanvasMenu.classList.remove('active');
