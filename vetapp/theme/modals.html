@@ -1,3 +1,45 @@
+<style>
+/* CSS cho hiệu ứng trượt */
+.off-canvas-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background-color: #f59e0b; /* yellow-500 */
+    color: #fff;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 55;
+    padding-top: 60px;
+}
+.off-canvas-menu.active {
+    transform: translateX(0);
+}
+.off-canvas-menu a {
+    display: block;
+    padding: 1rem;
+    color: white;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.off-canvas-menu a:hover {
+    background-color: #d97706; /* yellow-700 */
+}
+.off-canvas-menu-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.modal-content-scrollable {
+    max-height: 80vh; /* Chiều cao tối đa 80% chiều cao màn hình */
+    overflow-y: auto; /* Tự động cuộn theo chiều dọc */
+}
+</style>
+
 <div id="aboutModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-10 hidden opacity-0 transition-opacity duration-300">
     <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 max-w-full w-full mx-4 transform scale-95 transition-transform duration-300 relative modal-content-scrollable mb-24">
         <button id="closeAboutModalBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200">
@@ -48,5 +90,14 @@
         <p class="text-gray-600 font-normal">
             <strong>Zalo:</strong><a href="https://zalo.me/0935985468" class="font-bold text-blue-600 hover:underline" target="_blank"> 0935.985.468</a>
         </p>
+    </div>
+</div>
+
+<div id="offCanvasMenu" class="off-canvas-menu">
+    <button class="off-canvas-menu-close"><i class="fas fa-times"></i></button>
+    <div class="p-4">
+        <a href="https://go.drugbank.com/drug-interaction-checker">Tính độ suy thận</a>
+        <a href="https://tuongtacthuoc.nhic.vn/Home/CSDLTuongTacThuoc">Tính chỉ số MER</a>
+        <a href="https://www.drugs.com/drug_interactions.html">Tính lượng máu truyền</a>
     </div>
 </div>
