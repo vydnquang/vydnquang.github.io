@@ -20,6 +20,13 @@
             margin: 0;
             line-height: 1.6;
         }
+        main {
+            flex-grow: 1;
+        }
+.modal-content-scrollable {
+    max-height: 80vh; /* Chiều cao tối đa 80% chiều cao màn hình */
+    overflow-y: auto; /* Tự động cuộn theo chiều dọc */
+}
 
         /* Thêm các class cho màu sắc và hiệu ứng của nút */
         .btn-start {
@@ -552,7 +559,7 @@
             }
         </script>
     </main>
-    
+
     <div id="donate-placeholder"></div>
     <div id="footer-placeholder"></div>
     <div id="modals-placeholder"></div>
