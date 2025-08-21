@@ -31,8 +31,9 @@ document.addEventListener("DOMContentLoaded", function() {
             const contactModal = document.getElementById('contactModal');
             const closeAboutModalBtn = document.getElementById('closeAboutModalBtn');
             const closeContactModalBtn = document.getElementById('closeContactModalBtn');
-            const searchDropdownBtn = document.getElementById('searchDropdownBtn');
-            const searchDropdownMenu = document.getElementById('searchDropdownMenu');
+            const menuBtn = document.getElementById('searchDropdownBtn');
+            const offCanvasMenu = document.getElementById('offCanvasMenu');
+            const offCanvasMenuCloseBtn = document.querySelector('.off-canvas-menu-close');
 
             const openModal = (modalElement) => {
                 modalElement.classList.remove('hidden');
@@ -41,8 +42,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     modalElement.classList.add('opacity-100');
                     const contentElement = modalElement.querySelector('div.bg-white');
                     if (contentElement) {
-                         contentElement.classList.remove('scale-95');
-                         contentElement.classList.add('scale-100');
+                        contentElement.classList.remove('scale-95');
+                        contentElement.classList.add('scale-100');
                     }
                 }, 10);
             };
@@ -51,17 +52,21 @@ document.addEventListener("DOMContentLoaded", function() {
                 modalElement.classList.remove('opacity-100');
                 modalElement.classList.add('opacity-0');
                 const contentElement = modalElement.querySelector('div.bg-white');
-                if (contentElement) {
-                     contentElement.classList.remove('scale-100');
-                     contentElement.classList.add('scale-95');
-                }
+                    if (contentElement) {
+                        contentElement.classList.remove('scale-100');
+                        contentElement.classList.add('scale-95');
+                    }
                 setTimeout(() => {
                     modalElement.classList.add('hidden');
                 }, 300);
             };
 
             if (aboutBtn) {
-                aboutBtn.addEventListener('click', () => openModal(aboutModal));
+                aboutBtn.addEventListener('click', () => {
+                    // Đóng menu trượt trước khi mở modal
+                    offCanvasMenu.classList.remove('active'); 
+                    openModal(aboutModal);
+                });
                 closeAboutModalBtn.addEventListener('click', () => closeModal(aboutModal));
                 aboutModal.addEventListener('click', (event) => {
                     if (event.target === aboutModal) {
@@ -71,7 +76,11 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             if (contactBtn) {
-                contactBtn.addEventListener('click', () => openModal(contactModal));
+                contactBtn.addEventListener('click', () => {
+                    // Đóng menu trượt trước khi mở modal
+                    offCanvasMenu.classList.remove('active');
+                    openModal(contactModal);
+                });
                 closeContactModalBtn.addEventListener('click', () => closeModal(contactModal));
                 contactModal.addEventListener('click', (event) => {
                     if (event.target === contactModal) {
@@ -80,23 +89,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
             }
 
-            if (searchDropdownBtn) {
-                searchDropdownBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    searchDropdownMenu.classList.toggle('opacity-0');
-                    searchDropdownMenu.classList.toggle('pointer-events-none');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', () => {
+                    offCanvasMenu.classList.toggle('active');
                 });
-                document.addEventListener('click', (e) => {
-                    if (!searchDropdownBtn.contains(e.target) && !searchDropdownMenu.contains(e.target)) {
-                        searchDropdownMenu.classList.add('opacity-0');
-                        searchDropdownMenu.classList.add('pointer-events-none');
-                    }
+            }
+            if (offCanvasMenuCloseBtn) {
+                offCanvasMenuCloseBtn.addEventListener('click', () => {
+                    offCanvasMenu.classList.remove('active');
                 });
             }
         });
     });
-
 });
-
-
