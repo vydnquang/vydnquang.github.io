@@ -209,17 +209,13 @@
                 <span class="text-sm text-gray-500 block mb-1">BSTY phải nhập thể tích đã tính toán ở các phần trên vào đây</span>
                 <input type="number" id="volume-to-infuse" placeholder="ví dụ: 500" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
             </div>
-            <div class="mb-4">
-                <label for="start-time" class="block font-semibold mb-1 text-gray-700">Giờ bắt đầu truyền:</label>
-                <div class="flex items-center gap-2">
-                <!-- 
-                    Lớp "flex-grow" cho phép ô input tự động mở rộng để lấp đầy không gian trống.
-                    Lớp "flex-shrink-0" trên nút sẽ ngăn nút bị co lại khi không gian bị giới hạn.
-                -->
+        <div class="mb-4">
+            <label for="start-time" class="block font-semibold mb-1 text-gray-700">Giờ bắt đầu truyền:</label>
+            <div class="flex items-center gap-2">
                 <input type="text" id="start-time" placeholder="nhập theo định dạng 13:33" class="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <button onclick="getCurrentTime()" class="p-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300 flex-shrink-0">Lấy giờ</button>
-                </div>
+                <button onclick="getCurrentTime()" class="p-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300 flex-shrink-0 whitespace-nowrap">Lấy giờ</button>
             </div>
+        </div>
             <button onclick="calculateInfusion()" class="w-full p-3 bg-green-500 text-white font-bold rounded-md hover:bg-green-600 transition duration-300">
                 Tính toán
             </button>
@@ -562,4 +558,3 @@
     <script src="theme/main.js"></script>
 </body>
 </html>
-
