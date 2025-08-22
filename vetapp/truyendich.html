@@ -39,9 +39,7 @@
         .fa-heart {
             animation: heartbeat 1.5s infinite;
         }
-        .modal-content-scrollable {
-            max-height: 80vh;
-            overflow-y: auto;
+        /* Hiệu ứng các nút */
         }
         .btn-start {
             background-color: #007bff;
@@ -233,7 +231,7 @@
                 <label for="start-time" class="block font-semibold mb-1">Giờ bắt đầu truyền:</label>
                 <div class="flex items-center gap-2">
                     <input type="text" id="start-time" placeholder="nhập theo định dạng 13:33" class="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    <button onclick="getCurrentTime()" class="p-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300 whitespace-nowrap">Lấy giờ</button>
+                    <button onclick="getCurrentTime()" class="p-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300">Lấy giờ</button>
                 </div>
             </div>
             <button onclick="calculateInfusion()" class="w-full p-3 bg-green-500 text-white font-bold rounded-md hover:bg-green-600 transition duration-300">
