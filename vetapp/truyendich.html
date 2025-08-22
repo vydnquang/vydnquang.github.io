@@ -210,10 +210,14 @@
                 <input type="number" id="volume-to-infuse" placeholder="ví dụ: 500" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
             </div>
             <div class="mb-4">
-                <label for="start-time" class="block font-semibold mb-1">Giờ bắt đầu truyền:</label>
+                <label for="start-time" class="block font-semibold mb-1 text-gray-700">Giờ bắt đầu truyền:</label>
                 <div class="flex items-center gap-2">
-                    <input type="text" id="start-time" placeholder="nhập theo định dạng 13:33" class="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    <button onclick="getCurrentTime()" class="p-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300">Lấy giờ</button>
+                <!-- 
+                    Lớp "flex-grow" cho phép ô input tự động mở rộng để lấp đầy không gian trống.
+                    Lớp "flex-shrink-0" trên nút sẽ ngăn nút bị co lại khi không gian bị giới hạn.
+                -->
+                <input type="text" id="start-time" placeholder="nhập theo định dạng 13:33" class="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <button onclick="getCurrentTime()" class="p-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300 flex-shrink-0">Lấy giờ</button>
                 </div>
             </div>
             <button onclick="calculateInfusion()" class="w-full p-3 bg-green-500 text-white font-bold rounded-md hover:bg-green-600 transition duration-300">
@@ -558,3 +562,4 @@
     <script src="theme/main.js"></script>
 </body>
 </html>
+
