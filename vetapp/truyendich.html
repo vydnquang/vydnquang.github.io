@@ -24,36 +24,34 @@
         main {
             flex-grow: 1;
         }
-
-        /* CÁC CODE RIÊNG CÓ CỦA TỪNG MAIN KHÁC NHAU */
-        /* Thêm các class cho màu sắc và hiệu ứng của nút */
         .btn-start {
-            background-color: #007bff;
+            background-color: #4CAF50;
         }
         .btn-start:hover {
-            background-color: #0056b3;
+            background-color: #45a049;
         }
         .btn-stop {
-            background-color: #dc3545;
+            background-color: #f44336;
         }
         .btn-stop:hover {
-            background-color: #c82333;
+            background-color: #e53935;
         }
         .btn-count {
-            background-color: #28a745;
+            background-color: #2196F3;
         }
         .btn-count:hover {
-            background-color: #218838;
+            background-color: #1e88e5;
         }
         .btn-disabled {
-            background-color: #6c757d;
+            background-color: #ccc;
             cursor: not-allowed;
         }
+
     </style>
 </head>
-
-<body class="font-['Inter'] bg-[#e0f2f7] text-[#333] flex flex-col min-h-screen overflow-x-hidden">
+<body>
     <div id="header-placeholder"></div>
+<!--    <main class="flex-grow container mx-auto p-4"> --!>
     <main class="flex-grow max-w-md mx-auto p-4 md:p-6 lg:p-8">
         <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg border-2 border-slate-200">
             <h1 class="text-center text-blue-600 text-2xl md:text-3xl font-bold mb-6">
@@ -209,13 +207,13 @@
                 <span class="text-sm text-gray-500 block mb-1">BSTY phải nhập thể tích đã tính toán ở các phần trên vào đây</span>
                 <input type="number" id="volume-to-infuse" placeholder="ví dụ: 500" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
             </div>
-        <div class="mb-4">
-            <label for="start-time" class="block font-semibold mb-1 text-gray-700">Giờ bắt đầu truyền:</label>
-            <div class="flex items-center gap-2">
-                <input type="text" id="start-time" placeholder="nhập theo định dạng 13:33" class="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <button onclick="getCurrentTime()" class="p-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300 flex-shrink-0 whitespace-nowrap">Lấy giờ</button>
+            <div class="mb-4">
+                <label for="start-time" class="block font-semibold mb-1 text-gray-700">Giờ bắt đầu truyền:</label>
+                <div class="flex items-center gap-2">
+                    <input type="text" id="start-time" placeholder="nhập theo định dạng 13:33" class="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <button onclick="getCurrentTime()" class="p-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300 flex-shrink-0 whitespace-nowrap">Lấy giờ</button>
+                </div>
             </div>
-        </div>
             <button onclick="calculateInfusion()" class="w-full p-3 bg-green-500 text-white font-bold rounded-md hover:bg-green-600 transition duration-300">
                 Tính toán
             </button>
@@ -319,242 +317,345 @@
             </div>
         </div>
 
-        <script>
-            function getCurrentTime() {
-                const now = new Date();
-                const hours = now.getHours().toString().padStart(2, '0');
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                document.getElementById('start-time').value = `${hours}:${minutes}`;
-            }
 
-            function calculateArrivalFluid() {
-                const weight = parseFloat(document.getElementById('weight').value);
-                const dehydrationPercent = parseFloat(document.getElementById('dehydration-percent').value);
-                const bodyMass = document.getElementById('body-mass').value;
+        <!-- Dưới đây là modal thông báo lỗi và xác nhận tuỳ chỉnh, thay thế cho các hàm alert() và confirm() -->
+        <div id="messageModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-10 hidden opacity-0 transition-opacity duration-300">
+            <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300 relative">
+                <button id="closeMessageModalBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                <div class="text-center">
+                    <i class="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-4"></i>
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Thông báo</h2>
+                    <p id="message-text" class="text-gray-600 mb-4">Nội dung thông báo lỗi.</p>
+                    <button id="okMessageModalBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300">OK</button>
+                </div>
+            </div>
+        </div>
 
-                if (isNaN(weight) || weight <= 0) {
-                    alert('Vui lòng nhập Trọng lượng hợp lệ.');
-                    return;
-                }
-
-                let weightForCalculation = weight;
-                if (bodyMass === 'fat') {
-                    weightForCalculation = weight * 0.7;
-                }
-
-                const volume12h = weightForCalculation * dehydrationPercent * 10;
-                const vGluco30 = (97 * Math.pow(weightForCalculation, 0.655) * 0.1) / 2;
-                const vOther30 = volume12h - vGluco30;
-                const vGluco5 = vGluco30 * 6;
-                const vOther5 = volume12h - vGluco5;
-
-                document.getElementById('arrival-volume-12h').value = `${volume12h.toFixed(2)} ml`;
-                document.getElementById('arrival-v-gluco-30').value = `${vGluco30.toFixed(2)} ml`;
-                document.getElementById('arrival-v-other-30').value = `${vOther30.toFixed(2)} ml`;
-                document.getElementById('arrival-v-gluco-5').value = `${vGluco5.toFixed(2)} ml`;
-                document.getElementById('arrival-v-other-5').value = `${vOther5.toFixed(2)} ml`;
-            }
-
-            function calculateHospitalFluid() {
-                const weight = parseFloat(document.getElementById('weight').value);
-                const respFluidLoss = parseFloat(document.getElementById('resp-fluid-loss').value) || 0;
-                const digestiveFluidLoss = parseFloat(document.getElementById('digestive-fluid-loss').value) || 0;
-                const bodyMass = document.getElementById('body-mass').value;
-
-                if (isNaN(weight) || weight <= 0) {
-                    alert('Vui lòng nhập Trọng lượng hợp lệ.');
-                    return;
-                }
-
-                let weightForCalculation = weight;
-                if (bodyMass === 'fat') {
-                    weightForCalculation = weight * 0.7;
-                }
-
-                const totalHospitalFluid = (97 * Math.pow(weightForCalculation, 0.655)) + respFluidLoss + digestiveFluidLoss;
-                const vGluco30Arrival = parseFloat(document.getElementById('arrival-v-gluco-30').value);
-
-                if (isNaN(vGluco30Arrival)) {
-                    alert('Vui lòng tính toán khung "KHI BỆNH THÚ MỚI ĐẾN" trước để có giá trị V Gluco 30% (ml).');
-                    return;
-                }
-
-                const vGluco30Hospital = vGluco30Arrival * 2;
-                const vOther30Hospital = totalHospitalFluid - vGluco30Hospital;
-                const vGluco5Hospital = vGluco30Hospital * 6;
-                const vOther5Hospital = totalHospitalFluid - vGluco5Hospital;
-
-                document.getElementById('hospital-volume-24h').value = `${totalHospitalFluid.toFixed(2)} ml`;
-                document.getElementById('hospital-v-gluco-30').value = `${vGluco30Hospital.toFixed(2)} ml`;
-                document.getElementById('hospital-v-other-30').value = `${vOther30Hospital.toFixed(2)} ml`;
-                document.getElementById('hospital-v-gluco-5').value = `${vGluco5Hospital.toFixed(2)} ml`;
-                document.getElementById('hospital-v-other-5').value = `${vOther5Hospital.toFixed(2)} ml`;
-            }
-
-            function calculateInfusion() {
-                const dripFactor = parseFloat(document.getElementById('drip-factor').value);
-                const dripRate = parseFloat(document.getElementById('drip-rate').value);
-                const volumeToInfuse = parseFloat(document.getElementById('volume-to-infuse').value);
-                const startTimeStr = document.getElementById('start-time').value;
-
-                if (isNaN(dripRate) || isNaN(volumeToInfuse) || dripRate <= 0 || volumeToInfuse <= 0) {
-                    alert('Vui lòng nhập các giá trị Tốc độ nhỏ giọt và Thể tích muốn truyền hợp lệ.');
-                    return;
-                }
-
-                const infusionTimeMinutes = (volumeToInfuse * dripFactor) / dripRate;
-                const hours = Math.floor(infusionTimeMinutes / 60);
-                const minutes = Math.round(infusionTimeMinutes % 60);
-                document.getElementById('infusion-time').value = `${hours} giờ ${minutes} phút`;
-
-                if (startTimeStr) {
-                    const timeParts = startTimeStr.split(':');
-                    const startHour = parseInt(timeParts[0]);
-                    const startMinute = parseInt(timeParts[1]);
-
-                    if (isNaN(startHour) || isNaN(startMinute) || startHour < 0 || startHour > 23 || startMinute < 0 || startMinute > 59) {
-                        alert('Định dạng giờ bắt đầu truyền không hợp lệ. Vui lòng nhập theo định dạng HH:MM.');
-                        document.getElementById('end-time').value = '';
-                        return;
-                    }
-
-                    const totalMinutes = startHour * 60 + startMinute + infusionTimeMinutes;
-                    const endHour = Math.floor((totalMinutes / 60) % 24);
-                    const endMinute = Math.round(totalMinutes % 60);
-
-                    const endHourStr = endHour.toString().padStart(2, '0');
-                    const endMinuteStr = endMinute.toString().padStart(2, '0');
-
-                    document.getElementById('end-time').value = `${endHourStr}:${endMinuteStr}`;
-                }
-
-                document.getElementById('start-time-estimation').value = startTimeStr;
-            }
-
-            function calculateEstimation() {
-                const dripFactor = parseFloat(document.getElementById('drip-factor').value);
-                const dripRate = parseFloat(document.getElementById('drip-rate').value);
-                const startTimeStr = document.getElementById('start-time').value;
-
-                if (!startTimeStr || isNaN(dripRate) || dripRate <= 0) {
-                    alert('Vui lòng nhập "Giờ bắt đầu truyền:" và "Tốc độ nhỏ giọt" hợp lệ.');
-                    return;
-                }
-
-                const timeParts = startTimeStr.split(':');
-                const startHour = parseInt(timeParts[0]);
-                const startMinute = parseInt(timeParts[1]);
-
-                const now = new Date();
-                const currentHour = now.getHours();
-                const currentMinute = now.getMinutes();
-
-                const startTotalMinutes = startHour * 60 + startMinute;
-                const currentTotalMinutes = currentHour * 60 + currentMinute;
-                const passedTimeMinutes = currentTotalMinutes - startTotalMinutes;
-
-                if (passedTimeMinutes < 0) {
-                    alert('Thời gian bắt đầu truyền lớn hơn thời gian hiện tại. Vui lòng kiểm tra lại.');
-                    document.getElementById('estimated-minutes').value = '';
-                    document.getElementById('estimated-volume').value = '';
-                    return;
-                }
-
-                const hours = Math.floor(passedTimeMinutes / 60);
-                const minutes = passedTimeMinutes % 60;
-                const estimatedVolume = (dripRate * passedTimeMinutes) / dripFactor;
-
-                document.getElementById('estimated-minutes').value = `${hours} giờ ${minutes} phút`;
-                document.getElementById('estimated-volume').value = `${estimatedVolume.toFixed(2)} ml`;
-            }
-
-            // hàm đếm nhỏ giọt
-            let timer;
-            let startTime;
-            let drops = 0;
-            let isRunning = false;
-
-            function startStopTimer() {
-                const timerButton = document.getElementById('timer-button');
-                const countButton = document.getElementById('count-button');
-
-                if (!isRunning) {
-                    startTime = new Date();
-                    timer = setInterval(updateTime, 1000);
-                    timerButton.textContent = 'Dừng';
-                    timerButton.classList.remove('btn-start');
-                    timerButton.classList.add('btn-stop');
-                    countButton.disabled = false;
-                    countButton.classList.remove('btn-disabled');
-                    countButton.classList.add('btn-count');
-                    isRunning = true;
-                } else {
-                    clearInterval(timer);
-                    timerButton.textContent = 'Bắt đầu';
-                    timerButton.classList.remove('btn-stop');
-                    timerButton.classList.add('btn-start');
-                    countButton.disabled = true;
-                    countButton.classList.remove('btn-count');
-                    countButton.classList.add('btn-disabled');
-                    isRunning = false;
-                }
-            }
-
-            function updateTime() {
-                const now = new Date();
-                const elapsedTime = (now - startTime) / 1000;
-                const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
-                const seconds = Math.floor(elapsedTime % 60).toString().padStart(2, '0');
-                document.getElementById('elapsed-time').textContent = `${minutes}:${seconds}`;
-
-                // Cập nhật tốc độ nhỏ giọt theo thời gian thực
-                if (elapsedTime > 0) {
-                    const dripRate = (drops / elapsedTime) * 60;
-                    document.getElementById('calculated-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
-                }
-            }
-
-            function countDrop() {
-                drops++;
-                document.getElementById('drip-count').textContent = drops;
-            }
-
-            function resetTimer() {
-                clearInterval(timer);
-                isRunning = false;
-                drops = 0;
-                const timerButton = document.getElementById('timer-button');
-                const countButton = document.getElementById('count-button');
-                timerButton.textContent = 'Bắt đầu';
-                timerButton.classList.remove('btn-stop');
-                timerButton.classList.add('btn-start');
-                countButton.disabled = true;
-                countButton.classList.remove('btn-count');
-                countButton.classList.add('btn-disabled');
-                document.getElementById('elapsed-time').textContent = '00:00';
-                document.getElementById('drip-count').textContent = '0';
-                document.getElementById('calculated-drip-rate').value = '';
-            }
-
-            function calculatePredeterminedDripRate() {
-                const volume = parseFloat(document.getElementById('volume-predetermined').value);
-                const time = parseFloat(document.getElementById('time-predetermined').value);
-                const dripFactor = parseFloat(document.getElementById('drip-factor-predetermined').value);
-
-                if (isNaN(volume) || isNaN(time) || volume <= 0 || time <= 0) {
-                    alert('Vui lòng nhập Thể tích và Thời gian truyền hợp lệ.');
-                    return;
-                }
-
-                const dripRate = (volume * dripFactor) / time;
-                document.getElementById('result-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
-            }
-        </script>
     </main>
-
     <div id="donate-placeholder"></div>
     <div id="footer-placeholder"></div>
     <div id="modals-placeholder"></div>
-    <script src="theme/main.js"></script>
+
+    <!-- Custom Modal for Messages -->
+    <div id="messageModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
+            <h3 id="messageTitle" class="text-xl font-bold mb-2"></h3>
+            <p id="messageContent" class="text-gray-700 mb-4"></p>
+            <button id="closeMessageModalBtn" class="w-full p-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600">Đóng</button>
+        </div>
+    </div>
+    
+    <script>
+
+// Các hàm tính toán chính cho ứng dụng
+// Custom function to show a message modal instead of alert()
+/**
+ * @fileoverview Main JavaScript logic for the veterinary calculator mini-app.
+ * This script contains functions for various calculations related to fluid therapy,
+ * including calculating fluid volumes for hospitalized patients and estimating
+ * infusion times. It also includes functions for a manual drip counter.
+ */
+
+// Global variables for the drip counter functionality.
+let timer;
+let seconds = 0;
+let drops = 0;
+
+/**
+         * Custom function to show a message modal instead of alert().
+         * @param {string} message The message to display in the modal.
+         */
+        function showMessage(message) {
+            const messageModal = document.getElementById('messageModal');
+            const messageText = document.getElementById('message-text');
+            messageText.textContent = message;
+            messageModal.classList.remove('hidden');
+            setTimeout(() => {
+                messageModal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        /**
+         * Custom function to hide the message modal.
+         */
+        function hideMessage() {
+            const messageModal = document.getElementById('messageModal');
+            messageModal.classList.add('opacity-0');
+            setTimeout(() => {
+                messageModal.classList.add('hidden');
+            }, 300);
+        }
+
+        /**
+         * Adds event listeners to the message modal buttons when the DOM is loaded.
+         */
+        document.addEventListener("DOMContentLoaded", function() {
+            const okBtn = document.getElementById('okMessageModalBtn');
+            const closeBtn = document.getElementById('closeMessageModalBtn');
+            const messageModal = document.getElementById('messageModal');
+
+            if (okBtn) {
+                okBtn.addEventListener('click', hideMessage);
+            }
+            if (closeBtn) {
+                closeBtn.addEventListener('click', hideMessage);
+            }
+            // Close modal when clicking outside of it
+            if (messageModal) {
+                messageModal.addEventListener('click', (event) => {
+                    if (event.target === messageModal) {
+                        hideMessage();
+                    }
+                });
+            }
+        });
+
+// Hàm tính thể tích dịch truyền cho bệnh nhân nhập viện
+/**
+ * Calculates the fluid volume for a newly admitted patient based on weight,
+ * body condition, and dehydration percentage.
+ */
+function calculateArrivalFluid() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const bodyMass = document.getElementById('body-mass').value;
+    const dehydrationPercent = parseFloat(document.getElementById('dehydration-percent').value);
+
+    if (isNaN(weight) || weight <= 0) {
+        showMessage('Lỗi nhập liệu: Vui lòng nhập cân nặng hợp lệ.');
+        return;
+    }
+    
+    // Tính cân nặng thực tế dựa trên thể trạng
+    const realWeight = (bodyMass === 'fat') ? weight * 0.8 : weight;
+    const arrivalVolume12h = (dehydrationPercent * realWeight * 10);
+    
+    document.getElementById('arrival-volume-12h').value = `${arrivalVolume12h.toFixed(2)} ml`;
+    
+    // Tính toán thể tích dịch cho tỷ lệ Gluco 30%
+    const arrivalVOther30 = arrivalVolume12h * 0.7;
+    const arrivalVGluco30 = arrivalVolume12h * 0.3;
+    document.getElementById('arrival-v-gluco-30').value = `${arrivalVGluco30.toFixed(2)} ml`;
+    document.getElementById('arrival-v-other-30').value = `${arrivalVOther30.toFixed(2)} ml`;
+
+    // Tính toán thể tích dịch cho tỷ lệ Gluco 5%
+    const arrivalVOther5 = arrivalVolume12h * 0.95;
+    const arrivalVGluco5 = arrivalVolume12h * 0.05;
+    document.getElementById('arrival-v-gluco-5').value = `${arrivalVGluco5.toFixed(2)} ml`;
+    document.getElementById('arrival-v-other-5').value = `${arrivalVOther5.toFixed(2)} ml`;
+}
+
+// Hàm tính thể tích dịch truyền cho bệnh nhân đang nằm viện
+/**
+ * Calculates the total 24-hour fluid volume for a hospitalized patient,
+ * including maintenance needs and estimated fluid losses.
+ */
+function calculateHospitalFluid() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const bodyMass = document.getElementById('body-mass').value;
+    const respFluidLoss = parseFloat(document.getElementById('resp-fluid-loss').value) || 0;
+    const digestiveFluidLoss = parseFloat(document.getElementById('digestive-fluid-loss').value) || 0;
+
+    if (isNaN(weight) || weight <= 0) {
+        showMessage('Lỗi nhập liệu: Vui lòng nhập cân nặng hợp lệ.');
+        return;
+    }
+    
+    // Tính cân nặng thực tế dựa trên thể trạng
+    const realWeight = (bodyMass === 'fat') ? weight * 0.8 : weight;
+    
+    // Công thức tính thể tích dịch 24h
+    const hospitalVolume24h = (97 * Math.pow(realWeight, 0.655)) + respFluidLoss + digestiveFluidLoss;
+    
+    document.getElementById('hospital-volume-24h').value = `${hospitalVolume24h.toFixed(2)} ml`;
+
+    // Tính toán thể tích dịch cho tỷ lệ Gluco 30%
+    const hospitalVOther30 = hospitalVolume24h * 0.7;
+    const hospitalVGluco30 = hospitalVolume24h * 0.3;
+    document.getElementById('hospital-v-gluco-30').value = `${hospitalVGluco30.toFixed(2)} ml`;
+    document.getElementById('hospital-v-other-30').value = `${hospitalVOther30.toFixed(2)} ml`;
+
+    // Tính toán thể tích dịch cho tỷ lệ Gluco 5%
+    const hospitalVOther5 = hospitalVolume24h * 0.95;
+    const hospitalVGluco5 = hospitalVolume24h * 0.05;
+    document.getElementById('hospital-v-gluco-5').value = `${hospitalVGluco5.toFixed(2)} ml`;
+    document.getElementById('hospital-v-other-5').value = `${hospitalVOther5.toFixed(2)} ml`;
+}
+
+// Hàm lấy thời gian hiện tại để điền vào ô input
+/**
+ * Fills the start time input field with the current time.
+ */
+function getCurrentTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('start-time').value = `${hours}:${minutes}`;
+}
+    
+// Hàm tính thời gian truyền dịch dự kiến
+/**
+ * Calculates the estimated infusion duration and end time based on drip rate,
+ * volume, and start time.
+ */
+function calculateInfusion() {
+    const dripRate = parseFloat(document.getElementById('drip-rate').value);
+    const volume = parseFloat(document.getElementById('volume-to-infuse').value);
+    const startTimeString = document.getElementById('start-time').value;
+
+    if (isNaN(dripRate) || isNaN(volume) || dripRate <= 0 || volume <= 0 || !startTimeString) {
+        showMessage('Lỗi nhập liệu: Vui lòng nhập Giờ bắt đầu, Tốc độ nhỏ giọt và Thể tích muốn truyền hợp lệ.');
+        return;
+    }
+
+    const startTimeParts = startTimeString.split(':');
+    const startHour = parseInt(startTimeParts[0]);
+    const startMinute = parseInt(startTimeParts[1]);
+
+    const dripFactor = parseFloat(document.getElementById('drip-factor').value);
+    const totalDrops = volume * dripFactor;
+    const estimatedMinutes = totalDrops / dripRate;
+    
+    const endTotalMinutes = startHour * 60 + startMinute + estimatedMinutes;
+    const endHour = Math.floor(endTotalMinutes / 60) % 24;
+    const endMinute = Math.floor(endTotalMinutes % 60);
+
+    const endHourPadded = String(endHour).padStart(2, '0');
+    const endMinutePadded = String(endMinute).padStart(2, '0');
+
+    document.getElementById('infusion-time').value = `${Math.floor(estimatedMinutes)} phút`;
+    document.getElementById('end-time').value = `${endHourPadded}:${endMinutePadded}`;
+    document.getElementById('start-time-estimation').value = startTimeString;
+}
+
+// Hàm tính thể tích dịch truyền dự kiến dựa trên thời gian đã trôi qua
+/**
+ * Calculates the estimated volume infused based on the elapsed time and drip rate.
+ */
+function calculateEstimation() {
+    const dripRate = parseFloat(document.getElementById('drip-rate').value);
+    const startTimeString = document.getElementById('start-time').value;
+
+    if (isNaN(dripRate) || dripRate <= 0 || !startTimeString) {
+        showMessage('Lỗi nhập liệu: Vui lòng nhập Tốc độ nhỏ giọt và Giờ bắt đầu.');
+        return;
+    }
+
+    const startTimeParts = startTimeString.split(':');
+    const startHour = parseInt(startTimeParts[0]);
+    const startMinute = parseInt(startTimeParts[1]);
+
+    const now = new Date();
+    const nowHour = now.getHours();
+    const nowMinute = now.getMinutes();
+
+    const totalStartMinutes = startHour * 60 + startMinute;
+    const totalNowMinutes = nowHour * 60 + nowMinute;
+    
+    let estimatedMinutes = totalNowMinutes - totalStartMinutes;
+    if (estimatedMinutes < 0) {
+        // Nếu qua ngày mới, thêm 24 giờ (1440 phút)
+        estimatedMinutes += 24 * 60;
+    }
+
+    const estimatedVolume = (dripRate * estimatedMinutes) / parseFloat(document.getElementById('drip-factor').value);
+
+    document.getElementById('estimated-minutes').value = `${Math.floor(estimatedMinutes)} phút`;
+    document.getElementById('estimated-volume').value = `${estimatedVolume.toFixed(2)} ml`;
+}
+
+// Hàm bắt đầu/dừng đếm giờ
+/**
+ * Toggles the drip counter timer on and off.
+ */
+function startStopTimer() {
+    const timerButton = document.getElementById('timer-button');
+    const countButton = document.getElementById('count-button');
+
+    if (timerButton.textContent === 'Bắt đầu') {
+        timerButton.textContent = 'Dừng';
+        timerButton.classList.remove('btn-start');
+        timerButton.classList.add('btn-stop');
+        countButton.disabled = false;
+        countButton.classList.remove('btn-disabled');
+        countButton.classList.add('btn-count');
+        timer = setInterval(() => {
+            seconds++;
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            document.getElementById('elapsed-time').textContent = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+            
+            if (seconds > 0) {
+                const dripRate = (drops / seconds) * 60;
+                document.getElementById('calculated-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
+            } else {
+                document.getElementById('calculated-drip-rate').value = '';
+            }
+        }, 1000);
+    } else {
+        clearInterval(timer);
+        timerButton.textContent = 'Bắt đầu';
+        timerButton.classList.remove('btn-stop');
+        timerButton.classList.add('btn-start');
+        countButton.disabled = true;
+        countButton.classList.remove('btn-count');
+        countButton.classList.add('btn-disabled');
+    }
+}
+
+// Hàm đếm số giọt
+/**
+ * Increments the drop count and updates the calculated drip rate.
+ */
+function countDrop() {
+    drops++;
+    document.getElementById('drip-count').textContent = drops;
+    if (seconds > 0) {
+        const dripRate = (drops / seconds) * 60;
+        document.getElementById('calculated-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
+    }
+}
+
+// Hàm đặt lại đồng hồ và số giọt
+/**
+ * Resets the timer and drip count to their initial states.
+ */
+function resetTimer() {
+    clearInterval(timer);
+    seconds = 0;
+    drops = 0;
+    const timerButton = document.getElementById('timer-button');
+    const countButton = document.getElementById('count-button');
+    timerButton.textContent = 'Bắt đầu';
+    timerButton.classList.remove('btn-stop');
+    timerButton.classList.add('btn-start');
+    countButton.disabled = true;
+    countButton.classList.remove('btn-count');
+    countButton.classList.add('btn-disabled');
+    document.getElementById('elapsed-time').textContent = '00:00';
+    document.getElementById('drip-count').textContent = '0';
+    document.getElementById('calculated-drip-rate').value = '';
+}
+
+// Hàm tính tốc độ nhỏ giọt dựa trên thể tích và thời gian định trước
+/**
+ * Calculates the drip rate based on a predetermined volume and time.
+ */
+function calculatePredeterminedDripRate() {
+    const volume = parseFloat(document.getElementById('volume-predetermined').value);
+    const time = parseFloat(document.getElementById('time-predetermined').value);
+    const dripFactor = parseFloat(document.getElementById('drip-factor-predetermined').value);
+
+    if (isNaN(volume) || isNaN(time) || volume <= 0 || time <= 0) {
+        // ERROR FIX: Replaced alert() with showMessage() for consistent UI.
+        showMessage('Lỗi nhập liệu: Vui lòng nhập Thể tích và Thời gian truyền hợp lệ.');
+        return;
+    }
+
+    const dripRate = (volume * dripFactor) / time;
+    document.getElementById('result-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
+}
+    </script>
 </body>
 </html>
