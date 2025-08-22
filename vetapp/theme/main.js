@@ -99,6 +99,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     offCanvasMenu.classList.remove('active');
                 });
             }
+            
+            // THÊM TÍNH NĂNG MỚI: TỰ ĐỘNG ĐÓNG MENU KHI NHẤP RA NGOÀI
+            document.addEventListener('click', (e) => {
+                // Kiểm tra xem click có nằm ngoài menu và nút menu không
+                if (!offCanvasMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+                    offCanvasMenu.classList.remove('active');
+                }
+            });
         });
     });
 });
