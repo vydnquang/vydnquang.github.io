@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS CHUNG */
+        /* ĐÂY LÀ CSS CHÍNH, KHÔNG THỂ XÓA */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #e0f2f7;
@@ -24,23 +24,9 @@
         main {
             flex-grow: 1;
         }
-        /* CSS cho hiệu ứng nhịp tim đập */
-        @keyframes heartbeat {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        .fa-heart {
-            animation: heartbeat 1.5s infinite;
-        }
-        /* Hiệu ứng các nút */
-        }
+
+        /* CÁC CODE RIÊNG CÓ CỦA TỪNG MAIN KHÁC NHAU */
+        /* Thêm các class cho màu sắc và hiệu ứng của nút */
         .btn-start {
             background-color: #007bff;
         }
@@ -65,13 +51,10 @@
         }
     </style>
 </head>
+
 <body class="font-['Inter'] bg-[#e0f2f7] text-[#333] flex flex-col min-h-screen overflow-x-hidden">
-
-    <!-- Header -->
     <div id="header-placeholder"></div>
-
-    <!-- Main content -->
-    <main class="flex-grow max-w-md mx-auto p-4 md:p-6 lg:p-8 w-full">
+    <main class="flex-grow max-w-md mx-auto p-4 md:p-6 lg:p-8">
         <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg border-2 border-slate-200">
             <h1 class="text-center text-blue-600 text-2xl md:text-3xl font-bold mb-6">
                 Công cụ tính Thể tích dịch truyền cho Chó/Mèo
@@ -126,15 +109,14 @@
                 <input type="text" id="arrival-volume-12h" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
             </div>
             <p class="text-center font-bold mt-6 mb-2">Chia ra:</p>
-            <!-- REMOVED FIXED MIN-WIDTH: The problem was here! On small screens, fixed min-width causes overflow. -->
             <div class="flex flex-wrap gap-4">
-                <div class="flex-1">
+                <div class="flex-1 min-w-[250px]">
                     <div class="mb-4">
                         <label for="arrival-v-gluco-30" class="block font-semibold mb-1">V Gluco 30% (ml):</label>
                         <input type="text" id="arrival-v-gluco-30" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
                     </div>
                 </div>
-                <div class="flex-1">
+                <div class="flex-1 min-w-[250px]">
                     <div class="mb-4">
                         <label for="arrival-v-other-30" class="block font-semibold mb-1">=> Thể tích các loại dịch khác (ml):</label>
                         <input type="text" id="arrival-v-other-30" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
@@ -143,13 +125,13 @@
             </div>
             <p class="text-center font-bold mt-6 mb-2">Hoặc:</p>
             <div class="flex flex-wrap gap-4">
-                <div class="flex-1">
+                <div class="flex-1 min-w-[250px]">
                     <div class="mb-4">
                         <label for="arrival-v-gluco-5" class="block font-semibold mb-1">V Gluco 5% (ml):</label>
                         <input type="text" id="arrival-v-gluco-5" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
                     </div>
                 </div>
-                <div class="flex-1">
+                <div class="flex-1 min-w-[250px]">
                     <div class="mb-4">
                         <label for="arrival-v-other-5" class="block font-semibold mb-1">=> Thể tích các loại dịch khác (ml):</label>
                         <input type="text" id="arrival-v-other-5" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
@@ -175,13 +157,13 @@
             </div>
             <p class="text-center font-bold mt-6 mb-2">Chia ra:</p>
             <div class="flex flex-wrap gap-4">
-                <div class="flex-1">
+                <div class="flex-1 min-w-[250px]">
                     <div class="mb-4">
                         <label for="hospital-v-gluco-30" class="block font-semibold mb-1">V Gluco 30% (ml):</label>
                         <input type="text" id="hospital-v-gluco-30" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
                     </div>
                 </div>
-                <div class="flex-1">
+                <div class="flex-1 min-w-[250px]">
                     <div class="mb-4">
                         <label for="hospital-v-other-30" class="block font-semibold mb-1">=> Thể tích các loại dịch khác (ml):</label>
                         <input type="text" id="hospital-v-other-30" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
@@ -190,13 +172,13 @@
             </div>
             <p class="text-center font-bold mt-6 mb-2">Hoặc:</p>
             <div class="flex flex-wrap gap-4">
-                <div class="flex-1">
+                <div class="flex-1 min-w-[250px]">
                     <div class="mb-4">
                         <label for="hospital-v-gluco-5" class="block font-semibold mb-1">V Gluco 5% (ml):</label>
                         <input type="text" id="hospital-v-gluco-5" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
                     </div>
                 </div>
-                <div class="flex-1">
+                <div class="flex-1 min-w-[250px]">
                     <div class="mb-4">
                         <label for="hospital-v-other-5" class="block font-semibold mb-1">=> Thể tích các loại dịch khác (ml):</label>
                         <input type="text" id="hospital-v-other-5" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
@@ -336,15 +318,8 @@
                 <input type="text" id="result-drip-rate" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed">
             </div>
         </div>
-    </main>
 
-        <div id="donate-placeholder"></div>
-    <div id="footer-placeholder"></div>
-    <div id="modals-placeholder"></div>
-    <script src="theme/main.js"></script>
-
-    <!-- JavaScript logic -->
-    <script>
+        <script>
             function getCurrentTime() {
                 const now = new Date();
                 const hours = now.getHours().toString().padStart(2, '0');
@@ -575,5 +550,11 @@
                 document.getElementById('result-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
             }
         </script>
+    </main>
+
+    <div id="donate-placeholder"></div>
+    <div id="footer-placeholder"></div>
+    <div id="modals-placeholder"></div>
+    <script src="theme/main.js"></script>
 </body>
 </html>
