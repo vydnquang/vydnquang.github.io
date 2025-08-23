@@ -337,7 +337,7 @@
     <div id="donate-placeholder"></div>
     <div id="footer-placeholder"></div>
     <div id="modals-placeholder"></div>
-
+    <script src="theme/main.js"></script>
     <!-- Custom Modal for Messages -->
     <div id="messageModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
@@ -358,10 +358,6 @@
  * infusion times. It also includes functions for a manual drip counter.
  */
 
-// Global variables for the drip counter functionality.
-let timer;
-let seconds = 0;
-let drops = 0;
 
 /**
          * Custom function to show a message modal instead of alert().
@@ -427,22 +423,34 @@ function calculateArrivalFluid() {
         return;
     }
     
-    // Tính cân nặng thực tế dựa trên thể trạng
-    const realWeight = (bodyMass === 'fat') ? weight * 0.8 : weight;
-    const arrivalVolume12h = (dehydrationPercent * realWeight * 10);
+    let arrivalVolume12h;
+    if (bodyMass === 'normal') {
+        arrivalVolume12h = weight * dehydrationPercent * 10;
+    } else if (bodyMass === 'fat') {
+        arrivalVolume12h = weight * 0.7 * dehydrationPercent * 10;
+    }
     
     document.getElementById('arrival-volume-12h').value = `${arrivalVolume12h.toFixed(2)} ml`;
     
     // Tính toán thể tích dịch cho tỷ lệ Gluco 30%
-    const arrivalVOther30 = arrivalVolume12h * 0.7;
-    const arrivalVGluco30 = arrivalVolume12h * 0.3;
-    document.getElementById('arrival-v-gluco-30').value = `${arrivalVGluco30.toFixed(2)} ml`;
+    let vGluco30;
+    if (bodyMass === 'normal') {
+        vGluco30 = (97 * Math.pow(weight, 0.655) * 0.1) / 2;
+    } else if (bodyMass === 'fat') {
+        vGluco30 = (97 * Math.pow(weight * 0.7, 0.655) * 0.1) / 2;
+    }
+    document.getElementById('arrival-v-gluco-30').value = `${vGluco30.toFixed(2)} ml`;
+
+    // Công thức tính thể tích dịch khác cho tỷ lệ 30%
+    const arrivalVOther30 = arrivalVolume12h - vGluco30;
     document.getElementById('arrival-v-other-30').value = `${arrivalVOther30.toFixed(2)} ml`;
 
     // Tính toán thể tích dịch cho tỷ lệ Gluco 5%
-    const arrivalVOther5 = arrivalVolume12h * 0.95;
-    const arrivalVGluco5 = arrivalVolume12h * 0.05;
+    const arrivalVGluco5 = vGluco30 * 6;
     document.getElementById('arrival-v-gluco-5').value = `${arrivalVGluco5.toFixed(2)} ml`;
+    
+    // Công thức tính thể tích dịch khác cho tỷ lệ 5%
+    const arrivalVOther5 = arrivalVolume12h - arrivalVGluco5;
     document.getElementById('arrival-v-other-5').value = `${arrivalVOther5.toFixed(2)} ml`;
 }
 
@@ -451,35 +459,46 @@ function calculateArrivalFluid() {
  * Calculates the total 24-hour fluid volume for a hospitalized patient,
  * including maintenance needs and estimated fluid losses.
  */
+// Hàm tính thể tích dịch truyền cho bệnh nhân đang nằm viện
 function calculateHospitalFluid() {
     const weight = parseFloat(document.getElementById('weight').value);
     const bodyMass = document.getElementById('body-mass').value;
     const respFluidLoss = parseFloat(document.getElementById('resp-fluid-loss').value) || 0;
     const digestiveFluidLoss = parseFloat(document.getElementById('digestive-fluid-loss').value) || 0;
-
+    
     if (isNaN(weight) || weight <= 0) {
         showMessage('Lỗi nhập liệu: Vui lòng nhập cân nặng hợp lệ.');
         return;
     }
     
-    // Tính cân nặng thực tế dựa trên thể trạng
-    const realWeight = (bodyMass === 'fat') ? weight * 0.8 : weight;
-    
-    // Công thức tính thể tích dịch 24h
-    const hospitalVolume24h = (97 * Math.pow(realWeight, 0.655)) + respFluidLoss + digestiveFluidLoss;
+    let maintenanceFluid;
+    if (bodyMass === 'normal') {
+        maintenanceFluid = 97 * Math.pow(weight, 0.655);
+    } else if (bodyMass === 'fat') {
+        maintenanceFluid = 97 * Math.pow(weight * 0.7, 0.655);
+    }
+
+    const hospitalVolume24h = maintenanceFluid + respFluidLoss + digestiveFluidLoss;
     
     document.getElementById('hospital-volume-24h').value = `${hospitalVolume24h.toFixed(2)} ml`;
 
-    // Tính toán thể tích dịch cho tỷ lệ Gluco 30%
-    const hospitalVOther30 = hospitalVolume24h * 0.7;
-    const hospitalVGluco30 = hospitalVolume24h * 0.3;
+    // Lấy giá trị từ ô "V Gluco 30% (ml):" ở phần "2. KHI BỆNH THÚ MỚI ĐẾN"
+    const arrivalVGluco30 = parseFloat(document.getElementById('arrival-v-gluco-30').value) || 0;
+
+    // Công thức tính thể tích dịch cho tỷ lệ Gluco 30%
+    const hospitalVGluco30 = arrivalVGluco30 * 2;
     document.getElementById('hospital-v-gluco-30').value = `${hospitalVGluco30.toFixed(2)} ml`;
+
+    // Công thức tính thể tích các loại dịch khác cho tỷ lệ 30%
+    const hospitalVOther30 = hospitalVolume24h - hospitalVGluco30;
     document.getElementById('hospital-v-other-30').value = `${hospitalVOther30.toFixed(2)} ml`;
 
-    // Tính toán thể tích dịch cho tỷ lệ Gluco 5%
-    const hospitalVOther5 = hospitalVolume24h * 0.95;
-    const hospitalVGluco5 = hospitalVolume24h * 0.05;
+    // Công thức tính thể tích dịch cho tỷ lệ Gluco 5%
+    const hospitalVGluco5 = hospitalVGluco30 * 6;
     document.getElementById('hospital-v-gluco-5').value = `${hospitalVGluco5.toFixed(2)} ml`;
+    
+    // Công thức tính thể tích các loại dịch khác cho tỷ lệ 5%
+    const hospitalVOther5 = hospitalVolume24h - hospitalVGluco5;
     document.getElementById('hospital-v-other-5').value = `${hospitalVOther5.toFixed(2)} ml`;
 }
 
@@ -565,78 +584,73 @@ function calculateEstimation() {
     document.getElementById('estimated-volume').value = `${estimatedVolume.toFixed(2)} ml`;
 }
 
-// Hàm bắt đầu/dừng đếm giờ
-/**
- * Toggles the drip counter timer on and off.
- */
-function startStopTimer() {
-    const timerButton = document.getElementById('timer-button');
-    const countButton = document.getElementById('count-button');
+            // hàm đếm tốc độ nhỏ giọt dựa trên click vào nút đếm giọt
+            let timer;
+            let startTime;
+            let drops = 0;
+            let isRunning = false;
 
-    if (timerButton.textContent === 'Bắt đầu') {
-        timerButton.textContent = 'Dừng';
-        timerButton.classList.remove('btn-start');
-        timerButton.classList.add('btn-stop');
-        countButton.disabled = false;
-        countButton.classList.remove('btn-disabled');
-        countButton.classList.add('btn-count');
-        timer = setInterval(() => {
-            seconds++;
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            document.getElementById('elapsed-time').textContent = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-            
-            if (seconds > 0) {
-                const dripRate = (drops / seconds) * 60;
-                document.getElementById('calculated-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
-            } else {
+            function startStopTimer() {
+                const timerButton = document.getElementById('timer-button');
+                const countButton = document.getElementById('count-button');
+
+                if (!isRunning) {
+                    startTime = new Date();
+                    timer = setInterval(updateTime, 1000);
+                    timerButton.textContent = 'Dừng';
+                    timerButton.classList.remove('btn-start');
+                    timerButton.classList.add('btn-stop');
+                    countButton.disabled = false;
+                    countButton.classList.remove('btn-disabled');
+                    countButton.classList.add('btn-count');
+                    isRunning = true;
+                } else {
+                    clearInterval(timer);
+                    timerButton.textContent = 'Bắt đầu';
+                    timerButton.classList.remove('btn-stop');
+                    timerButton.classList.add('btn-start');
+                    countButton.disabled = true;
+                    countButton.classList.remove('btn-count');
+                    countButton.classList.add('btn-disabled');
+                    isRunning = false;
+                }
+            }
+
+            function updateTime() {
+                const now = new Date();
+                const elapsedTime = (now - startTime) / 1000;
+                const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+                const seconds = Math.floor(elapsedTime % 60).toString().padStart(2, '0');
+                document.getElementById('elapsed-time').textContent = `${minutes}:${seconds}`;
+
+                // Cập nhật tốc độ nhỏ giọt theo thời gian thực
+                if (elapsedTime > 0) {
+                    const dripRate = (drops / elapsedTime) * 60;
+                    document.getElementById('calculated-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
+                }
+            }
+
+            function countDrop() {
+                drops++;
+                document.getElementById('drip-count').textContent = drops;
+            }
+
+            function resetTimer() {
+                clearInterval(timer);
+                isRunning = false;
+                drops = 0;
+                const timerButton = document.getElementById('timer-button');
+                const countButton = document.getElementById('count-button');
+                timerButton.textContent = 'Bắt đầu';
+                timerButton.classList.remove('btn-stop');
+                timerButton.classList.add('btn-start');
+                countButton.disabled = true;
+                countButton.classList.remove('btn-count');
+                countButton.classList.add('btn-disabled');
+                document.getElementById('elapsed-time').textContent = '00:00';
+                document.getElementById('drip-count').textContent = '0';
                 document.getElementById('calculated-drip-rate').value = '';
             }
-        }, 1000);
-    } else {
-        clearInterval(timer);
-        timerButton.textContent = 'Bắt đầu';
-        timerButton.classList.remove('btn-stop');
-        timerButton.classList.add('btn-start');
-        countButton.disabled = true;
-        countButton.classList.remove('btn-count');
-        countButton.classList.add('btn-disabled');
-    }
-}
-
-// Hàm đếm số giọt
-/**
- * Increments the drop count and updates the calculated drip rate.
- */
-function countDrop() {
-    drops++;
-    document.getElementById('drip-count').textContent = drops;
-    if (seconds > 0) {
-        const dripRate = (drops / seconds) * 60;
-        document.getElementById('calculated-drip-rate').value = `${dripRate.toFixed(2)} giọt/phút`;
-    }
-}
-
-// Hàm đặt lại đồng hồ và số giọt
-/**
- * Resets the timer and drip count to their initial states.
- */
-function resetTimer() {
-    clearInterval(timer);
-    seconds = 0;
-    drops = 0;
-    const timerButton = document.getElementById('timer-button');
-    const countButton = document.getElementById('count-button');
-    timerButton.textContent = 'Bắt đầu';
-    timerButton.classList.remove('btn-stop');
-    timerButton.classList.add('btn-start');
-    countButton.disabled = true;
-    countButton.classList.remove('btn-count');
-    countButton.classList.add('btn-disabled');
-    document.getElementById('elapsed-time').textContent = '00:00';
-    document.getElementById('drip-count').textContent = '0';
-    document.getElementById('calculated-drip-rate').value = '';
-}
 
 // Hàm tính tốc độ nhỏ giọt dựa trên thể tích và thời gian định trước
 /**
