@@ -47,12 +47,27 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+        /* CSS cho hiệu ứng nhịp tim đập */
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .fa-heart {
+            animation: heartbeat 1.5s infinite;
+        }
 
     </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
-<!-- code này làm main rộng hơn <main class="flex-grow container mx-auto p-4"> --!>
+<!-- code này làm main rộng hơn <main class="flex-grow container mx-auto p-4"> -->
     <main class="flex-grow max-w-md mx-auto p-4 md:p-6 lg:p-8">
         <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg border-2 border-slate-200">
             <h1 class="text-center text-blue-600 text-2xl md:text-3xl font-bold mb-6">
@@ -334,8 +349,23 @@
             </div>
         </div>
     </main>
+<!-- ĐOẠN CODE KHUNG DONATE -->
+<div class="flex-grow max-w-md mx-auto p-4 md:p-6 lg:p-8">
+        <div class="bg-pink-300 p-6 md:p-8 rounded-xl shadow-lg border-2 border-dashed border-red-600">
 
-    <div id="donate-placeholder"></div>
+            <h1 class="text-center text-blue-600 text-xl md:text-2xl font-bold mb-3">
+                Hãy nhấn vào đây để ủng hộ dự án Mini Vet App nhé!
+            </h1>
+            <p class="text-center pb-3">
+                <a href="donate.html" onclick="alert('Cảm ơn bạn đã nhấn nút [Ủng hộ], xin mời bạn đến với trang kêu gọi ủng hộ dự án của chúng tôi!');" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-md transition-colors duration-300 ease-in-out inline-block">
+                    <i class="fa-solid fa-heart mr-2" style="color: red;"></i>Ủng hộ Mini Vet App
+                </a>
+            </p>
+        </div>
+    </div>
+
+
+
     <div id="footer-placeholder"></div>
     <div id="modals-placeholder"></div>
     <script src="theme/main.js"></script>
