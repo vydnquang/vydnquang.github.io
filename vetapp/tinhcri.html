@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công cụ tính truyền dịch CRI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 md:p-8">
+    <div class="bg-white p-6 md:p-10 rounded-xl shadow-lg w-full max-w-4xl space-y-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-center text-indigo-600 mb-8">Công cụ tính CRI</h1>
+            <p class="text-xl text-center text-red-400">Constant-rate infusion - Truyền thuốc với tốc độ không đổi.</p>
+<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                            <li>Nó loại bỏ các đỉnh và đáy liên quan đến liều lượng không liên tục</li>
+                            <li>Nó cho phép chúng ta kiểm soát liều lượng chặt chẽ hơn và điều chỉnh liều lượng nhanh hơn</li>
+                            <li>Cho phép sử dụng liên tục nhiều loại thuốc giảm đau liều thấp</li>
+                        </ul>
+
+        <!-- Phần tính toán cho ống tiêm -->
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tính tốc độ truyền thuốc/tiêm thuốc</h2>
+            <p class="text-sm text-red-500 mb-4 italic">
+                <strong>Công thức:</strong> Tốc độ truyền (ml/giờ) = [Liều lượng (mg/kg/giờ) x Trọng lượng (kg)] / Nồng độ (mg/ml)
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="space-y-2">
+                    <label for="dose-syringe" class="block text-sm font-medium text-gray-700">Liều lượng (mg/kg/giờ)</label>
+                    <input type="number" id="dose-syringe" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập liều lượng" step="0.01">
+                </div>
+                <div class="space-y-2">
+                    <label for="weight-syringe" class="block text-sm font-medium text-gray-700">Trọng lượng (kg)</label>
+                    <input type="number" id="weight-syringe" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập trọng lượng" step="0.1">
+                </div>
+                <div class="space-y-2">
+                    <label for="concentration-syringe" class="block text-sm font-medium text-gray-700">Nồng độ (mg/ml)</label>
+                    <input type="number" id="concentration-syringe" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập nồng độ" step="0.01">
+                </div>
+                <div class="space-y-2 flex items-end">
+                    <button id="calculate-syringe" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
+                        Tính tốc độ
+                    </button>
+                </div>
+            </div>
+            <div id="result-syringe" class="mt-6 p-4 bg-indigo-100 text-indigo-800 rounded-lg hidden">
+                <p class="font-bold">Kết quả:</p>
+                <p id="syringe-output"></p>
+            </div>
+        </div>
+
+        <!-- Phần tính toán tốc độ truyền dịch -->
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tính tốc độ truyền dịch</h2>
+            <p class="text-sm text-red-500 mb-4 italic">
+                <strong>Công thức:</strong> Tốc độ (ml/giờ) = (Tốc độ nhỏ giọt / Thông số dây truyền) x 60
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="space-y-2">
+                    <label for="drip-factor" class="block text-sm font-medium text-gray-700">Thông số dây truyền:</label>
+                    <p class="text-xs text-gray-400">Xem trên bao bì nhà sản xuất ghi bao nhiêu giọt/1ml?</p>
+                    <input type="number" id="drip-factor" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Số giọt/ml" step="1">
+                </div>
+                <div class="space-y-2">
+                    <label for="drop-rate" class="block text-sm font-medium text-gray-700">Tốc độ nhỏ giọt đếm được:</label>
+                    <p class="text-xs text-gray-400">BSTY sẽ quan sát thực tế xem trong 1 phút có bao nhiêu giọt nhỏ xuống?</p>
+                    <input type="number" id="drop-rate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Số giọt/phút" step="1">
+                </div>
+                <div class="space-y-2 flex items-end">
+                    <button id="calculate-rate" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
+                        Tính tốc độ
+                    </button>
+                </div>
+            </div>
+            <div id="result-rate" class="mt-6 p-4 bg-indigo-100 text-indigo-800 rounded-lg hidden">
+                <p class="font-bold">Kết quả:</p>
+                <p id="rate-output"></p>
+            </div>
+        </div>
+
+        <!-- Phần tính toán cho chai dịch truyền -->
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tính thể tích thuốc cho vào chai/túi dịch truyền</h2>
+            <p class="text-sm text-red-500 mb-4 italic">
+                <strong>Công thức:</strong> Thể tích thuốc = [Kích thước túi (ml) / Tốc độ truyền dịch (ml/giờ)] x Tốc độ truyền thuốc (ml/giờ)
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="space-y-2">
+                    <label for="bag-size-iv" class="block text-sm font-medium text-gray-700">Kích thước túi (ml)</label>
+                    <input type="number" id="bag-size-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập kích thước" step="1">
+                </div>
+                <div class="space-y-2">
+                    <label for="fluid-rate-iv" class="block text-sm font-medium text-gray-700">Tốc độ truyền dịch (ml/giờ)</label>
+                    <input type="number" id="fluid-rate-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập tốc độ" step="1">
+                </div>
+                <div class="space-y-2">
+                    <label for="drug-rate-iv" class="block text-sm font-medium text-gray-700">Tốc độ truyền thuốc (ml/giờ)</label>
+                    <input type="number" id="drug-rate-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập tốc độ thuốc" step="0.01">
+                </div>
+            </div>
+            <div class="flex justify-center mt-4">
+                <button id="calculate-iv" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
+                    Tính thể tích thuốc
+                </button>
+            </div>
+            <div id="result-iv" class="mt-6 p-4 bg-indigo-100 text-indigo-800 rounded-lg hidden">
+                <p class="font-bold">Kết quả:</p>
+                <p id="iv-output"></p>
+            </div>
+        </div>
+
+        <!-- Vùng thông báo lỗi chung -->
+        <div id="error-message" class="hidden mt-4 p-4 bg-red-100 text-red-800 rounded-lg text-center font-medium">
+            Vui lòng nhập tất cả các trường hợp lệ.
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const syringeDoseInput = document.getElementById('dose-syringe');
+            const syringeWeightInput = document.getElementById('weight-syringe');
+            const syringeConcentrationInput = document.getElementById('concentration-syringe');
+            const syringeCalculateButton = document.getElementById('calculate-syringe');
+            const syringeResultDiv = document.getElementById('result-syringe');
+            const syringeOutput = document.getElementById('syringe-output');
+
+            const rateDripFactorInput = document.getElementById('drip-factor');
+            const rateDropRateInput = document.getElementById('drop-rate');
+            const rateCalculateButton = document.getElementById('calculate-rate');
+            const rateResultDiv = document.getElementById('result-rate');
+            const rateOutput = document.getElementById('rate-output');
+
+            const ivBagSizeInput = document.getElementById('bag-size-iv');
+            const ivFluidRateInput = document.getElementById('fluid-rate-iv');
+            const ivDrugRateInput = document.getElementById('drug-rate-iv');
+            const ivCalculateButton = document.getElementById('calculate-iv');
+            const ivResultDiv = document.getElementById('result-iv');
+            const ivOutput = document.getElementById('iv-output');
+            
+            const errorMessageDiv = document.getElementById('error-message');
+
+            // Xử lý sự kiện cho nút tính toán ống tiêm
+            syringeCalculateButton.addEventListener('click', () => {
+                // Đảm bảo ẩn kết quả tính toán khác khi tính toán ống tiêm
+                errorMessageDiv.classList.add('hidden');
+
+                const dose = parseFloat(syringeDoseInput.value);
+                const weight = parseFloat(syringeWeightInput.value);
+                const concentration = parseFloat(syringeConcentrationInput.value);
+
+                if (isNaN(dose) || isNaN(weight) || isNaN(concentration) || concentration === 0) {
+                    errorMessageDiv.textContent = 'Vui lòng nhập các giá trị số hợp lệ và đảm bảo nồng độ khác 0.';
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+
+                const result = (dose * weight) / concentration;
+                syringeOutput.innerHTML = `Tốc độ truyền thuốc là: <span class="font-semibold text-xl">${result.toFixed(2)} ml/giờ</span>`;
+                syringeResultDiv.classList.remove('hidden');
+
+                // Tự động nạp kết quả vào khung tính toán cuối cùng
+                ivDrugRateInput.value = result.toFixed(2);
+            });
+
+            // Xử lý sự kiện cho nút tính tốc độ truyền dịch
+            rateCalculateButton.addEventListener('click', () => {
+                // Đảm bảo ẩn kết quả tính toán khác
+                errorMessageDiv.classList.add('hidden');
+
+                const dripFactor = parseFloat(rateDripFactorInput.value);
+                const dropRate = parseFloat(rateDropRateInput.value);
+
+                if (isNaN(dripFactor) || isNaN(dropRate) || dripFactor === 0) {
+                    errorMessageDiv.textContent = 'Vui lòng nhập các giá trị số hợp lệ và đảm bảo thông số dây truyền khác 0.';
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+
+                const result = (dropRate / dripFactor) * 60;
+                rateOutput.innerHTML = `Tốc độ truyền dịch là: <span class="font-semibold text-xl">${result.toFixed(2)} ml/giờ</span>`;
+                rateResultDiv.classList.remove('hidden');
+
+                // Tự động nạp kết quả vào khung tính toán cuối cùng
+                ivFluidRateInput.value = result.toFixed(2);
+            });
+
+            // Xử lý sự kiện cho nút tính toán chai dịch truyền
+            ivCalculateButton.addEventListener('click', () => {
+                // Đảm bảo ẩn kết quả tính toán khác khi tính toán chai dịch truyền
+                errorMessageDiv.classList.add('hidden');
+
+                const bagSize = parseFloat(ivBagSizeInput.value);
+                const fluidRate = parseFloat(ivFluidRateInput.value);
+                const drugRate = parseFloat(ivDrugRateInput.value);
+
+                if (isNaN(bagSize) || isNaN(fluidRate) || isNaN(drugRate) || fluidRate === 0) {
+                    errorMessageDiv.textContent = 'Vui lòng nhập các giá trị số hợp lệ và đảm bảo tốc độ chất lỏng khác 0.';
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                // Tính số giờ túi có thể dùng được
+                const hours = bagSize / fluidRate;
+                // Tính thể tích thuốc cần thêm vào túi
+                const drugVolume = drugRate * hours;
+
+                ivOutput.innerHTML = `Thể tích thuốc cần thêm vào chai dịch truyền là: <span class="font-semibold text-xl">${drugVolume.toFixed(2)} ml</span>`;
+                ivResultDiv.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
