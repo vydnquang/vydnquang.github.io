@@ -16,7 +16,7 @@
 </head>
 <body class="flex items-center justify-center min-h-screen p-4 md:p-8">
     <div class="bg-white p-6 md:p-10 rounded-xl shadow-lg w-full max-w-4xl space-y-8">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-center text-indigo-600 mb-8">Công cụ tính CRI</h1>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-center text-indigo-600 mb-8">Công cụ tính thuốc khi CRI</h1>
             <p class="text-xl text-center text-red-400">Constant-rate infusion - Truyền thuốc với tốc độ không đổi.</p>
 <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
                             <li>Nó loại bỏ các đỉnh và đáy liên quan đến liều lượng không liên tục</li>
@@ -26,9 +26,9 @@
 
         <!-- Phần tính toán cho ống tiêm -->
         <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tính tốc độ truyền thuốc/tiêm thuốc</h2>
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Tính tốc độ truyền thuốc (tiêm thuốc)</h2>
             <p class="text-sm text-red-500 mb-4 italic">
-                <strong>Công thức:</strong> Tốc độ truyền (ml/giờ) = [Liều lượng (mg/kg/giờ) x Trọng lượng (kg)] / Nồng độ (mg/ml)
+                <strong>Công thức:</strong> Tốc độ truyền (ml/giờ) = [Liều lượng x Trọng lượng] / Nồng độ
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="space-y-2">
@@ -57,7 +57,7 @@
 
         <!-- Phần tính toán tốc độ truyền dịch -->
         <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tính tốc độ truyền dịch</h2>
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Tính tốc độ truyền dịch</h2>
             <p class="text-sm text-red-500 mb-4 italic">
                 <strong>Công thức:</strong> Tốc độ (ml/giờ) = (Tốc độ nhỏ giọt / Thông số dây truyền) x 60
             </p>
@@ -65,7 +65,10 @@
                 <div class="space-y-2">
                     <label for="drip-factor" class="block text-sm font-medium text-gray-700">Thông số dây truyền:</label>
                     <p class="text-xs text-gray-400">Xem trên bao bì nhà sản xuất ghi bao nhiêu giọt/1ml?</p>
-                    <input type="number" id="drip-factor" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Số giọt/ml" step="1">
+                    <select id="drip-factor" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="20" selected>20 giọt/ml</option>
+                        <option value="15">15 giọt/ml</option>
+                    </select>
                 </div>
                 <div class="space-y-2">
                     <label for="drop-rate" class="block text-sm font-medium text-gray-700">Tốc độ nhỏ giọt đếm được:</label>
@@ -86,32 +89,173 @@
 
         <!-- Phần tính toán cho chai dịch truyền -->
         <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Tính thể tích thuốc cho vào chai/túi dịch truyền</h2>
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Tính thể tích thuốc cho vào chai/túi dịch truyền</h2>
+            
+            <!-- Chuyển đổi theo thể tích dịch truyền ban đầu -->
+            <div>
+                <p class="text-sm text-red-500 mb-4">
+                    <span class="text-lg font-bold text-indigo-500">Trường hợp 1: Tính thể tích thuốc cần thêm (dựa trên thể tích dịch truyền ban đầu)</span>
+                    <br>
+                    <span class="text-md text-red-500"><em><strong>Công thức:</strong> V(thuốc cần cho vào) = [Tốc độ truyền thuốc / Tốc độ truyền dịch] x V (dịch truyền ban đầu)</em></span>
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="space-y-2">
+                        <label for="bag-size-iv" class="block text-sm font-medium text-gray-700">Thể tích dịch truyền ban đầu (ml)</label>
+                        <input type="number" id="bag-size-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập thể tích" step="1">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="fluid-rate-iv" class="block text-sm font-medium text-gray-700">Tốc độ truyền dịch (ml/giờ)</label>
+                        <input type="number" id="fluid-rate-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập tốc độ" step="1">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="drug-rate-iv" class="block text-sm font-medium text-gray-700">Tốc độ truyền thuốc (ml/giờ)</label>
+                        <input type="number" id="drug-rate-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập tốc độ thuốc" step="0.01">
+                    </div>
+                </div>
+                <div class="flex justify-center mt-4">
+                    <button id="calculate-iv" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
+                        Tính thể tích thuốc
+                    </button>
+                </div>
+                <div id="result-iv" class="mt-6 p-4 bg-indigo-100 text-indigo-800 rounded-lg hidden">
+                    <p class="font-bold">Kết quả:</p>
+                    <p id="iv-output"></p>
+                    <p id="total-time-output"></p>
+                </div>
+            </div>
+
+            <!-- Dòng phân cách -->
+            <hr class="border-t border-gray-300 my-8">
+
+            <!-- Chuyển đổi theo tổng thể tích mong muốn -->
+            <div>
+                <p class="text-sm mb-4">
+                    <span class="text-lg font-bold text-indigo-500">Trường hợp 2: Tính thể tích dịch truyền và thuốc (dựa trên tổng thể tích truyền)</span>
+                    <br>
+                    <span class="text-md text-red-500"><em><strong>Công thức:</strong> V(dịch truyền ban đầu) = V(tổng) / (1 + Tốc độ truyền thuốc / Tốc độ truyền dịch)</em></span>
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="space-y-2">
+                        <label for="total-volume-iv" class="block text-sm font-medium text-gray-700">Tổng thể tích tối đa (ml)</label>
+                        <input type="number" id="total-volume-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập tổng thể tích" step="1">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="fluid-rate-total-iv" class="block text-sm font-medium text-gray-700">Tốc độ truyền dịch (ml/giờ)</label>
+                        <input type="number" id="fluid-rate-total-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập tốc độ" step="1">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="drug-rate-total-iv" class="block text-sm font-medium text-gray-700">Tốc độ truyền thuốc (ml/giờ)</label>
+                        <input type="number" id="drug-rate-total-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập tốc độ thuốc" step="0.01">
+                    </div>
+                </div>
+                <div class="flex justify-center mt-4">
+                    <button id="calculate-total-iv" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
+                        Tính thể tích
+                    </button>
+                </div>
+                <div id="result-total-iv" class="mt-6 p-4 bg-indigo-100 text-indigo-800 rounded-lg hidden">
+                    <p class="font-bold">Kết quả:</p>
+                    <p id="total-iv-fluid-output"></p>
+                    <p id="total-iv-drug-output"></p>
+                    <p id="total-time-output-2"></p>
+                </div>
+            </div>
+        </div>
+
+
+<!-- Phần chuyển đổi đơn vị -->
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Chuyển đổi đơn vị liều lượng thuốc</h2>
+            
+            <div class="space-y-6">
+                <!-- Chuyển đổi mg/kg/q sang mg/kg/h -->
+                <div>
+                    <p class="text-sm text-red-500 mb-2 italic">
+                        <strong>Công thức:</strong> Liều lượng (mg/kg/h) = Liều lượng (mg/kg/q) / q
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="space-y-2">
+                            <label for="dosage-q" class="block text-sm font-medium text-gray-700">Liều lượng (mg/kg/q)</label>
+                            <input type="number" id="dosage-q" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập liều lượng" step="0.01">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="q-value" class="block text-sm font-medium text-gray-700">Giá trị q (giờ)</label>
+                            <input type="number" id="q-value" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập giá trị q (vd: 12)" step="0.1">
+                        </div>
+                        <div class="space-y-2 flex items-end">
+                            <button id="convert-q" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
+                                Chuyển đổi
+                            </button>
+                        </div>
+                    </div>
+                    <div id="result-q-conversion" class="mt-4 p-4 bg-indigo-100 text-indigo-800 rounded-lg hidden">
+                        <p class="font-bold">Kết quả:</p>
+                        <p id="q-conversion-output"></p>
+                    </div>
+                </div>
+
+                <!-- Dòng phân cách -->
+                <hr class="border-t border-gray-300">
+
+                <!-- Chuyển đổi mcg/kg/phút sang mg/kg/h -->
+                <div>
+                    <p class="text-sm text-red-500 mb-2 italic">
+                        <strong>Công thức:</strong> Liều lượng (mg/kg/h) = [Liều lượng (mcg/kg/phút) / 1000] x 60
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label for="mcg-per-min" class="block text-sm font-medium text-gray-700">Liều lượng (mcg/kg/phút)</label>
+                            <input type="number" id="mcg-per-min" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập liều lượng" step="0.01">
+                        </div>
+                        <div class="space-y-2 flex items-end">
+                            <button id="convert-units" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
+                                Chuyển đổi
+                            </button>
+                        </div>
+                    </div>
+                    <div id="result-conversion" class="mt-4 p-4 bg-indigo-100 text-indigo-800 rounded-lg hidden">
+                        <p class="font-bold">Kết quả:</p>
+                        <p id="conversion-output"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<!-- Phần tính toán nồng độ và thể tích cho tốc độ truyền 1 ml/kg/h -->
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Tính thể tích và nồng độ thuốc để tốc độ truyền luôn là 1 ml/kg/h</h2>
             <p class="text-sm text-red-500 mb-4 italic">
-                <strong>Công thức:</strong> Thể tích thuốc = [Kích thước túi (ml) / Tốc độ truyền dịch (ml/giờ)] x Tốc độ truyền thuốc (ml/giờ)
+                <strong>Công thức:</strong> Nồng độ (mg/ml) = Liều lượng (mg/kg/h)
+                <br>
+                <strong>Thể tích thuốc:</strong> <span class="font-semibold text-gray-700">V(thuốc cần thêm) = [C(cần đạt) x V(dung môi)] / [C(thuốc gốc) - C(cần đạt)]</span>
             </p>
+            <!-- code goc <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"> -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="space-y-2">
-                    <label for="bag-size-iv" class="block text-sm font-medium text-gray-700">Kích thước túi (ml)</label>
-                    <input type="number" id="bag-size-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập kích thước" step="1">
+                    <label for="desired-dose-1ml" class="block text-sm font-medium text-gray-700">Liều lượng (mg/kg/giờ)</label>
+                    <input type="number" id="desired-dose-1ml" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập liều lượng" step="0.01">
                 </div>
                 <div class="space-y-2">
-                    <label for="fluid-rate-iv" class="block text-sm font-medium text-gray-700">Tốc độ truyền dịch (ml/giờ)</label>
-                    <input type="number" id="fluid-rate-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập tốc độ" step="1">
+                    <label for="stock-concentration-1ml" class="block text-sm font-medium text-gray-700">Nồng độ thuốc gốc (mg/ml)</label>
+                    <input type="number" id="stock-concentration-1ml" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập nồng độ thuốc gốc" step="0.01">
                 </div>
                 <div class="space-y-2">
-                    <label for="drug-rate-iv" class="block text-sm font-medium text-gray-700">Tốc độ truyền thuốc (ml/giờ)</label>
-                    <input type="number" id="drug-rate-iv" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập tốc độ thuốc" step="0.01">
+                    <label for="diluent-volume-1ml" class="block text-sm font-medium text-gray-700">Thể tích dung môi (ml)</label>
+                    <input type="number" id="diluent-volume-1ml" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nhập thể tích dung môi" step="1">
                 </div>
             </div>
-            <div class="flex justify-center mt-4">
-                <button id="calculate-iv" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
-                    Tính thể tích thuốc
-                </button>
-            </div>
-            <div id="result-iv" class="mt-6 p-4 bg-indigo-100 text-indigo-800 rounded-lg hidden">
+                <div class="flex justify-center mt-4">
+                    <button id="calculate-1ml" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
+                        Tính toán
+                    </button>
+                </div>
+
+
+            <div id="result-1ml" class="mt-6 p-4 bg-indigo-100 text-indigo-800 rounded-lg hidden">
                 <p class="font-bold">Kết quả:</p>
-                <p id="iv-output"></p>
+                <p id="concentration-output"></p>
+                <p id="drug-volume-output"></p>
             </div>
         </div>
 
@@ -119,7 +263,10 @@
         <div id="error-message" class="hidden mt-4 p-4 bg-red-100 text-red-800 rounded-lg text-center font-medium">
             Vui lòng nhập tất cả các trường hợp lệ.
         </div>
+
     </div>
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -135,19 +282,47 @@
             const rateCalculateButton = document.getElementById('calculate-rate');
             const rateResultDiv = document.getElementById('result-rate');
             const rateOutput = document.getElementById('rate-output');
-
+            
             const ivBagSizeInput = document.getElementById('bag-size-iv');
             const ivFluidRateInput = document.getElementById('fluid-rate-iv');
             const ivDrugRateInput = document.getElementById('drug-rate-iv');
             const ivCalculateButton = document.getElementById('calculate-iv');
             const ivResultDiv = document.getElementById('result-iv');
             const ivOutput = document.getElementById('iv-output');
+            const totalTimeOutput = document.getElementById('total-time-output');
+            
+            const totalVolumeIvInput = document.getElementById('total-volume-iv');
+            const fluidRateTotalIvInput = document.getElementById('fluid-rate-total-iv');
+            const drugRateTotalIvInput = document.getElementById('drug-rate-total-iv');
+            const calculateTotalIvButton = document.getElementById('calculate-total-iv');
+            const resultTotalIvDiv = document.getElementById('result-total-iv');
+            const totalIvFluidOutput = document.getElementById('total-iv-fluid-output');
+            const totalIvDrugOutput = document.getElementById('total-iv-drug-output');
+            const totalTimeOutput2 = document.getElementById('total-time-output-2');
+            
+            const dosageQInput = document.getElementById('dosage-q');
+            const qValueInput = document.getElementById('q-value');
+            const convertQButton = document.getElementById('convert-q');
+            const resultQDiv = document.getElementById('result-q-conversion');
+            const qConversionOutput = document.getElementById('q-conversion-output');
+
+            const mcgPerMinInput = document.getElementById('mcg-per-min');
+            const convertUnitsButton = document.getElementById('convert-units');
+            const resultConversionDiv = document.getElementById('result-conversion');
+            const conversionOutput = document.getElementById('conversion-output');
+
+            const desiredDose1mlInput = document.getElementById('desired-dose-1ml');
+            const stockConcentration1mlInput = document.getElementById('stock-concentration-1ml');
+            const diluentVolume1mlInput = document.getElementById('diluent-volume-1ml');
+            const calculate1mlButton = document.getElementById('calculate-1ml');
+            const result1mlDiv = document.getElementById('result-1ml');
+            const concentrationOutput = document.getElementById('concentration-output');
+            const drugVolumeOutput = document.getElementById('drug-volume-output');
             
             const errorMessageDiv = document.getElementById('error-message');
 
             // Xử lý sự kiện cho nút tính toán ống tiêm
             syringeCalculateButton.addEventListener('click', () => {
-                // Đảm bảo ẩn kết quả tính toán khác khi tính toán ống tiêm
                 errorMessageDiv.classList.add('hidden');
 
                 const dose = parseFloat(syringeDoseInput.value);
@@ -164,13 +339,12 @@
                 syringeOutput.innerHTML = `Tốc độ truyền thuốc là: <span class="font-semibold text-xl">${result.toFixed(2)} ml/giờ</span>`;
                 syringeResultDiv.classList.remove('hidden');
 
-                // Tự động nạp kết quả vào khung tính toán cuối cùng
                 ivDrugRateInput.value = result.toFixed(2);
+                drugRateTotalIvInput.value = result.toFixed(2);
             });
 
             // Xử lý sự kiện cho nút tính tốc độ truyền dịch
             rateCalculateButton.addEventListener('click', () => {
-                // Đảm bảo ẩn kết quả tính toán khác
                 errorMessageDiv.classList.add('hidden');
 
                 const dripFactor = parseFloat(rateDripFactorInput.value);
@@ -186,13 +360,12 @@
                 rateOutput.innerHTML = `Tốc độ truyền dịch là: <span class="font-semibold text-xl">${result.toFixed(2)} ml/giờ</span>`;
                 rateResultDiv.classList.remove('hidden');
 
-                // Tự động nạp kết quả vào khung tính toán cuối cùng
                 ivFluidRateInput.value = result.toFixed(2);
+                fluidRateTotalIvInput.value = result.toFixed(2);
             });
-
-            // Xử lý sự kiện cho nút tính toán chai dịch truyền
+            
+            // Xử lý sự kiện cho nút tính toán chai dịch truyền (dựa trên thể tích dịch ban đầu)
             ivCalculateButton.addEventListener('click', () => {
-                // Đảm bảo ẩn kết quả tính toán khác khi tính toán chai dịch truyền
                 errorMessageDiv.classList.add('hidden');
 
                 const bagSize = parseFloat(ivBagSizeInput.value);
@@ -205,13 +378,119 @@
                     return;
                 }
                 
-                // Tính số giờ túi có thể dùng được
-                const hours = bagSize / fluidRate;
-                // Tính thể tích thuốc cần thêm vào túi
-                const drugVolume = drugRate * hours;
+                const drugVolume = (drugRate / fluidRate) * bagSize;
+                
+                const totalVolume = bagSize + drugVolume;
+                const totalTimeHours = totalVolume / fluidRate;
+                const totalHours = Math.floor(totalTimeHours);
+                const totalMinutes = Math.round((totalTimeHours - totalHours) * 60);
 
                 ivOutput.innerHTML = `Thể tích thuốc cần thêm vào chai dịch truyền là: <span class="font-semibold text-xl">${drugVolume.toFixed(2)} ml</span>`;
+                
+                let timeString = '';
+                if (totalHours > 0) {
+                    timeString += `${totalHours} giờ `;
+                }
+                timeString += `${totalMinutes} phút`;
+
+                totalTimeOutput.innerHTML = `Tổng thời gian để truyền hết số dịch+thuốc là: <span class="font-semibold text-xl">${timeString}</span>`;
                 ivResultDiv.classList.remove('hidden');
+            });
+            
+            // Xử lý sự kiện cho nút tính toán chai dịch truyền (dựa trên tổng thể tích)
+            calculateTotalIvButton.addEventListener('click', () => {
+                errorMessageDiv.classList.add('hidden');
+                
+                const totalVolume = parseFloat(totalVolumeIvInput.value);
+                const fluidRate = parseFloat(fluidRateTotalIvInput.value);
+                const drugRate = parseFloat(drugRateTotalIvInput.value);
+                
+                if (isNaN(totalVolume) || isNaN(fluidRate) || isNaN(drugRate) || fluidRate === 0) {
+                    errorMessageDiv.textContent = 'Vui lòng nhập các giá trị số hợp lệ và đảm bảo tốc độ chất lỏng khác 0.';
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                const fluidVolume = totalVolume / (1 + drugRate / fluidRate);
+                const drugVolume = totalVolume - fluidVolume;
+                
+                const totalTimeHours = totalVolume / fluidRate;
+                const totalHours = Math.floor(totalTimeHours);
+                const totalMinutes = Math.round((totalTimeHours - totalHours) * 60);
+                
+                totalIvFluidOutput.innerHTML = `Thể tích dịch truyền ban đầu cần dùng là: <span class="font-semibold text-xl">${fluidVolume.toFixed(2)} ml</span>`;
+                totalIvDrugOutput.innerHTML = `Thể tích thuốc cần thêm vào là: <span class="font-semibold text-xl">${drugVolume.toFixed(2)} ml</span>`;
+                
+                let timeString = '';
+                if (totalHours > 0) {
+                    timeString += `${totalHours} giờ `;
+                }
+                timeString += `${totalMinutes} phút`;
+                totalTimeOutput2.innerHTML = `Tổng thời gian để truyền hết số dịch+thuốc là: <span class="font-semibold text-xl">${timeString}</span>`;
+                resultTotalIvDiv.classList.remove('hidden');
+
+            });
+
+            // Xử lý sự kiện cho nút chuyển đổi đơn vị mg/kg/q
+            convertQButton.addEventListener('click', () => {
+                errorMessageDiv.classList.add('hidden');
+
+                const dosageQ = parseFloat(dosageQInput.value);
+                const qValue = parseFloat(qValueInput.value);
+
+                if (isNaN(dosageQ) || isNaN(qValue) || qValue <= 0) {
+                    errorMessageDiv.textContent = 'Vui lòng nhập các giá trị số hợp lệ và đảm bảo giá trị q lớn hơn 0.';
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+
+                const mgPerHour = dosageQ / qValue;
+                qConversionOutput.innerHTML = `Liều lượng tương đương là: <span class="font-semibold text-xl">${mgPerHour.toFixed(2)} mg/kg/giờ</span>`;
+                resultQDiv.classList.remove('hidden');
+
+                syringeDoseInput.value = mgPerHour.toFixed(2);
+            });
+
+            // Xử lý sự kiện cho nút chuyển đổi đơn vị mcg/kg/phút
+            convertUnitsButton.addEventListener('click', () => {
+                errorMessageDiv.classList.add('hidden');
+
+                const mcgPerMin = parseFloat(mcgPerMinInput.value);
+
+                if (isNaN(mcgPerMin)) {
+                    errorMessageDiv.textContent = 'Vui lòng nhập giá trị số hợp lệ để chuyển đổi.';
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+
+                const mgPerHour = (mcgPerMin / 1000) * 60;
+                conversionOutput.innerHTML = `Liều lượng tương đương là: <span class="font-semibold text-xl">${mgPerHour.toFixed(2)} mg/kg/giờ</span>`;
+                resultConversionDiv.classList.remove('hidden');
+
+                syringeDoseInput.value = mgPerHour.toFixed(2);
+            });
+
+// Xử lý sự kiện cho phần tính toán nồng độ và thể tích cho tốc độ truyền 1 ml/kg/h
+            calculate1mlButton.addEventListener('click', () => {
+                errorMessageDiv.classList.add('hidden');
+                
+                const desiredDose = parseFloat(desiredDose1mlInput.value);
+                const stockConcentration = parseFloat(stockConcentration1mlInput.value);
+                const diluentVolume = parseFloat(diluentVolume1mlInput.value);
+
+                if (isNaN(desiredDose) || isNaN(stockConcentration) || isNaN(diluentVolume) || stockConcentration === 0 || stockConcentration <= desiredDose) {
+                    errorMessageDiv.textContent = 'Vui lòng nhập các giá trị hợp lệ. Nồng độ thuốc gốc phải lớn hơn nồng độ cần đạt.';
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                const neededConcentration = desiredDose;
+                const drugVolume = (neededConcentration * diluentVolume) / (stockConcentration - neededConcentration);
+                const finalConcentrationCheck = (drugVolume * stockConcentration) / (drugVolume + diluentVolume);
+
+                concentrationOutput.innerHTML = `Nồng độ cần đạt được là: <span class="font-semibold text-xl">${neededConcentration.toFixed(2)} mg/ml</span>`;
+                drugVolumeOutput.innerHTML = `Thể tích thuốc cần thêm vào dung môi là: <span class="font-semibold text-xl">${drugVolume.toFixed(2)} ml</span>`;
+                result1mlDiv.classList.remove('hidden');
             });
         });
     </script>
