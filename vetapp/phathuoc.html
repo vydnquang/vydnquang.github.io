@@ -17,9 +17,10 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-8 flex items-center justify-center min-h-screen">
+<body class="p-4 md:p-8 flex flex-col items-center justify-center min-h-screen space-y-8">
+    <!-- Calculator 1: Find V1 and V_diluent from C1, C2, V2 -->
     <div class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-2xl">
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-6 text-indigo-700">Công cụ tính toán khi pha loãng thuốc</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-6 text-indigo-700">Phép tính khi pha loãng thuốc</h1>
         <p class="text-center text-gray-600 mb-2"><strong class="text-red-600">Công thức:</strong> C1 (nồng độ ban đầu) x V1 (thể tích ban đầu) = C2 (nồng độ cần pha) x V2 (thể tích cuối cùng).</p>
         <p class="text-center text-gray-600 mb-8">Áp dụng <strong class="text-red-600">quy tắc tam suất</strong> để tìm ra V1, và => V(dung môi) = V2 - V1.</p>
         
@@ -48,14 +49,53 @@
 
         <!-- Khu vực hiển thị kết quả -->
         <div class="mt-10 p-6 bg-gray-50 border border-gray-200 rounded-2xl">
-            <h2 class="text-xl font-bold text-red-600 text-center mb-4">KẾT QUẢ</h2>
+            <h2 class="text-xl font-bold text-center text-red-500 mb-4">KẾT QUẢ</h2>
             <div id="resultMessage" class="text-red-500 mb-4 hidden"></div>
-            <p class="text-lg text-gray-700 mb-2">Thể tích dung dịch nguyên chất cần dùng: <span id="initialVolumeResult" class="font-bold text-indigo-600">...</span></p>
-            <p class="text-lg text-gray-700">Thể tích dung môi cần thêm: <span id="diluentVolumeResult" class="font-bold text-green-600">...</span></p>
+            <p class="text-lg text-gray-700 mb-2">Thể tích dung dịch nguyên chất cần dùng (ml): <span id="initialVolumeResult" class="font-bold text-indigo-600">...</span></p>
+            <p class="text-lg text-gray-700">Thể tích dung môi cần thêm (ml): <span id="diluentVolumeResult" class="font-bold text-green-600">...</span></p>
+        </div>
+    </div>
+
+    <!-- Calculator 2: Find V1 and V2 from C1, C2, V_diluent -->
+    <div class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-2xl">
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-6 text-indigo-700">Tính toán khi biết thể tích dung môi</h1>
+        <p class="text-center text-gray-600 mb-8">Nhập các giá trị để tính toán thể tích dung dịch ban đầu và thể tích cuối cùng.</p>
+        
+        <!-- Khu vực nhập liệu -->
+        <div class="space-y-6">
+            <div>
+                <label for="initialConcentration2" class="block text-sm font-medium text-gray-700">Nồng độ thuốc/hóa chất ban đầu (đơn vị có thể là: %, mg/ml, ppm...):</label>
+                <input type="number" id="initialConcentration2" placeholder="Ví dụ: 100" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-300">
+            </div>
+            <div>
+                <label for="finalConcentration2" class="block text-sm font-medium text-gray-700">Nồng độ cuối cùng sau khi pha:</label>
+                <input type="number" id="finalConcentration2" placeholder="Ví dụ: 25" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-300">
+            </div>
+            <div>
+                <label for="diluentVolume" class="block text-sm font-medium text-gray-700">Thể tích dung môi định sẵn (đơn vị có thể là: ml, Ll):</label>
+                <input type="number" id="diluentVolume" placeholder="Ví dụ: 150" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-300">
+            </div>
         </div>
 
-        <!-- Phần chuyển đổi đơn vị -->
+        <!-- Nút tính toán -->
+        <div class="mt-8">
+            <button id="calculateBtn2" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                Tính toán
+            </button>
+        </div>
+
+        <!-- Khu vực hiển thị kết quả -->
         <div class="mt-10 p-6 bg-gray-50 border border-gray-200 rounded-2xl">
+            <h2 class="text-xl font-bold text-center text-red-500 mb-4">KẾT QUẢ</h2>
+            <div id="resultMessage2" class="text-red-500 mb-4 hidden"></div>
+            <p class="text-lg text-gray-700 mb-2">Thể tích dung dịch nguyên chất cần dùng (ml): <span id="initialVolumeResult2" class="font-bold text-indigo-600">...</span></p>
+            <p class="text-lg text-gray-700">Thể tích cuối cùng sau khi pha loãng (ml): <span id="finalVolumeResult2" class="font-bold text-green-600">...</span></p>
+        </div>
+    </div>
+
+            <!-- Phần chuyển đổi đơn vị -->
+
+        <div class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-2xl">
             <h2 class="text-xl font-bold text-center text-rose-900 mb-4">CHUYỂN ĐỔI NHANH GIỮA CÁC LOẠI ĐƠN VỊ TÍNH</h2>
             <div id="unitConversionShort">
                 <p class="text-gray-700">
@@ -74,17 +114,17 @@
                             <li>Dung dịch 15% sẽ trở thành 150 mg/ml</li>
                         </ul>
                     </li>
-<li>1 <strong class="text-indigo-600">ppm</strong> = 1 <strong class="text-indigo-600">mg/L</strong> = 0,001 <strong class="text-indigo-600">g/L</strong> = 1 <strong class="text-indigo-600">microgam/ml</strong>.</li>
-<li>Đổi <strong class="text-indigo-600">ppm</strong> sang <strong class="text-indigo-600">%</strong>: Chia số ppm cho 1.000.000 rồi nhân cho 100</li>
-<li>Đổi <strong class="text-indigo-600">%</strong> sang <strong class="text-indigo-600">ppm (phần triệu)</strong>: Chia số % cho 100 rồi nhân cho 1.000.000</li>
+                    <li>1 <strong class="text-indigo-600">ppm</strong> = 1 <strong class="text-indigo-600">mg/L</strong> = 0,001 <strong class="text-indigo-600">g/L</strong> = 1 <strong class="text-indigo-600">microgam/ml</strong>.</li>
+                    <li>Đổi <strong class="text-indigo-600">ppm</strong> sang <strong class="text-indigo-600">%</strong>: Chia số ppm cho 1.000.000 rồi nhân cho 100</li>
+                    <li>Đổi <strong class="text-indigo-600">%</strong> sang <strong class="text-indigo-600">ppm (phần triệu)</strong>: Chia số % cho 100 rồi nhân cho 1.000.000</li>
                 </ol>
                 <button id="readLessBtn" class="mt-4 text-indigo-600 font-semibold hover:underline">Thu gọn</button>
             </div>
         </div>
-    </div>
+
 
     <script>
-        // Lấy các phần tử DOM cần thiết
+        // Lấy các phần tử DOM cần thiết cho công cụ 1
         const initialConcentrationInput = document.getElementById('initialConcentration');
         const finalConcentrationInput = document.getElementById('finalConcentration');
         const finalVolumeInput = document.getElementById('finalVolume');
@@ -93,13 +133,22 @@
         const diluentVolumeResult = document.getElementById('diluentVolumeResult');
         const resultMessage = document.getElementById('resultMessage');
 
+        // Lấy các phần tử DOM cần thiết cho công cụ 2
+        const initialConcentrationInput2 = document.getElementById('initialConcentration2');
+        const finalConcentrationInput2 = document.getElementById('finalConcentration2');
+        const diluentVolumeInput = document.getElementById('diluentVolume');
+        const calculateBtn2 = document.getElementById('calculateBtn2');
+        const initialVolumeResult2 = document.getElementById('initialVolumeResult2');
+        const finalVolumeResult2 = document.getElementById('finalVolumeResult2');
+        const resultMessage2 = document.getElementById('resultMessage2');
+
         // Lấy các phần tử DOM cho tính năng xem thêm
         const readMoreBtn = document.getElementById('readMoreBtn');
         const readLessBtn = document.getElementById('readLessBtn');
         const unitConversionShort = document.getElementById('unitConversionShort');
         const unitConversionFull = document.getElementById('unitConversionFull');
 
-        // Thêm sự kiện click cho nút "Tính toán"
+        // Thêm sự kiện click cho nút "Tính toán" công cụ 1
         calculateBtn.addEventListener('click', () => {
             // Lấy giá trị từ các trường nhập liệu và chuyển đổi sang số
             const c1 = parseFloat(initialConcentrationInput.value);
@@ -136,6 +185,48 @@
             // Hiển thị kết quả với 2 chữ số thập phân
             initialVolumeResult.textContent = v1.toFixed(2);
             diluentVolumeResult.textContent = diluentVolume.toFixed(2);
+        });
+
+        // Thêm sự kiện click cho nút "Tính toán" công cụ 2
+        calculateBtn2.addEventListener('click', () => {
+            // Lấy giá trị từ các trường nhập liệu và chuyển đổi sang số
+            const c1 = parseFloat(initialConcentrationInput2.value);
+            const c2 = parseFloat(finalConcentrationInput2.value);
+            const vDiluent = parseFloat(diluentVolumeInput.value);
+
+            // Kiểm tra tính hợp lệ của các giá trị nhập vào
+            if (isNaN(c1) || isNaN(c2) || isNaN(vDiluent) || c1 <= 0 || c2 <= 0 || vDiluent <= 0) {
+                resultMessage2.textContent = 'Vui lòng nhập các giá trị hợp lệ (phải là số dương).';
+                resultMessage2.classList.remove('hidden');
+                initialVolumeResult2.textContent = '...';
+                finalVolumeResult2.textContent = '...';
+                return;
+            }
+
+            // Kiểm tra nồng độ cuối cùng phải nhỏ hơn nồng độ ban đầu
+            if (c2 >= c1) {
+                resultMessage2.textContent = 'Nồng độ cuối cùng phải nhỏ hơn nồng độ ban đầu.';
+                resultMessage2.classList.remove('hidden');
+                initialVolumeResult2.textContent = '...';
+                finalVolumeResult2.textContent = '...';
+                return;
+            }
+
+            // Ẩn thông báo lỗi nếu có
+            resultMessage2.classList.add('hidden');
+
+            // Tính toán thể tích ban đầu ($V_1$)
+            // Dựa trên công thức C1V1 = C2V2 và V2 = V1 + V_diluent
+            // => C1V1 = C2(V1 + V_diluent) => V1(C1 - C2) = C2 * V_diluent
+            // => V1 = (C2 * V_diluent) / (C1 - C2)
+            const v1 = (c2 * vDiluent) / (c1 - c2);
+
+            // Tính toán thể tích cuối cùng ($V_2$)
+            const v2 = v1 + vDiluent;
+
+            // Hiển thị kết quả với 2 chữ số thập phân
+            initialVolumeResult2.textContent = v1.toFixed(2);
+            finalVolumeResult2.textContent = v2.toFixed(2);
         });
 
         // Thêm sự kiện click cho nút "Xem thêm"
