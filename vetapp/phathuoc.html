@@ -21,7 +21,30 @@
     <!-- Tiêu đề chung -->
     <div class="bg-blue-100 p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-2xl">
         <h1 class="text-2xl md:text-3xl font-bold text-center mb-6 text-indigo-700">CÁC PHÉP TÍNH KHI CẦN PHA LOÃNG THUỐC</h1>
-        <p class="text-center text-gray-600 mb-2"><strong>Các công cụ này sẽ giúp các BSTY hoặc y tá thú y tính toán nhanh trong việc pha loãng thuốc ở một hàm lượng nào đó? với một thể tích nào đó?</strong></p>
+        <p class="text-left text-gray-600 mb-2">Các công cụ này sẽ giúp các BSTY hoặc y tá thú y tính toán nhanh trong việc pha loãng thuốc ở một hàm lượng nào đó? với một thể tích nào đó?</p>
+        <p class="text-left text-red-600 mb-1"><strong>Lưu ý:</strong></p>
+            <div id="noteShort">
+                <button id="readMoreBtn0" class="mt-1 text-orange-500 font-semibold hover:underline">Nhấn vào đây để xem các lưu ý</button>
+            </div>
+            <div id="noteFull" class="hidden">
+                <ol class="list-decimal list-inside space-y-2 text-indigo-800">
+                     <li>Luôn luôn tìm hiểu về sự tương hợp – tương kỵ giữa thuốc và dung môi trước khi pha chế.</li>
+                     <li>Các loại dung môi: Nước cất pha tiêm, dung dịch nước muối sinh lý (NaCl 0.9%), hoặc dung dịch glucose 5%, hoặc một loại dung môi cụ thể mà nhà sản xuất gửi kèm:</li>
+                     <ul class="list-disc list-inside ml-4 mt-2 text-rose-400 text-sm space-y-1">                  
+                          <li>Glucose 5%: Thích hợp để pha thuốc pefloxacin, amiodarone. Không dùng cho các thuốc kém bền trong môi trường acid (amox, ampi...).</li>
+                          <li>Glucose 5%: Là môi trường vi khuẩn dễ sinh sôi do đó, pha xong phải dùng ngay, không bảo quản lâu.</li>
+                          <li>Glucose 5%: Cấm dùng trong tiểu đường hoặc hạ kali máu nặng.</li>
+                          <li>NaCl 0.9%: Dùng để pha hầu hết các loại thuốc (vẫn có ngoại lệ).</li>
+                          <li>NaCl 0.9%: Thận trọng ở các đối tượng bệnh suy tim sung huyết, phù, tăng natri máu.</li>
+                          <li>Nước cất: Là dung dịch nhược trương (tránh tiêm quá nhiều vào bắp thịt).</li>
+                          <li>Nước cất: Pha được hầu hết các loại thuốc, trừ các thuốc tan trong dầu.</li>
+                     </ul>
+                     <li>Luôn tuân thủ hướng dẫn về tỷ lệ và loại dung môi pha loãng được ghi rõ trong tờ hướng dẫn sử dụng của nhà sản xuất.</li>
+                     <li>Dụng cụ pha chế phải sạch sẽ, vô khuẩn.</li>
+                     <li>Sau khi pha loãng, thuốc cần được bảo quản đúng cách và sử dụng trong thời gian quy định để đảm bảo hiệu quả và an toàn.</li>
+                </ol>
+                <button id="readLessBtn0" class="mt-4 text-orange-500 font-semibold hover:underline">Thu gọn</button>
+            </div>
     </div>
 
     <!-- Calculator 1: Find V1 and V_diluent from C1, C2, V2 -->
@@ -102,7 +125,7 @@
 
 <!-- Calculator 3: Find V_diluent from C_final and Mass_initial -->
     <div class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-2xl">
-        <h1 class="text-xl md:text-2xl font-bold text-center mb-6 text-indigo-700">Tính toán pha thuốc bột</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-center mb-6 text-indigo-700">Tính toán khi pha thuốc bột</h1>
         <p class="text-center text-gray-600 mb-8"><strong class="text-red-600">Công thức:</strong> V (dung môi) = Lượng thuốc bột (mg) / Nồng độ mong muốn (mg/ml).</p>
         
         <!-- Khu vực nhập liệu -->
@@ -140,7 +163,7 @@
                 <p class="text-gray-700">
                     Để chuyển đổi <strong class="text-indigo-600">microgam/kg</strong> sang <strong class="text-indigo-600">mg/kg</strong>, bạn cần chia liều lượng cho 1000.
                 </p>
-                <button id="readMoreBtn" class="mt-4 text-indigo-600 font-semibold hover:underline">Xem thêm</button>
+                <button id="readMoreBtn" class="mt-4 text-orange-500 font-semibold hover:underline">Xem thêm</button>
             </div>
             <div id="unitConversionFull" class="hidden">
                 <ol class="list-decimal list-inside space-y-2 text-gray-700">
@@ -153,16 +176,22 @@
                             <li>Dung dịch 15% sẽ trở thành 150 mg/ml</li>
                         </ul>
                     </li>
-                    <li>1 <strong class="text-indigo-600">ppm</strong> = 1 <strong class="text-indigo-600">mg/L</strong> = 0,001 <strong class="text-indigo-600">g/L</strong> = 1 <strong class="text-indigo-600">microgam/ml</strong>.</li>
+                    <li><strong class="text-indigo-600">1 ppm</strong> = 1 <strong class="text-indigo-600">mg/L</strong> = 0,001 <strong class="text-indigo-600">g/L</strong> = 1 <strong class="text-indigo-600">microgam/ml</strong>.</li>
                     <li>Đổi <strong class="text-indigo-600">ppm</strong> sang <strong class="text-indigo-600">%</strong>: Chia số ppm cho 1.000.000 rồi nhân cho 100</li>
                     <li>Đổi <strong class="text-indigo-600">%</strong> sang <strong class="text-indigo-600">ppm (phần triệu)</strong>: Chia số % cho 100 rồi nhân cho 1.000.000</li>
                 </ol>
-                <button id="readLessBtn" class="mt-4 text-indigo-600 font-semibold hover:underline">Thu gọn</button>
+                <button id="readLessBtn" class="mt-4 text-orange-500 font-semibold hover:underline">Thu gọn</button>
             </div>
         </div>
 
 
     <script>
+        // Lấy các phần tử DOM cho tính năng xem thêm Note
+        const readMoreBtn0 = document.getElementById('readMoreBtn0');
+        const readLessBtn0 = document.getElementById('readLessBtn0');
+        const noteShort = document.getElementById('noteShort');
+        const noteFull = document.getElementById('noteFull');
+
         // Lấy các phần tử DOM cần thiết cho công cụ 1
         const initialConcentrationInput = document.getElementById('initialConcentration');
         const finalConcentrationInput = document.getElementById('finalConcentration');
@@ -193,6 +222,18 @@
         const readLessBtn = document.getElementById('readLessBtn');
         const unitConversionShort = document.getElementById('unitConversionShort');
         const unitConversionFull = document.getElementById('unitConversionFull');
+
+        // Thêm sự kiện click cho nút "Xem thêm note"
+        readMoreBtn0.addEventListener('click', () => {
+            noteShort.classList.add('hidden');
+            noteFull.classList.remove('hidden');
+        });
+
+        // Thêm sự kiện click cho nút "Thu gọn note"
+        readLessBtn0.addEventListener('click', () => {
+            noteShort.classList.remove('hidden');
+            noteFull.classList.add('hidden');
+        });
 
         // Thêm sự kiện click cho nút "Tính toán" công cụ 1
         calculateBtn.addEventListener('click', () => {
