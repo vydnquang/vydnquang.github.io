@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Công cụ tính tuổi thú cưng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-5 gap-5 font-sans">
+
+<!-- Container 1: Tính tuổi chó theo công thức -->
+<div class="bg-white p-6 rounded-2xl shadow-xl w-[350px] md:w-[450px] text-justify">
+    <h2 class="text-2xl font-bold text-indigo-700 mb-4 text-center">Tính tuổi chó theo công thức</h2>
+    <p class="text-gray-600 mb-4 text-md">Dựa trên nghiên cứu của Đại học California San Diego vào năm 2020, công thức sử dụng biểu đồ gen và phép tính logarit tự nhiên (ln) cho độ chính xác cao. Áp dụng đối với size chó trung bình.</p>
+    <p class="text-red-500 mb-4 text-md"><strong>Công thức:</strong> <em>Tuổi người = 16*ln(Tuổi chó)+31</em></p>
+    <div class="flex flex-col items-center gap-4 mt-4">
+        <input type="number" id="dogAgeFormula" placeholder="Nhập tuổi chó (1-31)" min="1" max="31" class="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
+        <button onclick="calculateAgeFromFormula()" class="p-3 bg-green-500 text-white rounded-md cursor-pointer font-semibold hover:bg-green-600 transition-colors w-full">Tính toán</button>
+    </div>
+    <div id="result-formula" class="mt-6 p-4 text-xl font-bold text-red-500 text-center bg-indigo-50 border border-indigo-200 rounded-lg hidden"></div>
+</div>
+
+<!-- Container 2: Tính tuổi chó theo bảng quy đổi -->
+<div class="bg-white p-6 rounded-2xl shadow-xl w-[350px] md:w-[450px] text-justify">
+    <h2 class="text-2xl font-bold text-indigo-700 mb-4 text-center">Tính tuổi chó theo bảng quy đổi</h2>
+    <p class="text-gray-600 mb-4 text-sm">
+        <ul class="list-disc list-inside space-y-1">
+            <li>Năm đầu tiên: 1 năm tương đương với khoảng 15 năm tuổi người.</li>
+            <li>Năm thứ hai: 1 năm tương đương với khoảng 9 năm tuổi người.</li>
+            <li>Từ năm thứ ba trở đi: Mỗi năm tuổi của chó tương đương với khoảng 4-6 năm tuổi người, tùy thuộc vào kích cỡ.</li>
+        </ul>
+    </p>
+    <div class="flex flex-col items-center gap-4 mt-4">
+        <div class="flex flex-col md:flex-row justify-between items-center w-full gap-4">
+            <input type="number" id="dogAgeTable" placeholder="Tuổi chó (1-21)" min="1" max="21" class="p-3 border border-gray-300 rounded-lg w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
+            <select id="dogSize" class="p-3 border border-gray-300 rounded-lg w-full md:w-1/2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
+                <option value="small">Nhỏ (dưới 9 kg)</option>
+                <option value="medium">Trung bình (9-20 kg)</option>
+                <option value="large">Lớn (trên 20 kg)</option>
+            </select>
+        </div>
+        <button onclick="calculateAgeFromTable()" class="p-3 bg-green-500 text-white rounded-md cursor-pointer font-semibold hover:bg-green-600 transition-colors w-full">Tính toán</button>
+    </div>
+    <div id="result-table" class="mt-6 p-4 text-xl font-bold text-red-500 text-center bg-indigo-50 border border-indigo-200 rounded-lg hidden"></div>
+</div>
+
+<!-- Container 3: Tính tuổi mèo theo bảng quy đổi -->
+<div class="bg-white p-6 rounded-2xl shadow-xl w-[350px] md:w-[450px] text-justify">
+    <h2 class="text-2xl font-bold text-indigo-700 mb-4 text-center">Tính tuổi mèo theo bảng quy đổi</h2>
+    <p class="text-gray-600 mb-4 text-sm">
+        <ul class="list-disc list-inside space-y-1">
+            <li>Năm đầu tiên: 1 năm tương đương với khoảng 15 năm tuổi người.</li>
+            <li>Năm thứ hai: 1 năm tương đương với khoảng 9 năm tuổi người.</li>
+            <li>Từ năm thứ ba trở đi: Mỗi năm tuổi của mèo chỉ tương đương với khoảng 4 năm tuổi người.</li>
+        </ul>
+    </p>
+    <div class="flex flex-col items-center gap-4 mt-4">
+        <input type="number" id="catAgeTable" placeholder="Nhập tuổi mèo (1-20)" min="1" max="20" class="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
+        <button onclick="calculateCatAge()" class="p-3 bg-green-500 text-white rounded-lg cursor-pointer font-semibold hover:bg-green-600 transition-colors w-full">Tính toán</button>
+    </div>
+    <div id="result-cat" class="mt-6 p-4 text-xl font-bold text-red-500 text-center bg-indigo-50 border border-indigo-200 rounded-lg hidden"></div>
+</div>
+
+<script>
+    const ageTableDog = {
+        'small': [15, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100],
+        'medium': [15, 24, 28, 32, 36, 42, 47, 51, 56, 60, 65, 69, 74, 78, 83, 87, 92, 96],
+        'large': [15, 24, 28, 32, 36, 45, 52, 59, 65, 71, 78, 84, 89, 96, 100]
+    };
+
+    const ageTableCat = {
+        1: 15, 2: 24, 3: 28, 4: 32, 5: 36, 6: 40, 7: 44, 8: 48, 9: 52, 10: 56,
+        11: 60, 12: 64, 13: 68, 14: 72, 15: 76, 16: 80, 17: 84, 18: 88, 19: 92, 20: 96
+    };
+
+    // Hàm chung để hiển thị kết quả
+    function showResult(resultDiv, textContent) {
+        resultDiv.textContent = textContent;
+        resultDiv.classList.remove('hidden');
+    }
+
+    // Hàm tính toán tuổi chó theo công thức
+    function calculateAgeFromFormula() {
+        const dogAge = document.getElementById('dogAgeFormula').value;
+        const resultDiv = document.getElementById('result-formula');
+        const maxAge = 31;
+
+        if (dogAge > 0 && dogAge <= maxAge) {
+            const age = parseFloat(dogAge);
+            const humanAge = 16 * Math.log(age) + 31;
+            const roundedAge = Math.round(humanAge);
+            showResult(resultDiv, `Tuổi của chó tương đương ${roundedAge} tuổi người.`);
+        } else {
+            showResult(resultDiv, `Vui lòng nhập một số từ 1 đến ${maxAge}.`);
+        }
+    }
+
+    // Hàm tính toán tuổi chó theo bảng quy đổi
+    function calculateAgeFromTable() {
+        const dogAge = parseInt(document.getElementById('dogAgeTable').value);
+        const dogSize = document.getElementById('dogSize').value;
+        const resultDiv = document.getElementById('result-table');
+        const maxAge = ageTableDog[dogSize].length;
+
+        if (dogAge >= 1 && dogAge <= maxAge) {
+            const humanAge = ageTableDog[dogSize][dogAge - 1];
+            showResult(resultDiv, `Tuổi của chó tương đương ${humanAge} tuổi người.`);
+        } else {
+            showResult(resultDiv, `Vui lòng nhập tuổi từ 1 đến ${maxAge}.`);
+        }
+    }
+
+    // Hàm tính toán tuổi mèo theo bảng quy đổi
+    function calculateCatAge() {
+        const catAge = parseInt(document.getElementById('catAgeTable').value);
+        const resultDiv = document.getElementById('result-cat');
+        const maxAge = 20;
+
+        if (catAge > 0 && catAge <= maxAge) {
+            const humanAge = ageTableCat[catAge];
+            showResult(resultDiv, `Tuổi của mèo tương đương ${humanAge} tuổi người.`);
+        } else {
+            showResult(resultDiv, `Vui lòng nhập tuổi từ 1 đến ${maxAge}.`);
+        }
+    }
+</script>
+
+</body>
+</html>
