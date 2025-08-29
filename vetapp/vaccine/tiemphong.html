@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kiểm tra Lịch Tiêm Phòng Tự Động</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+    
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1, h2 {
+        color: #333;
+        text-align: center;
+    }
+    
+    .button-group {
+        text-align: center;
+        margin: 20px 0;
+    }
+    
+    /* Style cho các nút chính (Kiểm tra Tiêm Dại, 7 Bệnh) */
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        margin: 0 10px;
+        transition: background-color 0.3s;
+    }
+    
+    #rabiesButton {
+        background-color: #d9534f;
+    }
+    
+    #rabiesButton:hover {
+        background-color: #c9302c;
+    }
+    
+    #sevenInOneButton {
+        background-color: #5cb85c;
+    }
+    
+    #sevenInOneButton:hover {
+        background-color: #4cae4c;
+    }
+    
+    #results {
+        margin-top: 20px;
+    }
+    
+    /* Style cho khung thông tin thú cưng */
+    .pet-info {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        position: relative;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+    
+    /* Màu sắc theo từng trạng thái */
+    .pet-info.overdue {
+        border-color: #d9534f;
+        background-color: #f2dede; /* Đã sửa lại màu đỏ nhạt */
+    }
+    
+    .pet-info.upcoming {
+        border-color: #f0ad4e;
+        background-color: #fcf8e3; /* Đã sửa lại màu vàng nhạt */
+    }
+    
+    .pet-info.ok {
+        border-color: #5cb85c;
+        background-color: #dff0d8; /* Đã sửa lại màu xanh lá nhạt */
+    }
+    
+    .pet-info .content {
+        flex-grow: 1;
+    }
+    
+    /* Style cho dấu tích */
+    .pet-info .status-icon {
+        font-size: 24px;
+        line-height: 1;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+    
+    .pet-info .status-icon.check {
+        color: #5cb85c;
+    }
+    
+    /* Style cho khu vực chứa các nút */
+    .update-section {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    /* Style chung cho tất cả các nút trong update-section */
+    .update-section button,
+    .update-section a {
+        padding: 8px 15px;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        color: white;
+        transition: background-color 0.3s;
+        /* flex-grow: 1; đã được bỏ đi để tránh giãn quá mức */
+    }
+
+    /* Style riêng cho từng nút */
+    .update-button {
+        background-color: #007bff;
+    }
+    
+    .update-button:hover {
+        background-color: #0056b3;
+    }
+    
+    .save-button {
+        background-color: #28a745;
+    }
+    
+    .save-button:hover {
+        background-color: #218838;
+    }
+    
+    .call-button {
+        background-color: #5bc0de;
+    }
+    
+    .call-button:hover {
+        background-color: #31b0d5;
+    }
+    
+    .zalo-button {
+        background-color: #0088cc;
+    }
+    
+    .zalo-button:hover {
+        background-color: #006699;
+    }
+    
+    /* Style cho ô nhập ngày */
+    .update-section input[type="date"] {
+        padding: 7px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        flex-grow: 1;
+    }
+</style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Kiểm tra Lịch Tiêm Phòng Thú Cưng</h1>
+        <p style="text-align: center;">Bấm vào nút dưới đây để kiểm tra lịch tiêm chủng.</p>
+        <div class="button-group">
+            <button id="rabiesButton">Kiểm tra Tiêm Dại</button>
+            <button id="sevenInOneButton">Kiểm tra Tiêm 7 Bệnh</button>
+        </div>
+        <div id="results"></div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="function.js"></script>
+
+</body>
+</html>
