@@ -1,17 +1,28 @@
-// script.js (cập nhật toàn bộ nội dung file này)
+// script.js (hoàn chỉnh và đã sửa lỗi)
 
 // Global event listener - Chỉ gán một lần duy nhất khi trang tải
 const resultsDiv = document.getElementById('results');
 
 resultsDiv.addEventListener('click', function(event) {
     if (event.target.classList.contains('update-button')) {
-        const updateForm = event.target.nextElementSibling;
-        updateForm.style.display = 'block';
-        event.target.style.display = 'none'; // Ẩn nút "Cập nhật"
+        // Tìm phần tử cha gần nhất có class 'update-section'
+        const updateSection = event.target.closest('.update-section');
+        // Tìm div.update-form bên trong updateSection
+        const updateForm = updateSection.querySelector('.update-form');
+        
+        updateForm.style.display = 'flex'; // Sử dụng flex để căn chỉnh form
+        // Ẩn toàn bộ nhóm nút
+        const buttonGroup = event.target.closest('.button-group-row');
+        buttonGroup.style.display = 'none';
+        
     } else if (event.target.classList.contains('save-button')) {
         const newDate = event.target.previousElementSibling.value;
         if (newDate) {
-            const updateButton = event.target.parentElement.previousElementSibling;
+            // Tìm phần tử cha gần nhất có class 'update-section'
+            const updateSection = event.target.closest('.update-section');
+            // Tìm nút 'update-button' bên trong updateSection
+            const updateButton = updateSection.querySelector('.update-button');
+
             const index = updateButton.dataset.index;
             const type = updateButton.dataset.type;
 
@@ -123,12 +134,14 @@ function processVaccineData(vaccineType) {
                 <strong>Số điện thoại:</strong> ${petInfo.contact}<br>
                 <strong>Thông báo:</strong> ${petInfo.message}<br>
                 <div class="update-section">
-                    <button class="update-button" data-index="${petInfo.index}" data-type="${vaccineType}">Cập nhật</button>
+                    <div class="button-group-row">
+                        <button class="update-button" data-index="${petInfo.index}" data-type="${vaccineType}">Cập nhật</button>
+                        ${contactButtonsHtml}
+                    </div>
                     <div class="update-form" style="display:none;">
                         <input type="date" class="new-date-input">
                         <button class="save-button">Lưu</button>
                     </div>
-                    ${contactButtonsHtml}
                 </div>
             </div>
             ${iconHtml}
@@ -153,4 +166,28 @@ function processVaccineData(vaccineType) {
     resultsDiv.appendChild(downloadButton);
 }
 
-// ... Giữ nguyên các hàm updateData và downloadUpdatedCSV ...
+// Hàm cập nhật dữ liệu tạm thời
+function updateData(index, type, newDate) {
+    let rows = csvData.split('\n');
+    let headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+    let columns = rows[parseInt(index) + 1].split(',').map(col => col.trim());
+
+    const vaccineIndex = headers.indexOf(type);
+    columns[vaccineIndex] = newDate;
+
+    rows[parseInt(index) + 1] = columns.join(',');
+    csvData = rows.join('\n');
+}
+
+// Hàm tải xuống file CSV
+function downloadUpdatedCSV() {
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "data_updated.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
