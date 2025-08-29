@@ -1,25 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Công cụ tính tuổi thú cưng</title>
+    <!-- Tải Tailwind CSS để tạo giao diện đẹp và linh hoạt -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-5 gap-5 font-sans">
+<body class="p-4 md:p-8 flex flex-col items-center justify-center min-h-screen space-y-8">
 
 <!-- Container 1: Tính tuổi chó theo công thức -->
-<div class="bg-white p-6 rounded-2xl shadow-xl w-[350px] md:w-[450px] text-justify">
+<div class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-2xl text-justify">
     <h2 class="text-2xl font-bold text-indigo-700 mb-4 text-center">Tính tuổi chó theo công thức</h2>
     <p class="text-gray-600 mb-4 text-md">Dựa trên nghiên cứu của Đại học California San Diego vào năm 2020, công thức sử dụng biểu đồ gen và phép tính logarit tự nhiên (ln) cho độ chính xác cao. Áp dụng đối với size chó trung bình.</p>
     <p class="text-red-500 mb-4 text-md"><strong>Công thức:</strong> <em>Tuổi người = 16*ln(Tuổi chó)+31</em></p>
     <div class="flex flex-col items-center gap-4 mt-4">
         <input type="number" id="dogAgeFormula" placeholder="Nhập tuổi chó (1-31)" min="1" max="31" class="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
-        <button onclick="calculateAgeFromFormula()" class="p-3 bg-green-500 text-white rounded-md cursor-pointer font-semibold hover:bg-green-600 transition-colors w-full">Tính toán</button>
+        <button onclick="calculateAgeFromFormula()" class="p-3 bg-green-500 text-white rounded-md cursor-pointer font-semibold hover:bg-green-600 transition-colors w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Tính toán</button>
     </div>
     <div id="result-formula" class="mt-6 p-4 text-xl font-bold text-red-500 text-center bg-indigo-50 border border-indigo-200 rounded-lg hidden"></div>
 </div>
 
 <!-- Container 2: Tính tuổi chó theo bảng quy đổi -->
-<div class="bg-white p-6 rounded-2xl shadow-xl w-[350px] md:w-[450px] text-justify">
+<div class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-2xl text-justify">
     <h2 class="text-2xl font-bold text-indigo-700 mb-4 text-center">Tính tuổi chó theo bảng quy đổi</h2>
     <p class="text-gray-600 mb-4 text-sm">
         <ul class="list-disc list-inside space-y-1">
@@ -37,13 +50,13 @@
                 <option value="large">Lớn (trên 20 kg)</option>
             </select>
         </div>
-        <button onclick="calculateAgeFromTable()" class="p-3 bg-green-500 text-white rounded-md cursor-pointer font-semibold hover:bg-green-600 transition-colors w-full">Tính toán</button>
+        <button onclick="calculateAgeFromTable()" class="p-3 bg-green-500 text-white rounded-md cursor-pointer font-semibold hover:bg-green-600 transition-colors w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Tính toán</button>
     </div>
     <div id="result-table" class="mt-6 p-4 text-xl font-bold text-red-500 text-center bg-indigo-50 border border-indigo-200 rounded-lg hidden"></div>
 </div>
 
 <!-- Container 3: Tính tuổi mèo theo bảng quy đổi -->
-<div class="bg-white p-6 rounded-2xl shadow-xl w-[350px] md:w-[450px] text-justify">
+<div class="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-2xl text-justify">
     <h2 class="text-2xl font-bold text-indigo-700 mb-4 text-center">Tính tuổi mèo theo bảng quy đổi</h2>
     <p class="text-gray-600 mb-4 text-sm">
         <ul class="list-disc list-inside space-y-1">
@@ -54,7 +67,7 @@
     </p>
     <div class="flex flex-col items-center gap-4 mt-4">
         <input type="number" id="catAgeTable" placeholder="Nhập tuổi mèo (1-20)" min="1" max="20" class="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
-        <button onclick="calculateCatAge()" class="p-3 bg-green-500 text-white rounded-lg cursor-pointer font-semibold hover:bg-green-600 transition-colors w-full">Tính toán</button>
+        <button onclick="calculateCatAge()" class="p-3 bg-green-500 text-white rounded-lg cursor-pointer font-semibold hover:bg-green-600 transition-colors w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Tính toán</button>
     </div>
     <div id="result-cat" class="mt-6 p-4 text-xl font-bold text-red-500 text-center bg-indigo-50 border border-indigo-200 rounded-lg hidden"></div>
 </div>
@@ -122,6 +135,5 @@
         }
     }
 </script>
-
 </body>
 </html>
