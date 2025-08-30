@@ -1,55 +1,77 @@
-// script.js (hoàn chỉnh và đã sửa lỗi)
-
 // Global event listener - Chỉ gán một lần duy nhất khi trang tải
 const resultsDiv = document.getElementById('results');
+const totalPetsCountElement = document.getElementById('total-pets-count');
 
 resultsDiv.addEventListener('click', function(event) {
     if (event.target.classList.contains('update-button')) {
-        // Tìm phần tử cha gần nhất có class 'update-section'
         const updateSection = event.target.closest('.update-section');
-        // Tìm div.update-form bên trong updateSection
         const updateForm = updateSection.querySelector('.update-form');
         
-        updateForm.style.display = 'flex'; // Sử dụng flex để căn chỉnh form
-        // Ẩn toàn bộ nhóm nút
+        updateForm.classList.remove('hidden'); // Hiển thị form
+        
         const buttonGroup = event.target.closest('.button-group-row');
-        buttonGroup.style.display = 'none';
+        buttonGroup.classList.add('hidden'); // Ẩn nhóm nút
         
     } else if (event.target.classList.contains('save-button')) {
         const newDate = event.target.previousElementSibling.value;
         if (newDate) {
-            // Tìm phần tử cha gần nhất có class 'update-section'
             const updateSection = event.target.closest('.update-section');
-            // Tìm nút 'update-button' bên trong updateSection
             const updateButton = updateSection.querySelector('.update-button');
 
             const index = updateButton.dataset.index;
             const type = updateButton.dataset.type;
 
             updateData(index, type, newDate);
-            processVaccineData(type);
+            processVaccineData(type); // Gọi lại để cập nhật hiển thị
         }
+    } else if (event.target.classList.contains('cancel-button')) {
+        const updateSection = event.target.closest('.update-section');
+        const updateForm = updateSection.querySelector('.update-form');
+        const buttonGroup = updateSection.querySelector('.button-group-row');
+        
+        updateForm.classList.add('hidden'); // Ẩn form nhập liệu
+        buttonGroup.classList.remove('hidden'); // Hiển thị lại nhóm nút ban đầu
     }
 });
 
 document.getElementById('rabiesButton').addEventListener('click', () => {
-    processVaccineData('ngày tiêm phòng dại');
+    processVaccineData('ngày tiêm phòng dại', 'all'); // 'all' để hiển thị cả chó và mèo
 });
 
 document.getElementById('sevenInOneButton').addEventListener('click', () => {
-    processVaccineData('ngày tiêm phòng vaccine 7 bệnh');
+    processVaccineData('ngày tiêm phòng vaccine 7 bệnh', 'dog');
 });
 
-function processVaccineData(vaccineType) {
-    resultsDiv.innerHTML = '<h2>Kết quả kiểm tra:</h2>';
+document.getElementById('fourInOneButton').addEventListener('click', () => {
+    processVaccineData('ngày tiêm phòng vaccine 4 bệnh', 'cat');
+});
 
-    // Sử dụng dữ liệu từ biến csvData trong file data.js
+function countTotalPets() {
+    if (typeof csvData !== 'undefined') {
+        const rows = csvData.split('\n').map(row => row.trim()).filter(row => row);
+        const dataRows = rows.slice(1);
+        totalPetsCountElement.textContent = `Cập nhật mới nhất: có ${dataRows.length} thú cưng trong danh sách.`;
+    }
+}
+
+function processVaccineData(vaccineType, speciesFilter) {
+    let headerText = '';
+    if (vaccineType === 'ngày tiêm phòng dại') {
+        headerText = 'Kết quả Tiêm phòng Dại cho Cún & Mèo';
+    } else if (vaccineType === 'ngày tiêm phòng vaccine 7 bệnh') {
+        headerText = 'Kết quả Tiêm phòng 7 bệnh cho Cún';
+    } else if (vaccineType === 'ngày tiêm phòng vaccine 4 bệnh') {
+        headerText = 'Kết quả Tiêm phòng 4 bệnh cho Mèo';
+    }
+
+    resultsDiv.innerHTML = `<h2 class="text-blue-500 text-center text-xl font-bold">${headerText}</h2>`;
+
     const rows = csvData.split('\n').map(row => row.trim()).filter(row => row);
     const headers = rows[0].split(',').map(header => header.trim().toLowerCase());
     const dataRows = rows.slice(1);
 
     if (dataRows.length === 0) {
-        resultsDiv.innerHTML += '<p style="color:red; text-align:center;">Không có dữ liệu để kiểm tra.</p>';
+        resultsDiv.innerHTML += '<p class="text-red-500 text-center">Không có dữ liệu để kiểm tra.</p>';
         return;
     }
 
@@ -59,14 +81,31 @@ function processVaccineData(vaccineType) {
     const reminderInMs = reminderMonths * 30.44 * 24 * 60 * 60 * 1000;
 
     const vaccineIndex = headers.indexOf(vaccineType);
-    
-    let allPetsInfo = []; 
+    const speciesIndex = headers.indexOf('loại vật nuôi');
+
+    let allPetsInfo = [];
 
     dataRows.forEach((row, index) => {
         const columns = row.split(',').map(col => col.trim());
         if (columns.length < headers.length) return;
+
+        const species = columns[speciesIndex].toLowerCase();
         
+        // Bỏ qua nếu không đúng loại vật nuôi được lọc
+        if (speciesFilter === 'dog' && species !== 'chó') {
+            return;
+        }
+        if (speciesFilter === 'cat' && species !== 'mèo') {
+            return;
+        }
+
         const lastVaccineDateStr = columns[vaccineIndex];
+        
+        if (!lastVaccineDateStr) {
+            // Nếu không có dữ liệu vaccine cho loại này, bỏ qua thú cưng này
+            return;
+        }
+
         const petName = columns[headers.indexOf('tên thú cưng')];
         const ownerName = columns[headers.indexOf('tên chủ')];
         const contact = columns[headers.indexOf('số điện thoại')];
@@ -75,22 +114,22 @@ function processVaccineData(vaccineType) {
         const timeDiff = today.getTime() - lastVaccineDate.getTime();
 
         let message = '';
-        let statusClass = '';
+        let statusColorClass = '';
         let needsAttention = false;
         
         if (timeDiff > oneYearInMs) {
             const daysOverdue = Math.floor((timeDiff - oneYearInMs) / (1000 * 60 * 60 * 24));
             message = `Đã quá hạn tiêm nhắc lại ${daysOverdue} ngày.`;
-            statusClass = 'overdue';
+            statusColorClass = 'border-red-500 bg-red-100';
             needsAttention = true;
         } else if (timeDiff > oneYearInMs - reminderInMs) {
             const daysUntilDue = Math.floor((oneYearInMs - timeDiff) / (1000 * 60 * 60 * 24));
             message = `Sắp đến hạn tiêm nhắc lại trong ${daysUntilDue} ngày.`;
-            statusClass = 'upcoming';
+            statusColorClass = 'border-yellow-500 bg-yellow-100';
             needsAttention = true;
         } else {
-            message = 'Lịch tiêm phòng hiện tại ổn.';
-            statusClass = 'ok';
+            message = 'Đã tiêm đúng lịch.';
+            statusColorClass = 'border-green-500 bg-green-100';
         }
         
         const petInfo = {
@@ -98,9 +137,10 @@ function processVaccineData(vaccineType) {
             ownerName: ownerName,
             contact: contact,
             message: message,
-            statusClass: statusClass,
+            statusColorClass: statusColorClass,
             needsAttention: needsAttention,
-            index: index
+            index: index,
+            species: species // Thêm loại vật nuôi vào petInfo
         };
         allPetsInfo.push(petInfo);
     });
@@ -110,37 +150,51 @@ function processVaccineData(vaccineType) {
     let hasAttentionResults = false;
     allPetsInfo.forEach(petInfo => {
         const petInfoDiv = document.createElement('div');
-        petInfoDiv.className = `pet-info ${petInfo.statusClass}`;
+        petInfoDiv.className = `p-4 mb-4 border rounded-md flex justify-between items-start relative transition-colors ${petInfo.statusColorClass}`;
         
         let iconHtml = '';
-        if (petInfo.statusClass === 'ok') {
-            iconHtml = '<span class="status-icon check">✅</span>';
+        // Icon xác nhận cập nhật
+        if (petInfo.index == updatedIndex && petInfo.statusColorClass === 'border-green-500 bg-green-100') {
+             iconHtml = '<span class="text-2xl leading-none absolute top-4 right-4 text-green-500">✅</span>';
         }
         
-        // Thêm các nút liên hệ nếu trạng thái là "upcoming"
-        let contactButtonsHtml = '';
-        if (petInfo.statusClass === 'upcoming') {
-            const cleanPhoneNumber = petInfo.contact.replace(/\s/g, '');
-            contactButtonsHtml = `
-                <a href="tel:${cleanPhoneNumber}" class="call-button">Gọi điện</a>
-                <a href="https://zalo.me/${cleanPhoneNumber}" target="_blank" class="zalo-button">Chat Zalo</a>
-            `;
+        // Icon loài vật nuôi
+        let speciesIconHtml = '';
+        if (petInfo.species === 'chó') {
+            speciesIconHtml = '<i class="fa-solid fa-dog text-3xl mr-2 text-[#ff9900]"></i>'; // Icon chó
+        } else if (petInfo.species === 'mèo') {
+            speciesIconHtml = '<i class="fa-solid fa-cat text-3xl mr-2 text-[#4548ff]"></i>'; // Icon mèo
         }
 
+
+        let contactButtonsHtml = '';
+        if (petInfo.statusColorClass.includes('border-yellow-500') || petInfo.statusColorClass.includes('border-red-500')) {
+            const cleanPhoneNumber = petInfo.contact.replace(/\s/g, '');
+            contactButtonsHtml = `
+                <a href="tel:${cleanPhoneNumber}" class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#ff9429] hover:bg-[#fa6000]">Gọi điện</a>
+                <a href="https://zalo.me/${cleanPhoneNumber}" target="_blank" class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#0088cc] hover:bg-[#006699]">Chat Zalo</a>
+            `;
+        }
+        
+        // Cấu trúc mới với các class Tailwind
         petInfoDiv.innerHTML = `
-            <div class="content">
-                <strong>Tên thú cưng:</strong> ${petInfo.petName}<br>
+            <div class="flex-grow">
+                <div class="flex items-center mb-2">
+                    ${speciesIconHtml} 
+                    <strong class="text-lg">${petInfo.petName}</strong>
+                </div>
                 <strong>Tên chủ:</strong> ${petInfo.ownerName}<br>
                 <strong>Số điện thoại:</strong> ${petInfo.contact}<br>
-                <strong>Thông báo:</strong> ${petInfo.message}<br>
-                <div class="update-section">
-                    <div class="button-group-row">
-                        <button class="update-button" data-index="${petInfo.index}" data-type="${vaccineType}">Cập nhật</button>
+                <strong>Tình trạng tiêm phòng:</strong> ${petInfo.message}<br>
+                <div class="mt-4 update-section">
+                    <div class="flex gap-2 button-group-row">
+                        <button class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#ff6363] hover:bg-[#d62222] update-button" data-index="${petInfo.index}" data-type="${vaccineType}">Cập nhật ngày tiêm</button>
                         ${contactButtonsHtml}
                     </div>
-                    <div class="update-form" style="display:none;">
-                        <input type="date" class="new-date-input">
-                        <button class="save-button">Lưu</button>
+                    <div class="mt-2 flex gap-2 hidden update-form">
+                        <input type="date" class="p-2 text-sm border border-[#ccc] rounded-md flex-grow">
+                        <button class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#28a745] hover:bg-[#218838] save-button">Lưu</button>
+                        <button class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#6c757d] hover:bg-[#5a6268] cancel-button">Hủy</button>
                     </div>
                 </div>
             </div>
@@ -153,20 +207,18 @@ function processVaccineData(vaccineType) {
     });
 
     if (!hasAttentionResults) {
-        resultsDiv.innerHTML += '<p style="text-align:center;">Không có thú cưng nào cần tiêm nhắc lại trong danh sách này.</p>';
+        resultsDiv.innerHTML += '<p class="text-center">Không có thú cưng nào cần tiêm nhắc lại trong danh sách này.</p>';
     }
 
-    // Thêm nút tải xuống CSV
     const downloadButton = document.createElement('button');
-    downloadButton.textContent = 'Tải xuống CSV đã cập nhật';
-    downloadButton.style.marginTop = '20px';
-    downloadButton.style.backgroundColor = '#28a745';
-    downloadButton.style.color = '#fff';
+    downloadButton.textContent = 'Tải file CSV vừa cập nhật';
+    downloadButton.className = 'w-full mt-5 py-2 px-4 text-white bg-green-600 hover:bg-green-700 rounded-md cursor-pointer';
     downloadButton.addEventListener('click', downloadUpdatedCSV);
     resultsDiv.appendChild(downloadButton);
 }
 
-// Hàm cập nhật dữ liệu tạm thời
+let updatedIndex = null;
+
 function updateData(index, type, newDate) {
     let rows = csvData.split('\n');
     let headers = rows[0].split(',').map(h => h.trim().toLowerCase());
@@ -177,9 +229,10 @@ function updateData(index, type, newDate) {
 
     rows[parseInt(index) + 1] = columns.join(',');
     csvData = rows.join('\n');
+    
+    updatedIndex = index;
 }
 
-// Hàm tải xuống file CSV
 function downloadUpdatedCSV() {
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
@@ -191,3 +244,5 @@ function downloadUpdatedCSV() {
     link.click();
     document.body.removeChild(link);
 }
+
+window.onload = countTotalPets;
