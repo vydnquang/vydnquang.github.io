@@ -9,21 +9,37 @@
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
+      /* Khai báo font Nokia */
+      @font-face {
+      font-family: 'UTM Nokia';
+      src: url('UTM-Nokia.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      }
+
+      /* Style riêng cho dòng chữ "AN NHƠN PET" */
+      .nokia-font {
+      font-family: 'UTM Nokia', sans-serif;
+      }
+
       body {
         font-family: 'Inter', sans-serif;
       }
     </style>
 </head>
 <body class="bg-[#f4f4f4] min-h-screen flex flex-col">
-    <div class="flex items-center justify-center p-4 border-b-2 border-solid border-[#ddd] bg-[#ffff9e] mb-5">
-        <img src="https://vydnquang.github.io/codeks/anp-logo.png" alt="Logo Phòng khám" class="w-[100px] h-auto mr-5">
-        <div class="text-left">
-            <h1 class="m-0 text-blue-500 text-2xl font-bold">DỊCH VỤ THÚ CƯNG AN NHƠN - AN NHƠN PET</h1>
-            <p class="m-0 text-[#666] text-sm"><strong>Địa chỉ:</strong> 21 Lương Văn Can, phường Bình Định, tỉnh Gia Lai</p>
-            <p class="m-0 text-[#666] text-sm"><strong>Điện thoại:</strong> 0935.985.468 - 0388.13.8586</p>
-        </div>
+    <header class="bg-[#ffff9e] p-4 shadow-md flex flex-col sm:flex-row items-center sm:justify-center gap-1 mb-5">
+    <div class="flex-shrink-0 mb-1 sm:mb-0">
+        <img src="https://vydnquang.github.io/codeks/anp-logo.png" alt="AN NHON PET Logo" class="w-24 h-24 sm:w-32 sm:h-32 object-contain">
     </div>
+    <div class="text-center sm:text-left flex flex-col items-center sm:items-start">
+        <h1 class="text-xl sm:text-2xl font-bold text-blue-600 text-center">DỊCH VỤ THÚ CƯNG AN NHƠN<br><span class="nokia-font">AN NHƠN PET</span></h1>
+        <p class="text-gray-700 text-sm sm:text-base">Địa chỉ: 21 Lương Văn Can, P. Bình Định, T. Gia Lai</p>
+        <p class="text-gray-700 text-sm sm:text-base">Điện thoại: 0935.985.468 - 0388.13.8586</p>
+    </div>
+</header>
     
     <div class="max-w-2xl mx-auto p-5 md:p-6 lg:p-8 bg-white rounded-lg shadow-lg flex flex-col space-y-4">
         <p class="text-center text-red-500 text-2xl font-bold">PHẦN MỀM QUẢN LÝ LỊCH TIÊM PHÒNG THÚ CƯNG</p>
@@ -31,16 +47,16 @@
 
         <p class="text-center">Bấm vào nút dưới đây để kiểm tra lịch tiêm chủng:</p>
 
-        <div class="text-center my-5 flex justify-center flex-wrap gap-2">
-            <button id="rabiesButton" class="py-2 px-4 text-white text-base cursor-pointer border-none rounded-md transition-colors bg-[#d9534f] hover:bg-[#c9302c] mx-2">Tiêm phòng Dại</button>
-            <button id="sevenInOneButton" class="py-2 px-4 text-white text-base cursor-pointer border-none rounded-md transition-colors bg-[#5cb85c] hover:bg-[#4cae4c] mx-2">Tiêm phòng 7-in-1</button>
-            <button id="fourInOneButton" class="py-2 px-4 text-white text-base cursor-pointer border-none rounded-md transition-colors bg-[#0088cc] hover:bg-[#006699] mx-2">Tiêm phòng 4-in-1</button>
-        </div>
+<div class="text-center my-5 flex flex-col sm:flex-row justify-center gap-2">
+    <button id="rabiesButton" class="py-2 px-4 text-white text-base cursor-pointer border-none rounded-md transition-colors bg-[#d9534f] hover:bg-[#c9110c] mx-2 flex-1">Vaccine Dại</button>
+    <button id="sevenInOneButton" class="py-2 px-4 text-white text-base cursor-pointer border-none rounded-md transition-colors bg-[#5cb85c] hover:bg-[#008000] mx-2 flex-1">Vaccine 7-in-1</button>
+    <button id="fourInOneButton" class="py-2 px-4 text-white text-base cursor-pointer border-none rounded-md transition-colors bg-[#0088cc] hover:bg-[#006699] mx-2 flex-1">Vaccine 4-in-1</button>
+</div>
         <div id="results" class="mt-5 space-y-4"></div>
     </div>
 
     <footer class="text-center p-5 bg-[#a88a77] text-white mt-5 border-t-2 border-solid border-[#555]">
-        <p class="m-0 text-sm">&copy; 2025 Dịch vụ Thú cưng An Nhơn - An Nhơn Pet. Mọi quyền được bảo lưu.</p>
+        <p class="m-0 text-sm">&copy; 2025 Dịch vụ Thú cưng An Nhơn</p>
         <p class="m-0 text-sm">Phát triển bởi <strong class="text-[#85ffb8]">nh@tqu@ng</strong></p>
     </footer>
 
