@@ -57,11 +57,11 @@ function countTotalPets() {
 function processVaccineData(vaccineType, speciesFilter) {
     let headerText = '';
     if (vaccineType === 'ngày tiêm phòng dại') {
-        headerText = 'Kết quả Tiêm phòng Dại cho Cún & Mèo';
+        headerText = 'Danh sách tiêm vaccine Dại cho Cún & Mèo';
     } else if (vaccineType === 'ngày tiêm phòng vaccine 7 bệnh') {
-        headerText = 'Kết quả Tiêm phòng 7 bệnh cho Cún';
+        headerText = 'Danh sách tiêm vaccine 7-in-1 cho Cún';
     } else if (vaccineType === 'ngày tiêm phòng vaccine 4 bệnh') {
-        headerText = 'Kết quả Tiêm phòng 4 bệnh cho Mèo';
+        headerText = 'Danh sách tiêm vaccine 4-in-1 cho Mèo';
     }
 
     resultsDiv.innerHTML = `<h2 class="text-blue-500 text-center text-xl font-bold">${headerText}</h2>`;
@@ -248,5 +248,6 @@ function downloadUpdatedCSV() {
     link.click();
     document.body.removeChild(link);
 }
+
 
 window.onload = countTotalPets;
