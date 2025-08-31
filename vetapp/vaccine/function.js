@@ -155,7 +155,8 @@ function processVaccineData(vaccineType, speciesFilter) {
         let iconHtml = '';
         // Icon xác nhận cập nhật
         if (petInfo.index == updatedIndex && petInfo.statusColorClass === 'border-green-500 bg-green-100') {
-             iconHtml = '<span class="text-2xl leading-none absolute top-4 right-4 text-green-500">✅</span>';
+             // Thêm thuộc tính title để hiện chú thích khi trỏ chuột vào
+             iconHtml = '<span class="absolute top-4 right-4 text-green-500 text-3xl" title="Vừa cập nhật ngày tiêm vaccine"><i class="ti ti-calendar-check"></i></span>';
         }
         
         // Icon loài vật nuôi
@@ -170,9 +171,10 @@ function processVaccineData(vaccineType, speciesFilter) {
         let contactButtonsHtml = '';
         if (petInfo.statusColorClass.includes('border-yellow-500') || petInfo.statusColorClass.includes('border-red-500')) {
             const cleanPhoneNumber = petInfo.contact.replace(/\s/g, '');
+            // Các nút con sẽ tự động co giãn trong Flexbox
             contactButtonsHtml = `
-                <a href="tel:${cleanPhoneNumber}" class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#ff9429] hover:bg-[#fa6000]">Gọi điện</a>
-                <a href="https://zalo.me/${cleanPhoneNumber}" target="_blank" class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#0088cc] hover:bg-[#006699]">Chat Zalo</a>
+                <a href="tel:${cleanPhoneNumber}" class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#ff9429] hover:bg-[#fa6000] flex-1">Gọi điện</a>
+                <a href="https://zalo.me/${cleanPhoneNumber}" target="_blank" class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#0088cc] hover:bg-[#006699] flex-1">Chat Zalo</a>
             `;
         }
         
@@ -187,9 +189,11 @@ function processVaccineData(vaccineType, speciesFilter) {
                 <strong>Số điện thoại:</strong> ${petInfo.contact}<br>
                 <strong>Tình trạng tiêm phòng:</strong> ${petInfo.message}<br>
                 <div class="mt-4 update-section">
-                    <div class="flex gap-2 button-group-row">
-                        <button class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#ff6363] hover:bg-[#d62222] update-button" data-index="${petInfo.index}" data-type="${vaccineType}">Cập nhật ngày tiêm</button>
-                        ${contactButtonsHtml}
+                    <div class="flex flex-col sm:flex-row gap-2 button-group-row">
+                        <button class="flex items-center justify-center p-2 text-sm rounded-md cursor-pointer border-none text-white transition-colors bg-[#ff6363] hover:bg-[#d62222] update-button" data-index="${petInfo.index}" data-type="${vaccineType}">Cập nhật lại ngày tiêm</button>
+                        <div class="flex flex-1 gap-2">
+                            ${contactButtonsHtml}
+                        </div>
                     </div>
                     <div class="mt-2 flex gap-2 hidden update-form">
                         <input type="date" class="p-2 text-sm border border-[#ccc] rounded-md flex-grow">
