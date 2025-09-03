@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý tiêm chủng thú cưng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .scrollable-content {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        /* Tùy chỉnh thanh cuộn cho webkit (Chrome, Safari) */
+        .scrollable-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background-color: #9ca3af;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        /* Tùy chỉnh thanh cuộn cho các modal */
+        .modal-scrollable {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-scrollable::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-scrollable::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+
+        .modal-scrollable::-webkit-scrollbar-thumb {
+            background-color: #9ca3af;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+
+        /* CSS cho các nút tương tác */
+        .btn-action {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hiệu ứng mờ khi tải */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="content-container" class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl p-6">
+        <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
+            <h1 class="text-3xl text-center font-bold text-gray-900">Quản lý sức khỏe thú cưng</h1>
+            <div class="flex flex-col sm:flex-row gap-2">
+                <button id="export-excel-button" onclick="exportToExcel()"
+                    class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 btn-action">
+                    Xuất ra Excel
+                </button>
+                <button id="import-excel-button" onclick="showExcelImportModal()"
+                    class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 btn-action">
+                    Nhập từ Excel
+                </button>
+                <button id="add-pet-button" onclick="showAddPetModal()"
+                    class="bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105 btn-action">
+                    + Thêm thú cưng
+                </button>
+                <button id="check-upcoming-button" onclick="showUpcomingVaccinationsModal()"
+                    class="bg-yellow-500 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105 btn-action">
+                    Kiểm tra lịch tiêm sắp tới
+                </button>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <input type="text" id="search-input" oninput="filterPets()"
+                   class="block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+                   placeholder="Tìm kiếm thú cưng theo Tên hoặc ID...">
+        </div>
+        
+        <div class="space-y-4 scrollable-content">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Danh sách thú cưng</h2>
+            <ul id="pets-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                </ul>
+        </div>
+    </div>
+
+    <div id="add-pet-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
+            <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Thêm thú cưng mới</h3>
+            <form id="add-pet-form" class="space-y-4">
+                <div>
+                    <label for="pet-id" class="block text-sm font-medium text-gray-700">Số ID</label>
+                    <input type="text" id="pet-id" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="pet-name" class="block text-sm font-medium text-gray-700">Tên thú cưng</label>
+                    <input type="text" id="pet-name" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="pet-type" class="block text-sm font-medium text-gray-700">Loài</label>
+                    <select id="pet-type" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                        <option value="">Chọn loài</option>
+                        <option value="Chó">Chó</option>
+                        <option value="Mèo">Mèo</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="pet-breed" class="block text-sm font-medium text-gray-700">Giống</label>
+                    <input type="text" id="pet-breed"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="pet-dob" class="block text-sm font-medium text-gray-700">Ngày sinh</label>
+                    <input type="date" id="pet-dob"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="pet-gender" class="block text-sm font-medium text-gray-700">Giới tính</label>
+                    <select id="pet-gender" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                        <option value="">Chọn giới tính</option>
+                        <option value="Đực">Đực</option>
+                        <option value="Cái">Cái</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="pet-color" class="block text-sm font-medium text-gray-700">Màu lông</label>
+                    <input type="text" id="pet-color"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="pet-owner" class="block text-sm font-medium text-gray-700">Tên chủ</label>
+                    <input type="text" id="pet-owner"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="pet-address" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
+                    <input type="text" id="pet-address"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="pet-phone" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
+                    <input type="tel" id="pet-phone"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div class="flex justify-end space-x-2 mt-6">
+                    <button type="button" onclick="closeModal('add-pet-modal')"
+                        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-400 transition duration-300">Hủy</button>
+                    <button type="submit"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition duration-300">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-pet-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-51 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
+            <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Chỉnh sửa thú cưng</h3>
+            <form id="edit-pet-form" class="space-y-4">
+                <input type="hidden" id="current-edit-pet-id">
+                <div>
+                    <label for="edit-pet-id" class="block text-sm font-medium text-gray-700">Số ID</label>
+                    <input type="text" id="edit-pet-id" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="edit-pet-name" class="block text-sm font-medium text-gray-700">Tên thú cưng</label>
+                    <input type="text" id="edit-pet-name" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="edit-pet-type" class="block text-sm font-medium text-gray-700">Loài</label>
+                    <select id="edit-pet-type" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                        <option value="Chó">Chó</option>
+                        <option value="Mèo">Mèo</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="edit-pet-breed" class="block text-sm font-medium text-gray-700">Giống</label>
+                    <input type="text" id="edit-pet-breed"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="edit-pet-dob" class="block text-sm font-medium text-gray-700">Ngày sinh</label>
+                    <input type="date" id="edit-pet-dob"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="edit-pet-gender" class="block text-sm font-medium text-gray-700">Giới tính</label>
+                    <select id="edit-pet-gender" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                        <option value="Đực">Đực</option>
+                        <option value="Cái">Cái</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="edit-pet-color" class="block text-sm font-medium text-gray-700">Màu lông</label>
+                    <input type="text" id="edit-pet-color"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="edit-pet-owner" class="block text-sm font-medium text-gray-700">Tên chủ</label>
+                    <input type="text" id="edit-pet-owner"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="edit-pet-address" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
+                    <input type="text" id="edit-pet-address"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="edit-pet-phone" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
+                    <input type="tel" id="edit-pet-phone"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div class="flex justify-end space-x-2 mt-6">
+                    <button type="button" onclick="closeModal('edit-pet-modal')"
+                        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-400 transition duration-300">Hủy</button>
+                    <button type="submit"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition duration-300">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="pet-detail-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl fade-in modal-scrollable">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold text-gray-800">Thông tin chi tiết thú cưng</h3>
+                <button onclick="closeModal('pet-detail-modal')"
+                    class="text-gray-500 hover:text-gray-800 transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+                <img id="pet-detail-pet-photo" src="" alt="Ảnh thú cưng"
+                    class="w-32 h-32 object-cover rounded-full border-4 border-indigo-500 shadow-lg">
+                <div class="text-center md:text-left">
+                    <p id="pet-detail-pet-id" class="text-gray-600 mt-1"></p>
+                    <h4 id="pet-detail-pet-name" class="text-2xl font-bold text-gray-900"></h4>
+                    <p id="pet-detail-pet-type" class="text-gray-600 mt-1"></p>
+                    <p id="pet-detail-pet-breed" class="text-gray-600 mt-1"></p>
+                    <p id="pet-detail-pet-dob" class="text-gray-600 mt-1"></p>
+                    <p id="pet-detail-pet-gender" class="text-gray-600 mt-1"></p>
+                    <p id="pet-detail-pet-color" class="text-gray-600 mt-1"></p>
+                    <p id="pet-detail-pet-owner" class="text-gray-600 mt-1"></p>
+                    <p id="pet-detail-pet-address" class="text-gray-600 mt-1"></p>
+                    <p id="pet-detail-pet-phone" class="text-gray-600 mt-1"></p>
+                </div>
+            </div>
+            
+            <input type="hidden" id="current-detail-pet-id">
+
+            <div class="mt-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-xl font-semibold text-gray-800">Lịch tiêm chủng</h4>
+                    <button onclick="showAddVaccinationModal()"
+                        class="bg-green-500 text-white px-4 py-2 rounded-xl shadow-md hover:bg-green-600 transition duration-300 transform hover:scale-105 btn-action">
+                        + Thêm mũi tiêm
+                    </button>
+                </div>
+                <ul id="vaccinations-list" class="space-y-3">
+                    </ul>
+            </div>
+
+            <div class="flex justify-end space-x-2 mt-6">
+                <button id="delete-pet-btn" onclick="showConfirmationModal('Bạn có chắc chắn muốn xóa thú cưng này? Lịch tiêm chủng của nó cũng sẽ bị xóa.', deletePet)"
+                    class="bg-red-500 text-white px-4 py-2 rounded-xl shadow-md hover:bg-red-600 transition duration-300">Xóa thú cưng</button>
+                <button id="edit-pet-btn" onclick="showEditPetModal()"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-xl shadow-md hover:bg-blue-600 transition duration-300">Chỉnh sửa</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="add-vaccination-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
+            <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Thêm mũi tiêm mới</h3>
+            <form id="add-vaccination-form" class="space-y-4">
+                <div>
+                    <label for="vaccine-name-select" class="block text-sm font-medium text-gray-700">Tên vắc xin</label>
+                    <select id="vaccine-name-select" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                        <option value="">Chọn vắc xin</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="vaccine-date" class="block text-sm font-medium text-gray-700">Ngày tiêm</label>
+                    <input type="date" id="vaccine-date" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="vaccine-notes" class="block text-sm font-medium text-gray-700">Ghi chú (Tùy chọn)</label>
+                    <textarea id="vaccine-notes" rows="3"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2 mt-6">
+                    <button type="button" onclick="closeModal('add-vaccination-modal')"
+                        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-400 transition duration-300">Hủy</button>
+                    <button type="submit"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition duration-300">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="edit-vaccination-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
+            <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Chỉnh sửa mũi tiêm</h3>
+            <form id="edit-vaccination-form" class="space-y-4">
+                <input type="hidden" id="current-edit-vaccination-pet-id">
+                <input type="hidden" id="current-edit-vaccination-id">
+                <div>
+                    <label for="edit-vaccine-name-select" class="block text-sm font-medium text-gray-700">Tên vắc xin</label>
+                    <select id="edit-vaccine-name-select" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                    </select>
+                </div>
+                <div>
+                    <label for="edit-vaccine-date" class="block text-sm font-medium text-gray-700">Ngày tiêm</label>
+                    <input type="date" id="edit-vaccine-date" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="edit-vaccine-notes" class="block text-sm font-medium text-gray-700">Ghi chú (Tùy chọn)</label>
+                    <textarea id="edit-vaccine-notes" rows="3"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2 mt-6">
+                    <button type="button" onclick="closeModal('edit-vaccination-modal')"
+                        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-400 transition duration-300">Hủy</button>
+                    <button type="submit"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition duration-300">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="confirmation-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm fade-in">
+            <div class="text-center">
+                <p id="confirmation-message" class="text-lg font-semibold text-gray-800 mb-4"></p>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="cancelDeletion()"
+                        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-400 transition duration-300">Hủy</button>
+                    <button onclick="confirmDeletion()"
+                        class="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition duration-300">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="import-excel-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
+        <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Nhập dữ liệu từ Excel</h3>
+        <div class="space-y-4">
+            <label for="excel-file-input" class="block text-sm font-medium text-gray-700">Chọn một tệp Excel (.xlsx hoặc .xls)</label>
+            
+            <input type="file" id="excel-file-input" accept=".xlsx, .xls"
+                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+            <p id="excel-import-error-message" class="text-sm text-red-500 mt-2 hidden">Dữ liệu nhập không hợp lệ. Vui lòng kiểm tra lại.</p>
+            <div class="flex justify-end space-x-2 mt-6">
+                <button type="button" onclick="closeModal('import-excel-modal')"
+                    class="bg-gray-300 text-gray-800 px-4 py-2 rounded-xl hover:bg-gray-400 transition duration-300">Hủy</button>
+                <button type="button" onclick="importExcelFile()"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition duration-300">Nhập</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="upcoming-vaccinations-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-xl fade-in modal-scrollable">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold text-gray-800">Lịch tiêm chủng sắp tới</h3>
+                <button onclick="closeModal('upcoming-vaccinations-modal')"
+                    class="text-gray-500 hover:text-gray-800 transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <ul id="upcoming-pets-list" class="space-y-3">
+                </ul>
+        </div>
+    </div>
+    
+
+<script type="module">
+        
+// Nhập các hàm cần thiết từ Firebase SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getDatabase, ref, onValue, set, push, update, remove } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+
+// Nhập thư viện SheetJS để xử lý Excel
+import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.mjs";
+
+// Cấu hình Firebase của bạn
+const firebaseConfig = {
+    apiKey: "AIzaSyDWvm80NOv3NzyZyY8oY8o4JOl39pz2To0",
+    authDomain: "vaccination-annhonpet.firebaseapp.com",
+    databaseURL: "https://vaccination-annhonpet-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "vaccination-annhonpet",
+    messagingSenderId: "358228492756",
+    appId: "1:358228492756:web:e618f8f3d832bd303bd641",
+    measurementId: "G-Q4WG9JG61P"
+};
+
+// Khởi tạo Firebase và kết nối với Database
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const database = getDatabase(app);
+const petsRef = ref(database, 'pets');
+
+// State variables
+let petsData = [];
+let currentDeletionFunction = null;
+
+// UI elements
+const petsList = document.getElementById('pets-list');
+const vaccinationsList = document.getElementById('vaccinations-list');
+const addPetForm = document.getElementById('add-pet-form');
+const editPetForm = document.getElementById('edit-pet-form');
+const addVaccinationForm = document.getElementById('add-vaccination-form');
+const editVaccinationForm = document.getElementById('edit-vaccination-form');
+const addPetModal = document.getElementById('add-pet-modal');
+const editPetModal = document.getElementById('edit-pet-modal');
+const addVaccinationModal = document.getElementById('add-vaccination-modal');
+const editVaccinationModal = document.getElementById('edit-vaccination-modal');
+const petDetailModal = document.getElementById('pet-detail-modal');
+const confirmationModal = document.getElementById('confirmation-modal');
+const importExcelModal = document.getElementById('import-excel-modal');
+const upcomingVaccinationsModal = document.getElementById('upcoming-vaccinations-modal');
+const petDetailPetId = document.getElementById('pet-detail-pet-id');
+const petDetailPetName = document.getElementById('pet-detail-pet-name');
+const petDetailPetType = document.getElementById('pet-detail-pet-type');
+const petDetailPetDob = document.getElementById('pet-detail-pet-dob');
+const petDetailPetBreed = document.getElementById('pet-detail-pet-breed');
+const petDetailPetGender = document.getElementById('pet-detail-pet-gender');
+const petDetailPetColor = document.getElementById('pet-detail-pet-color');
+const petDetailPetOwner = document.getElementById('pet-detail-pet-owner');
+const petDetailPetAddress = document.getElementById('pet-detail-pet-address');
+const petDetailPetPhone = document.getElementById('pet-detail-pet-phone');
+const currentEditPetId = document.getElementById('current-edit-pet-id');
+const currentDetailPetId = document.getElementById('current-detail-pet-id');
+const excelImportErrorMsg = document.getElementById('excel-import-error-message');
+const upcomingPetsList = document.getElementById('upcoming-pets-list');
+const searchInput = document.getElementById('search-input');
+const vaccineNameSelect = document.getElementById('vaccine-name-select');
+const editVaccineNameSelect = document.getElementById('edit-vaccine-name-select');
+
+// --- Các hàm xử lý Firebase ---
+const loadPetsFromFirebase = () => {
+    onValue(petsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            petsData = Object.keys(data).map(key => ({ ...data[key], id: key }));
+        } else {
+            petsData = [];
+        }
+        renderPetsList(petsData);
+    }, (error) => {
+        console.error("Lỗi khi tải dữ liệu từ Firebase:", error);
+        alertMessage("Lỗi khi tải dữ liệu. Vui lòng kiểm tra kết nối!", "error");
+    });
+};
+
+const deletePetFromDb = (petId) => {
+    remove(ref(database, 'pets/' + petId))
+        .then(() => {
+            alertMessage("Thú cưng đã được xóa!", "success");
+            closeModal('pet-detail-modal');
+        })
+        .catch((error) => {
+            console.error("Lỗi khi xóa thú cưng:", error);
+            alertMessage("Lỗi khi xóa. Vui lòng thử lại!", "error");
+        });
+};
+
+const addVaccinationToDb = (petId, vaccineData) => {
+    const vaccinationsRef = ref(database, `pets/${petId}/vaccinations`);
+    const newVaccineRef = push(vaccinationsRef);
+    set(newVaccineRef, vaccineData)
+        .then(() => {
+            alertMessage("Thêm mũi tiêm thành công!", "success");
+            renderVaccinations(petId);
+        })
+        .catch((error) => {
+            console.error("Lỗi khi thêm mũi tiêm:", error);
+            alertMessage("Lỗi khi thêm mũi tiêm. Vui lòng thử lại!", "error");
+        });
+};
+
+const updateVaccinationInDb = (petId, vaccineId, vaccineData) => {
+    update(ref(database, `pets/${petId}/vaccinations/${vaccineId}`), vaccineData)
+        .then(() => {
+            alertMessage("Cập nhật mũi tiêm thành công!", "success");
+            renderVaccinations(petId);
+        })
+        .catch((error) => {
+            console.error("Lỗi khi cập nhật mũi tiêm:", error);
+            alertMessage("Lỗi khi cập nhật. Vui lòng thử lại!", "error");
+        });
+};
+
+const deleteVaccinationFromDb = (petId, vaccineId) => {
+    remove(ref(database, `pets/${petId}/vaccinations/${vaccineId}`))
+        .then(() => {
+            alertMessage("Mũi tiêm đã được xóa!", "success");
+            renderVaccinations(petId);
+        })
+        .catch((error) => {
+            console.error("Lỗi khi xóa mũi tiêm:", error);
+            alertMessage("Lỗi khi xóa. Vui lòng thử lại!", "error");
+        });
+};
+
+// --- Các hàm render giao diện ---
+const renderPetsList = (pets) => {
+    petsList.innerHTML = '';
+    if (pets.length === 0) {
+        petsList.innerHTML = `<p class="text-center text-gray-500 mt-4">Chưa có thú cưng nào được tìm thấy. <br/>Hãy thử tìm kiếm khác hoặc thêm con đầu tiên của bạn!</p>`;
+        return;
+    }
+    pets.forEach(pet => {
+        const li = document.createElement('li');
+        li.className = 'bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition duration-300 ease-in-out transform hover:scale-105';
+        li.innerHTML = `
+        <div class="flex items-center space-x-4">
+            <img src="${pet.photoUrl || 'https://placehold.co/100x100'}" alt="${pet.name}" class="w-16 h-16 object-cover rounded-full">
+            <div class="flex-grow">
+                <h4 class="text-lg font-semibold text-gray-900">${pet.name}</h4>
+                <p class="text-sm text-gray-600">ID: ${pet.id}</p>
+                <p class="text-sm text-gray-600">Loài: ${pet.type}</p>
+            </div>
+        </div>
+    `;
+        li.onclick = () => window.showPetDetail(pet.id);
+        petsList.appendChild(li);
+    });
+};
+
+const renderVaccinations = (petId) => {
+    const pet = petsData.find(p => p.id === petId);
+    vaccinationsList.innerHTML = '';
+    if (pet && pet.vaccinations) {
+        const vaccinations = Object.keys(pet.vaccinations).map(key => ({ ...pet.vaccinations[key], id: key }));
+        vaccinations.forEach(vac => {
+            const li = document.createElement('li');
+            li.className = 'bg-gray-100 p-4 rounded-lg shadow-sm flex justify-between items-center transition duration-300 hover:bg-gray-200';
+            li.innerHTML = `
+            <div>
+                <p class="font-semibold">${vac.vaccineName}</p>
+                <p class="text-sm text-gray-600">Ngày tiêm: ${vac.date}</p>
+                ${vac.notes ? `<p class="text-sm text-gray-500 italic">Ghi chú: ${vac.notes}</p>` : ''}
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="window.showEditVaccinationModal('${petId}', '${vac.id}')" class="text-blue-500 hover:text-blue-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                        <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <button onclick="window.showConfirmationModal('Bạn có chắc chắn muốn xóa mũi tiêm này?', () => window.deleteVaccinationFromDb('${petId}', '${vac.id}'))" class="text-red-500 hover:text-red-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        `;
+            vaccinationsList.appendChild(li);
+        });
+    } else {
+        vaccinationsList.innerHTML = `<p class="text-center text-gray-500 mt-2">Chưa có mũi tiêm nào được ghi nhận.</p>`;
+    }
+};
+
+// --- Hàm xử lý UI và Modal ---
+const showModal = (modalId) => {
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('hidden');
+};
+
+const closeModal = (modalId) => {
+    const modal = document.getElementById(modalId);
+    modal.classList.add('hidden');
+};
+
+// Export functions to the global scope so they can be called from HTML onclick attributes
+window.showAddPetModal = () => {
+    addPetForm.reset();
+    showModal('add-pet-modal');
+};
+
+window.showEditPetModal = (petId) => {
+    closeModal('pet-detail-modal');
+    const pet = petsData.find(p => p.id === petId);
+    if (pet) {
+        document.getElementById('current-edit-pet-id').value = pet.id;
+        document.getElementById('edit-pet-id').value = pet.id;
+        document.getElementById('edit-pet-name').value = pet.name;
+        document.getElementById('edit-pet-type').value = pet.type;
+        document.getElementById('edit-pet-breed').value = pet.breed || '';
+        document.getElementById('edit-pet-gender').value = pet.gender;
+        document.getElementById('edit-pet-dob').value = pet.dob || '';
+        document.getElementById('edit-pet-color').value = pet.color || '';
+        document.getElementById('edit-pet-owner').value = pet.owner || '';
+        document.getElementById('edit-pet-address').value = pet.address || '';
+        document.getElementById('edit-pet-phone').value = pet.phone || '';
+        showModal('edit-pet-modal');
+    }
+};
+
+window.showPetDetail = (petId) => {
+    const pet = petsData.find(p => p.id === petId);
+    if (pet) {
+        currentDetailPetId.value = petId;
+        document.getElementById('pet-detail-pet-photo').src = pet.photoUrl || 'https://placehold.co/100x100';
+        petDetailPetId.textContent = `ID: ${pet.id}`;
+        petDetailPetName.textContent = pet.name;
+        petDetailPetType.textContent = `Loài: ${pet.type}`;
+        petDetailPetBreed.textContent = `Giống: ${pet.breed || 'Không có'}`;
+        petDetailPetDob.textContent = `Ngày sinh: ${pet.dob || 'Không có'}`;
+        petDetailPetGender.textContent = `Giới tính: ${pet.gender}`;
+        petDetailPetColor.textContent = `Màu lông: ${pet.color || 'Không có'}`;
+        petDetailPetOwner.textContent = `Chủ: ${pet.owner || 'Không có'}`;
+        petDetailPetAddress.textContent = `Địa chỉ: ${pet.address || 'Không có'}`;
+        petDetailPetPhone.textContent = `SĐT: ${pet.phone || 'Không có'}`;
+
+        document.getElementById('edit-pet-btn').onclick = () => window.showEditPetModal(petId);
+        document.getElementById('delete-pet-btn').onclick = () => window.showConfirmationModal('Bạn có chắc chắn muốn xóa thú cưng này? Lịch tiêm chủng của nó cũng sẽ bị xóa.', () => window.deletePetFromDb(petId));
+
+        renderVaccinations(pet.id);
+        showModal('pet-detail-modal');
+    }
+};
+
+window.showAddVaccinationModal = () => {
+    const petId = currentDetailPetId.value;
+    const pet = petsData.find(p => p.id === petId);
+    if (pet) {
+        updateVaccineSelect(pet.type, vaccineNameSelect);
+        addVaccinationForm.reset();
+        showModal('add-vaccination-modal');
+    }
+};
+
+window.showEditVaccinationModal = (petId, vaccineId) => {
+    const pet = petsData.find(p => p.id === petId);
+    if (pet && pet.vaccinations && pet.vaccinations[vaccineId]) {
+        const vac = pet.vaccinations[vaccineId];
+        document.getElementById('current-edit-vaccination-pet-id').value = petId;
+        document.getElementById('current-edit-vaccination-id').value = vaccineId;
+        updateVaccineSelect(pet.type, editVaccineNameSelect);
+        editVaccineNameSelect.value = vac.vaccineName;
+        document.getElementById('edit-vaccine-date').value = vac.date;
+        document.getElementById('edit-vaccine-notes').value = vac.notes || '';
+        showModal('edit-vaccination-modal');
+    }
+};
+
+window.closeModal = (modalId) => {
+    closeModal(modalId);
+};
+
+window.showConfirmationModal = (message, confirmAction) => {
+    document.getElementById('confirmation-message').textContent = message;
+    currentDeletionFunction = confirmAction;
+    showModal('confirmation-modal');
+};
+
+window.confirmDeletion = () => {
+    if (currentDeletionFunction) {
+        currentDeletionFunction();
+        closeModal('confirmation-modal');
+    }
+};
+
+window.cancelDeletion = () => {
+    currentDeletionFunction = null;
+    closeModal('confirmation-modal');
+};
+
+window.deleteVaccinationFromDb = deleteVaccinationFromDb;
+
+// --- Hàm tạo ảnh đại diện từ tên ---
+const generateAvatar = (name) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 100;
+    canvas.height = 100;
+    const ctx = canvas.getContext('2d');
+    const colors = ["#4a90e2", "#50e3c2", "#b8e986", "#f5a623", "#f8e71c"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(50, 50, 50, 0, 2 * Math.PI);
+    ctx.fill();
+
+    let initials = '';
+    const nameParts = name.trim().split(/\s+/);
+    if (nameParts.length > 1) {
+        initials = nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0);
+    } else {
+        initials = name.charAt(0) + name.charAt(name.length - 1);
+    }
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 48px Inter, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(initials.toUpperCase(), 50, 50);
+
+    return canvas.toDataURL();
+};
+
+// --- Các hàm xử lý Form submissions ---
+
+addPetForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const petId = document.getElementById('pet-id').value;
+    const petName = document.getElementById('pet-name').value;
+    const petType = document.getElementById('pet-type').value;
+    const petBreed = document.getElementById('pet-breed').value;
+    const petGender = document.getElementById('pet-gender').value;
+    const petDob = document.getElementById('pet-dob').value;
+    const petColor = document.getElementById('pet-color').value;
+    const petOwner = document.getElementById('pet-owner').value;
+    const petAddress = document.getElementById('pet-address').value;
+    const petPhone = document.getElementById('pet-phone').value;
+
+    const isIdUsed = petsData.some(pet => pet.id.toLowerCase() === petId.toLowerCase());
+    if (isIdUsed) {
+        alertMessage('ID này đã tồn tại. Vui lòng chọn ID khác.', 'error');
+        return;
+    }
+
+    const newPet = {
+        id: petId,
+        name: petName,
+        type: petType,
+        breed: petBreed,
+        gender: petGender,
+        dob: petDob,
+        color: petColor,
+        owner: petOwner,
+        address: petAddress,
+        phone: petPhone,
+        photoUrl: generateAvatar(petName)
+    };
+
+    try {
+        await set(ref(database, 'pets/' + petId), newPet);
+        closeModal('add-pet-modal');
+        alertMessage("Đã lưu thành công!", "success");
+    } catch (error) {
+        console.error("Lỗi khi lưu dữ liệu:", error);
+        alertMessage("Lỗi khi lưu dữ liệu. Vui lòng thử lại!", "error");
+    }
+});
+
+editPetForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const originalPetId = document.getElementById('current-edit-pet-id').value;
+    const newPetId = document.getElementById('edit-pet-id').value;
+    const petName = document.getElementById('edit-pet-name').value;
+    const petType = document.getElementById('edit-pet-type').value;
+    const petBreed = document.getElementById('edit-pet-breed').value;
+    const petGender = document.getElementById('edit-pet-gender').value;
+    const petDob = document.getElementById('edit-pet-dob').value;
+    const petColor = document.getElementById('edit-pet-color').value;
+    const petOwner = document.getElementById('edit-pet-owner').value;
+    const petAddress = document.getElementById('edit-pet-address').value;
+    const petPhone = document.getElementById('edit-pet-phone').value;
+
+    const updatedPet = {
+        id: newPetId,
+        name: petName,
+        type: petType,
+        breed: petBreed,
+        gender: petGender,
+        dob: petDob,
+        color: petColor,
+        owner: petOwner,
+        address: petAddress,
+        phone: petPhone,
+        photoUrl: generateAvatar(petName)
+    };
+
+    try {
+        await update(ref(database, 'pets/' + originalPetId), updatedPet);
+        closeModal('edit-pet-modal');
+        closeModal('pet-detail-modal');
+        alertMessage("Đã lưu thành công!", "success");
+    } catch (error) {
+        console.error("Lỗi khi cập nhật dữ liệu:", error);
+        alertMessage("Lỗi khi cập nhật dữ liệu. Vui lòng thử lại!", "error");
+    }
+});
+
+addVaccinationForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const petId = currentDetailPetId.value;
+    const vaccineName = vaccineNameSelect.value;
+    const vaccineDate = document.getElementById('vaccine-date').value;
+    const vaccineNotes = document.getElementById('vaccine-notes').value;
+
+    const newVaccine = {
+        vaccineName: vaccineName,
+        date: vaccineDate,
+        notes: vaccineNotes,
+        created: new Date().toISOString()
+    };
+    addVaccinationToDb(petId, newVaccine);
+    closeModal('add-vaccination-modal');
+});
+
+editVaccinationForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const petId = document.getElementById('current-edit-vaccination-pet-id').value;
+    const vaccineId = document.getElementById('current-edit-vaccination-id').value;
+    const vaccineName = editVaccineNameSelect.value;
+    const vaccineDate = document.getElementById('edit-vaccine-date').value;
+    const vaccineNotes = document.getElementById('edit-vaccine-notes').value;
+
+    const updatedVaccine = {
+        vaccineName: vaccineName,
+        date: vaccineDate,
+        notes: vaccineNotes,
+    };
+    updateVaccinationInDb(petId, vaccineId, updatedVaccine);
+    closeModal('edit-vaccination-modal');
+});
+
+// --- Các hàm khác ---
+window.filterPets = () => {
+    const query = searchInput.value.toLowerCase();
+    const filtered = petsData.filter(pet =>
+        pet.name.toLowerCase().includes(query) || pet.id.toLowerCase().includes(query)
+    );
+    renderPetsList(filtered);
+};
+
+window.updateVaccineSelect = (petType, selectElement) => {
+    selectElement.innerHTML = '<option value="">Chọn vắc xin</option>';
+    let options = [];
+    if (petType === "Chó") {
+        options = ["Dại", "7 bệnh mũi 1", "7 bệnh mũi 2", "7 bệnh mũi 3", "7 bệnh hằng năm"];
+    } else if (petType === "Mèo") {
+        options = ["Dại", "4 bệnh mũi 1", "4 bệnh mũi 2", "4 bệnh mũi 3", "4 bệnh hằng năm"];
+    }
+
+    options.forEach(optionText => {
+        const optionElement = document.createElement('option');
+        optionElement.value = optionText;
+        optionElement.textContent = optionText;
+        selectElement.appendChild(optionElement);
+    });
+};
+
+const alertMessage = (message, type) => {
+    const alertBox = document.createElement('div');
+    alertBox.className = `fixed bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg shadow-xl text-white text-center transition-all duration-300 transform ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} z-50`;
+    alertBox.textContent = message;
+    document.body.appendChild(alertBox);
+    setTimeout(() => {
+        alertBox.classList.add('opacity-0');
+        setTimeout(() => alertBox.remove(), 300);
+    }, 3000);
+};
+
+// --- Các hàm xử lý Excel (ĐÃ HOÀN THIỆN) ---
+
+window.exportToExcel = () => {
+    try {
+        if (petsData.length === 0) {
+            alertMessage("Không có dữ liệu để xuất.", "error");
+            return;
+        }
+
+        const exportData = [];
+        const headers = ["ID", "Tên Thú Cưng", "Loài", "Giống", "Giới Tính", "Ngày Sinh", "Màu Lông", "Chủ", "Địa Chỉ", "SĐT", "Tên Vắc Xin", "Ngày Tiêm", "Ghi Chú"];
+        exportData.push(headers);
+
+        petsData.forEach(pet => {
+            if (pet.vaccinations && Object.keys(pet.vaccinations).length > 0) {
+                Object.keys(pet.vaccinations).forEach(vacId => {
+                    const vac = pet.vaccinations[vacId];
+                    exportData.push([
+                        pet.id,
+                        pet.name,
+                        pet.type,
+                        pet.breed || '',
+                        pet.gender || '',
+                        pet.dob || '',
+                        pet.color || '',
+                        pet.owner || '',
+                        pet.address || '',
+                        pet.phone || '',
+                        vac.vaccineName,
+                        vac.date,
+                        vac.notes || ''
+                    ]);
+                });
+            } else {
+                // Thú cưng không có mũi tiêm nào
+                exportData.push([
+                    pet.id,
+                    pet.name,
+                    pet.type,
+                    pet.breed || '',
+                    pet.gender || '',
+                    pet.dob || '',
+                    pet.color || '',
+                    pet.owner || '',
+                    pet.address || '',
+                    pet.phone || '',
+                    '', '', '' // Cột vắc xin để trống
+                ]);
+            }
+        });
+
+        const worksheet = XLSX.utils.aoa_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Lịch Tiêm Chủng");
+        XLSX.writeFile(workbook, "LichTiemChung_AnNhonPet.xlsx");
+        alertMessage("Đã xuất ra Excel thành công!", "success");
+
+    } catch (error) {
+        console.error("Lỗi khi xuất file Excel:", error);
+        alertMessage("Lỗi khi xuất file Excel. Vui lòng thử lại!", "error");
+    }
+};
+
+window.showExcelImportModal = () => {
+    showModal('import-excel-modal');
+};
+
+window.importExcelFile = () => {
+    const fileInput = document.getElementById('excel-file-input');
+    if (!fileInput.files.length) {
+        alertMessage("Vui lòng chọn một tệp Excel.", "error");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+        try {
+            alertMessage("Đang nhập dữ liệu từ Excel...", "info");
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {
+                type: 'array'
+            });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const json = XLSX.utils.sheet_to_json(worksheet);
+
+            if (!json || json.length === 0) {
+                alertMessage("Tệp Excel không có dữ liệu.", "error");
+                return;
+            }
+
+            const petsFromDbSnapshot = await new Promise(resolve => {
+                onValue(petsRef, (snapshot) => {
+                    resolve(snapshot.val());
+                }, {
+                    onlyOnce: true
+                });
+            });
+            const petsFromDb = petsFromDbSnapshot || {};
+            const updates = {};
+            const processedPets = new Set();
+
+            // Hàm chuyển đổi số Excel sang ngày
+            const excelDateToJSDate = (serial) => {
+                const utc_days = Math.floor(serial - 25569);
+                const utc_value = utc_days * 86400;
+                const date_info = new Date(utc_value * 1000);
+                const year = date_info.getUTCFullYear();
+                const month = String(date_info.getUTCMonth() + 1).padStart(2, '0');
+                const day = String(date_info.getUTCDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            json.forEach(row => {
+                const petId = row["ID"] ? String(row["ID"]) : null;
+                if (!petId) return;
+
+                // Lấy thông tin thú cưng hiện có trong Firebase hoặc tạo mới
+                const existingPet = petsFromDb[petId] || {};
+                
+                // Cập nhật thông tin chung của thú cưng
+                const petDataFromExcel = {
+                    id: petId,
+                    name: row["Tên Thú Cưng"] || '',
+                    type: row["Loài"] || '',
+                    breed: row["Giống"] || '',
+                    gender: row["Giới Tính"] || '',
+                    dob: row["Ngày Sinh"] || '',
+                    color: row["Màu Lông"] || '',
+                    owner: row["Chủ"] || '',
+                    address: row["Địa Chỉ"] || '',
+                    phone: row["SĐT"] || '',
+                    photoUrl: existingPet.photoUrl || generateAvatar(row["Tên Thú Cưng"] || petId)
+                };
+
+                // Lấy danh sách mũi tiêm từ Excel (nếu có)
+                let newVaccination = null;
+                if (row["Tên Vắc Xin"] && row["Ngày Tiêm"]) {
+                    let dateValue = row["Ngày Tiêm"];
+                    if (typeof dateValue === 'number') {
+                        dateValue = excelDateToJSDate(dateValue);
+                    }
+                    newVaccination = {
+                        vaccineName: row["Tên Vắc Xin"],
+                        date: dateValue,
+                        notes: row["Ghi Chú"] || '',
+                        created: new Date().toISOString()
+                    };
+                }
+
+                // Kiểm tra xem đã xử lý thú cưng này chưa
+                if (!updates[`pets/${petId}`]) {
+                    // Lần đầu tiên xử lý thú cưng này trong vòng lặp
+                    const combinedVaccinations = { ...existingPet.vaccinations };
+                    if (newVaccination) {
+                        const isDuplicate = Object.values(combinedVaccinations).some(vac =>
+                            vac.vaccineName === newVaccination.vaccineName && vac.date === newVaccination.date
+                        );
+                        if (!isDuplicate) {
+                            const newVacKey = push(ref(database, 'dummy')).key; // Tạo key tạm thời
+                            combinedVaccinations[newVacKey] = newVaccination;
+                        }
+                    }
+                    updates[`pets/${petId}`] = { ...existingPet, ...petDataFromExcel, vaccinations: combinedVaccinations };
+                } else {
+                    // Thú cưng này đã được xử lý, chỉ thêm mũi tiêm mới
+                    if (newVaccination) {
+                        const existingVaccinations = updates[`pets/${petId}`].vaccinations;
+                        const isDuplicate = Object.values(existingVaccinations).some(vac =>
+                            vac.vaccineName === newVaccination.vaccineName && vac.date === newVaccination.date
+                        );
+                        if (!isDuplicate) {
+                            const newVacKey = push(ref(database, 'dummy')).key;
+                            updates[`pets/${petId}`].vaccinations[newVacKey] = newVaccination;
+                        }
+                    }
+                }
+            });
+
+            // Ghi dữ liệu vào Firebase
+            if (Object.keys(updates).length > 0) {
+                await update(ref(database), updates);
+                alertMessage("Nhập Excel thành công!", "success");
+            } else {
+                alertMessage("Không tìm thấy dữ liệu thú cưng hợp lệ trong tệp.", "error");
+            }
+            closeModal('import-excel-modal');
+        } catch (error) {
+            console.error("Lỗi khi nhập file Excel:", error);
+            alertMessage(`Lỗi: ${error.message}. Vui lòng kiểm tra định dạng file.`, "error");
+        }
+    };
+    reader.onerror = (error) => {
+        console.error("Lỗi khi đọc file:", error);
+        alertMessage("Lỗi khi đọc file. Vui lòng thử lại.", "error");
+    };
+    reader.readAsArrayBuffer(file);
+};
+
+window.showUpcomingVaccinationsModal = () => {
+    showModal('upcoming-vaccinations-modal');
+    alertMessage("Chức năng xem lịch tiêm sắp tới chưa được triển khai đầy đủ.", "info");
+    console.log("Mở modal lịch tiêm sắp tới...");
+};
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    loadPetsFromFirebase();
+});
+
+    </script>
+    
+
+</body>
+
+</html>
