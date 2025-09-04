@@ -92,9 +92,11 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
     <div id="content-container" class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl p-6">
-        <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
-            <h1 class="text-3xl text-center font-bold text-gray-900">Quản lý sức khỏe thú cưng</h1>
-            <div class="flex flex-col sm:flex-row gap-2">
+        <div class="flex flex-col items-center gap-6 mb-6">
+            <h1 class="text-3xl text-center font-bold text-gray-900">
+                <span class="text-blue-500">An Nhơn Pet</span> - Quản lý lịch tiêm phòng thú cưng
+            </h1>
+            <div class="flex flex-col sm:flex-row gap-2 justify-center">
                 <button id="export-excel-button" onclick="exportToExcel()"
                     class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 btn-action">
                     Xuất ra Excel
@@ -108,20 +110,24 @@
                     + Thêm thú cưng
                 </button>
                 <button id="check-upcoming-button" onclick="showUpcomingVaccinationsModal()"
-                    class="bg-yellow-500 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105 btn-action">
-                    Kiểm tra lịch tiêm sắp tới
-                </button>
+    class="relative bg-yellow-500 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105 btn-action">
+    Kiểm tra nhắc lịch tiêm
+    <span id="upcoming-reminder-count"
+        class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">
+        0
+    </span>
+</button>
             </div>
         </div>
 
         <div class="mb-6">
             <input type="text" id="search-input" oninput="filterPets()"
                    class="block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
-                   placeholder="Tìm kiếm thú cưng theo Tên hoặc ID...">
+                   placeholder="Tìm kiếm theo Tên hoặc ID hoặc Chủ...">
         </div>
-        
+
+            <div><h2 class="text-2xl font-semibold text-center text-orange-600 mb-4">DANH SÁCH THÚ CƯNG</h2></div>
         <div class="space-y-4 scrollable-content">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Danh sách thú cưng</h2>
             <ul id="pets-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 </ul>
         </div>
@@ -283,7 +289,7 @@
                 </button>
             </div>
             <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
-                <img id="pet-detail-pet-photo" src="" alt="Ảnh thú cưng"
+                <img id="pet-detail-pet-photo" src="" alt="Ảnh avatar"
                     class="w-32 h-32 object-cover rounded-full border-4 border-indigo-500 shadow-lg">
                 <div class="text-center md:text-left">
                     <p id="pet-detail-pet-id" class="text-gray-600 mt-1"></p>
@@ -434,140 +440,153 @@
                 </ul>
         </div>
     </div>
-    
+  <!-- *******************************************************
+DÁN CODE JAVASCRIPT VÀO ĐÂY NHÉ
+********************************************************** -->
+
 
 <script type="module">
-        
-// Nhập các hàm cần thiết từ Firebase SDK
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getDatabase, ref, onValue, set, push, update, remove } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+    // Nhập các hàm cần thiết từ Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue, set, push, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
 
-// Nhập thư viện SheetJS để xử lý Excel
-import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.mjs";
+    // Nhập thư viện SheetJS để xử lý Excel
+    import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.mjs";
 
-// Cấu hình Firebase của bạn
-const firebaseConfig = {
-    apiKey: "AIzaSyDWvm80NOv3NzyZyY8oY8o4JOl39pz2To0",
-    authDomain: "vaccination-annhonpet.firebaseapp.com",
-    databaseURL: "https://vaccination-annhonpet-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "vaccination-annhonpet",
-    messagingSenderId: "358228492756",
-    appId: "1:358228492756:web:e618f8f3d832bd303bd641",
-    measurementId: "G-Q4WG9JG61P"
-};
+    // Cấu hình Firebase của bạn
+    const firebaseConfig = {
+        apiKey: "AIzaSyDWvm80NOv3NzyZyY8oY8o4JOl39pz2To0",
+        authDomain: "vaccination-annhonpet.firebaseapp.com",
+        databaseURL: "https://vaccination-annhonpet-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "vaccination-annhonpet",
+        messagingSenderId: "358228492756",
+        appId: "1:358228492756:web:e618f8f3d832bd303bd641",
+        measurementId: "G-Q4WG9JG61P"
+    };
 
-// Khởi tạo Firebase và kết nối với Database
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const database = getDatabase(app);
-const petsRef = ref(database, 'pets');
+    // Khởi tạo Firebase và kết nối với Database
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const database = getDatabase(app);
+    const petsRef = ref(database, 'pets');
 
-// State variables
-let petsData = [];
-let currentDeletionFunction = null;
+    // State variables
+    let petsData = [];
 
-// UI elements
-const petsList = document.getElementById('pets-list');
-const vaccinationsList = document.getElementById('vaccinations-list');
-const addPetForm = document.getElementById('add-pet-form');
-const editPetForm = document.getElementById('edit-pet-form');
-const addVaccinationForm = document.getElementById('add-vaccination-form');
-const editVaccinationForm = document.getElementById('edit-vaccination-form');
-const addPetModal = document.getElementById('add-pet-modal');
-const editPetModal = document.getElementById('edit-pet-modal');
-const addVaccinationModal = document.getElementById('add-vaccination-modal');
-const editVaccinationModal = document.getElementById('edit-vaccination-modal');
-const petDetailModal = document.getElementById('pet-detail-modal');
-const confirmationModal = document.getElementById('confirmation-modal');
-const importExcelModal = document.getElementById('import-excel-modal');
-const upcomingVaccinationsModal = document.getElementById('upcoming-vaccinations-modal');
-const petDetailPetId = document.getElementById('pet-detail-pet-id');
-const petDetailPetName = document.getElementById('pet-detail-pet-name');
-const petDetailPetType = document.getElementById('pet-detail-pet-type');
-const petDetailPetDob = document.getElementById('pet-detail-pet-dob');
-const petDetailPetBreed = document.getElementById('pet-detail-pet-breed');
-const petDetailPetGender = document.getElementById('pet-detail-pet-gender');
-const petDetailPetColor = document.getElementById('pet-detail-pet-color');
-const petDetailPetOwner = document.getElementById('pet-detail-pet-owner');
-const petDetailPetAddress = document.getElementById('pet-detail-pet-address');
-const petDetailPetPhone = document.getElementById('pet-detail-pet-phone');
-const currentEditPetId = document.getElementById('current-edit-pet-id');
-const currentDetailPetId = document.getElementById('current-detail-pet-id');
-const excelImportErrorMsg = document.getElementById('excel-import-error-message');
-const upcomingPetsList = document.getElementById('upcoming-pets-list');
-const searchInput = document.getElementById('search-input');
-const vaccineNameSelect = document.getElementById('vaccine-name-select');
-const editVaccineNameSelect = document.getElementById('edit-vaccine-name-select');
+    // UI elements
+    const petsList = document.getElementById('pets-list');
+    const vaccinationsList = document.getElementById('vaccinations-list');
+    const addPetForm = document.getElementById('add-pet-form');
+    const editPetForm = document.getElementById('edit-pet-form');
+    const addVaccinationForm = document.getElementById('add-vaccination-form');
+    const editVaccinationForm = document.getElementById('edit-vaccination-form');
+    const addPetModal = document.getElementById('add-pet-modal');
+    const editPetModal = document.getElementById('edit-pet-modal');
+    const addVaccinationModal = document.getElementById('add-vaccination-modal');
+    const editVaccinationModal = document.getElementById('edit-vaccination-modal');
+    const petDetailModal = document.getElementById('pet-detail-modal');
+    const confirmationModal = document.getElementById('confirmation-modal');
+    const importExcelModal = document.getElementById('import-excel-modal');
+    const petDetailPetId = document.getElementById('pet-detail-pet-id');
+    const petDetailPetName = document.getElementById('pet-detail-pet-name');
+    const petDetailPetType = document.getElementById('pet-detail-pet-type');
+    const petDetailPetDob = document.getElementById('pet-detail-pet-dob');
+    const petDetailPetBreed = document.getElementById('pet-detail-pet-breed');
+    const petDetailPetGender = document.getElementById('pet-detail-pet-gender');
+    const petDetailPetColor = document.getElementById('pet-detail-pet-color');
+    const petDetailPetOwner = document.getElementById('pet-detail-pet-owner');
+    const petDetailPetAddress = document.getElementById('pet-detail-pet-address');
+    const petDetailPetPhone = document.getElementById('pet-detail-pet-phone');
+    const currentEditPetId = document.getElementById('current-edit-pet-id');
+    const currentDetailPetId = document.getElementById('current-detail-pet-id');
+    const excelImportErrorMsg = document.getElementById('excel-import-error-message');
+    const searchInput = document.getElementById('search-input');
+    const vaccineNameSelect = document.getElementById('vaccine-name-select');
+    const editVaccineNameSelect = document.getElementById('edit-vaccine-name-select');
+    const petDetailPetPhoto = document.getElementById('pet-detail-pet-photo');
+    const vaccinationRemindersList = document.getElementById('vaccination-reminders-list');
+    const upcomingVaccinationsModal = document.getElementById('upcoming-vaccinations-modal');
+    const upcomingPetsList = document.getElementById('upcoming-pets-list');
+    const upcomingReminderCount = document.getElementById('upcoming-reminder-count');
+    const editPetBtn = document.getElementById('edit-pet-btn');
+    const deletePetBtn = document.getElementById('delete-pet-btn');
+    const addVaccinationBtn = document.getElementById('add-vaccination-btn');
 
-// --- Các hàm xử lý Firebase ---
-const loadPetsFromFirebase = () => {
-    onValue(petsRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            petsData = Object.keys(data).map(key => ({ ...data[key], id: key }));
-        } else {
-            petsData = [];
-        }
-        renderPetsList(petsData);
-    }, (error) => {
-        console.error("Lỗi khi tải dữ liệu từ Firebase:", error);
-        alertMessage("Lỗi khi tải dữ liệu. Vui lòng kiểm tra kết nối!", "error");
-    });
-};
-
-const deletePetFromDb = (petId) => {
-    remove(ref(database, 'pets/' + petId))
-        .then(() => {
-            alertMessage("Thú cưng đã được xóa!", "success");
-            closeModal('pet-detail-modal');
-        })
-        .catch((error) => {
-            console.error("Lỗi khi xóa thú cưng:", error);
-            alertMessage("Lỗi khi xóa. Vui lòng thử lại!", "error");
+    // --- Các hàm xử lý Firebase ---
+    const loadPetsFromFirebase = () => {
+        onValue(petsRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                petsData = Object.keys(data).map(key => ({ ...data[key], id: key }));
+            } else {
+                petsData = [];
+            }
+            renderPetsList(petsData);
+            updateUpcomingReminderCount();
+        }, (error) => {
+            console.error("Lỗi khi tải dữ liệu từ Firebase:", error);
+            alertMessage("Lỗi khi tải dữ liệu. Vui lòng kiểm tra kết nối!", "error");
         });
-};
+    };
 
-const addVaccinationToDb = (petId, vaccineData) => {
-    const vaccinationsRef = ref(database, `pets/${petId}/vaccinations`);
-    const newVaccineRef = push(vaccinationsRef);
-    set(newVaccineRef, vaccineData)
-        .then(() => {
-            alertMessage("Thêm mũi tiêm thành công!", "success");
-            renderVaccinations(petId);
-        })
-        .catch((error) => {
-            console.error("Lỗi khi thêm mũi tiêm:", error);
-            alertMessage("Lỗi khi thêm mũi tiêm. Vui lòng thử lại!", "error");
-        });
-};
+    const deletePetFromDb = (petId) => {
+        remove(ref(database, 'pets/' + petId))
+            .then(() => {
+                alertMessage("Thú cưng đã được xóa!", "success");
+                closeModal('pet-detail-modal');
+            })
+            .catch((error) => {
+                console.error("Lỗi khi xóa thú cưng:", error);
+                alertMessage("Lỗi khi xóa. Vui lòng thử lại!", "error");
+            });
+    };
 
-const updateVaccinationInDb = (petId, vaccineId, vaccineData) => {
-    update(ref(database, `pets/${petId}/vaccinations/${vaccineId}`), vaccineData)
-        .then(() => {
-            alertMessage("Cập nhật mũi tiêm thành công!", "success");
-            renderVaccinations(petId);
-        })
-        .catch((error) => {
-            console.error("Lỗi khi cập nhật mũi tiêm:", error);
-            alertMessage("Lỗi khi cập nhật. Vui lòng thử lại!", "error");
-        });
-};
+    const addVaccinationToDb = (petId, vaccineData) => {
+        const vaccinationsRef = ref(database, `pets/${petId}/vaccinations`);
+        const newVaccineRef = push(vaccinationsRef);
+        set(newVaccineRef, vaccineData)
+            .then(() => {
+                alertMessage("Thêm mũi tiêm thành công!", "success");
+                closeModal('add-vaccination-modal');
+                showPetDetail(petId);
+            })
+            .catch((error) => {
+                console.error("Lỗi khi thêm mũi tiêm:", error);
+                alertMessage("Lỗi khi thêm mũi tiêm. Vui lòng thử lại!", "error");
+            });
+    };
 
-const deleteVaccinationFromDb = (petId, vaccineId) => {
-    remove(ref(database, `pets/${petId}/vaccinations/${vaccineId}`))
-        .then(() => {
-            alertMessage("Mũi tiêm đã được xóa!", "success");
-            renderVaccinations(petId);
-        })
-        .catch((error) => {
-            console.error("Lỗi khi xóa mũi tiêm:", error);
-            alertMessage("Lỗi khi xóa. Vui lòng thử lại!", "error");
-        });
-};
+    const updateVaccinationInDb = (petId, vaccineId, vaccineData) => {
+        update(ref(database, `pets/${petId}/vaccinations/${vaccineId}`), vaccineData)
+            .then(() => {
+                alertMessage("Cập nhật mũi tiêm thành công!", "success");
+                closeModal('edit-vaccination-modal');
+                showPetDetail(petId);
+            })
+            .catch((error) => {
+                console.error("Lỗi khi cập nhật mũi tiêm:", error);
+                alertMessage("Lỗi khi cập nhật. Vui lòng thử lại!", "error");
+            });
+    };
 
-// --- Các hàm render giao diện ---
-const renderPetsList = (pets) => {
+    const deleteVaccinationFromDb = (petId, vaccineId) => {
+        remove(ref(database, `pets/${petId}/vaccinations/${vaccineId}`))
+            .then(() => {
+                alertMessage("Mũi tiêm đã được xóa!", "success");
+                showPetDetail(petId);
+            })
+            .catch((error) => {
+                console.error("Lỗi khi xóa mũi tiêm:", error);
+                alertMessage("Lỗi khi xóa. Vui lòng thử lại!", "error");
+            });
+    };
+
+    // --- Các hàm render giao diện ---
+    const renderPetsList = (pets) => {
+    // Thêm dòng này để sắp xếp mảng pets trước khi hiển thị
+    pets.sort((a, b) => b.id.localeCompare(a.id));
+
     petsList.innerHTML = '';
     if (pets.length === 0) {
         petsList.innerHTML = `<p class="text-center text-gray-500 mt-4">Chưa có thú cưng nào được tìm thấy. <br/>Hãy thử tìm kiếm khác hoặc thêm con đầu tiên của bạn!</p>`;
@@ -576,57 +595,63 @@ const renderPetsList = (pets) => {
     pets.forEach(pet => {
         const li = document.createElement('li');
         li.className = 'bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition duration-300 ease-in-out transform hover:scale-105';
+        li.setAttribute('data-pet-id', pet.id);
         li.innerHTML = `
-        <div class="flex items-center space-x-4">
-            <img src="${pet.photoUrl || 'https://placehold.co/100x100'}" alt="${pet.name}" class="w-16 h-16 object-cover rounded-full">
-            <div class="flex-grow">
-                <h4 class="text-lg font-semibold text-gray-900">${pet.name}</h4>
-                <p class="text-sm text-gray-600">ID: ${pet.id}</p>
-                <p class="text-sm text-gray-600">Loài: ${pet.type}</p>
+            <div class="flex items-center space-x-4">
+                <img src="${pet.photoUrl || generateAvatar(pet.name)}" alt="${pet.name}" class="w-16 h-16 object-cover rounded-full">
+                <div class="flex-grow">
+                    <h4 class="text-lg font-semibold text-gray-900">${pet.name}</h4>
+                    <p class="text-sm text-gray-600">ID: ${pet.id}</p>
+                    <p class="text-sm text-gray-600">Loài: ${pet.type}</p>
+                    <p class="text-sm text-gray-600">Chủ: ${pet.owner}</p>
+                </div>
             </div>
-        </div>
-    `;
-        li.onclick = () => window.showPetDetail(pet.id);
+        `;
+        // Gắn sự kiện click trực tiếp vào mỗi thẻ li
+        li.addEventListener('click', () => {
+            showPetDetail(pet.id);
+        });
         petsList.appendChild(li);
     });
 };
 
-const renderVaccinations = (petId) => {
-    const pet = petsData.find(p => p.id === petId);
-    vaccinationsList.innerHTML = '';
-    if (pet && pet.vaccinations) {
-        const vaccinations = Object.keys(pet.vaccinations).map(key => ({ ...pet.vaccinations[key], id: key }));
-        vaccinations.forEach(vac => {
-            const li = document.createElement('li');
-            li.className = 'bg-gray-100 p-4 rounded-lg shadow-sm flex justify-between items-center transition duration-300 hover:bg-gray-200';
-            li.innerHTML = `
-            <div>
-                <p class="font-semibold">${vac.vaccineName}</p>
-                <p class="text-sm text-gray-600">Ngày tiêm: ${vac.date}</p>
-                ${vac.notes ? `<p class="text-sm text-gray-500 italic">Ghi chú: ${vac.notes}</p>` : ''}
-            </div>
-            <div class="flex space-x-2">
-                <button onclick="window.showEditVaccinationModal('${petId}', '${vac.id}')" class="text-blue-500 hover:text-blue-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                        <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <button onclick="window.showConfirmationModal('Bạn có chắc chắn muốn xóa mũi tiêm này?', () => window.deleteVaccinationFromDb('${petId}', '${vac.id}'))" class="text-red-500 hover:text-red-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
-        `;
-            vaccinationsList.appendChild(li);
-        });
-    } else {
-        vaccinationsList.innerHTML = `<p class="text-center text-gray-500 mt-2">Chưa có mũi tiêm nào được ghi nhận.</p>`;
-    }
-};
+    const renderVaccinations = (petId) => {
+        const pet = petsData.find(p => p.id === petId);
+        vaccinationsList.innerHTML = '';
+        if (pet && pet.vaccinations) {
+            const vaccinations = Object.keys(pet.vaccinations).map(key => ({ ...pet.vaccinations[key], id: key }));
+            vaccinations.sort((a, b) => new Date(a.date) - new Date(b.date));
+            vaccinations.forEach(vac => {
+                const li = document.createElement('li');
+                li.className = 'bg-gray-100 p-4 rounded-lg shadow-sm flex justify-between items-center transition duration-300 hover:bg-gray-200';
+                li.innerHTML = `
+                    <div>
+                        <p class="font-semibold">${vac.vaccineName}</p>
+                        <p class="text-sm text-gray-600">Ngày tiêm: ${vac.date}</p>
+                        ${vac.notes ? `<p class="text-sm text-gray-500 italic">Ghi chú: ${vac.notes}</p>` : ''}
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="text-blue-500 hover:text-blue-700 edit-vaccine-btn" data-pet-id="${petId}" data-vaccine-id="${vac.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <button class="text-red-500 hover:text-red-700 delete-vaccine-btn" data-pet-id="${petId}" data-vaccine-id="${vac.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                vaccinationsList.appendChild(li);
+            });
+        } else {
+            vaccinationsList.innerHTML = `<p class="text-center text-gray-500 mt-2">Chưa có mũi tiêm nào được ghi nhận.</p>`;
+        }
+    };
 
-// --- Hàm xử lý UI và Modal ---
+    // --- Hàm xử lý UI và Modal ---
 const showModal = (modalId) => {
     const modal = document.getElementById(modalId);
     modal.classList.remove('hidden');
@@ -734,208 +759,430 @@ window.cancelDeletion = () => {
 
 window.deleteVaccinationFromDb = deleteVaccinationFromDb;
 
-// --- Hàm tạo ảnh đại diện từ tên ---
-const generateAvatar = (name) => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 100;
-    canvas.height = 100;
-    const ctx = canvas.getContext('2d');
-    const colors = ["#4a90e2", "#50e3c2", "#b8e986", "#f5a623", "#f8e71c"];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(50, 50, 50, 0, 2 * Math.PI);
-    ctx.fill();
+    // --- Hàm tạo ảnh đại diện từ tên ---
+    const generateAvatar = (name) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 100;
+        canvas.height = 100;
+        const ctx = canvas.getContext('2d');
+        const colors = ["#4a90e2", "#50e3c2", "#b8e986", "#f5a623", "#f8e71c", "#a8efff", "#ffa8f6", "#ff80aa"];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(50, 50, 50, 0, 2 * Math.PI);
+        ctx.fill();
 
-    let initials = '';
-    const nameParts = name.trim().split(/\s+/);
-    if (nameParts.length > 1) {
-        initials = nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0);
+        let initials = '';
+        const nameParts = name.trim().split(/\s+/);
+        if (nameParts.length > 1) {
+            initials = nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0);
+        } else {
+            initials = name.charAt(0) + name.charAt(name.length - 1);
+        }
+
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 48px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(initials.toUpperCase(), 50, 50);
+
+        return canvas.toDataURL();
+    };
+
+    // --- Logic nhắc nhở lịch tiêm ---
+    const getVaccinationReminders = (petId) => {
+    const pet = petsData.find(p => p.id === petId);
+    if (!pet || !pet.dob) return [];
+    
+    const reminders = [];
+    const today = new Date();
+    const petDob = new Date(pet.dob);
+    const ageInYears = (today - petDob) / (1000 * 60 * 60 * 24 * 365.25);
+    
+    const existingVaccinations = pet.vaccinations ? Object.values(pet.vaccinations).sort((a, b) => new Date(a.date) - new Date(b.date)) : [];
+
+    // Logic tiêm dại (chung cho chó và mèo)
+    const rabiesVaccinations = existingVaccinations.filter(v => v.vaccineName.includes('Dại')).reverse();
+    let nextRabiesDate = null;
+    let nextRabiesMessage = '';
+
+    if (rabiesVaccinations.length === 0) {
+        const firstShotDate = new Date(petDob);
+        firstShotDate.setDate(petDob.getDate() + 90);
+        nextRabiesDate = firstShotDate;
+        nextRabiesMessage = 'Cần tiêm vắc xin Dại';
     } else {
-        initials = name.charAt(0) + name.charAt(name.length - 1);
+        const lastShotDate = new Date(rabiesVaccinations[0].date);
+        const nextBoosterDate = new Date(lastShotDate);
+        nextBoosterDate.setFullYear(lastShotDate.getFullYear() + 1);
+        nextRabiesDate = nextBoosterDate;
+        nextRabiesMessage = 'Cần tiêm nhắc lại vắc xin Dại';
     }
 
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 48px Inter, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(initials.toUpperCase(), 50, 50);
+    if (nextRabiesDate && today > nextRabiesDate) {
+        reminders.push({ type: 'overdue', message: `${pet.name}: ${nextRabiesMessage}! (Đã quá hạn từ ngày: ${nextRabiesDate.toISOString().split('T')[0]})`, petId: pet.id });
+    } else if (nextRabiesDate && (nextRabiesDate - today) / (1000 * 60 * 60 * 24) <= 7) {
+        reminders.push({ type: 'upcoming', message: `${pet.name}: ${nextRabiesMessage}! (Sắp đến hạn vào ngày: ${nextRabiesDate.toISOString().split('T')[0]})`, petId: pet.id });
+    }
+    
+    // Logic riêng cho chó và mèo
+    if (pet.type === 'Chó') {
+        const vaccines7in1 = existingVaccinations.filter(v => v.vaccineName.includes('7 bệnh')).sort((a, b) => new Date(a.date) - new Date(b.date));
+        const last7in1 = vaccines7in1[vaccines7in1.length - 1];
 
-    return canvas.toDataURL();
+        const numShots = vaccines7in1.length;
+        
+        // Kiểm tra xem có mũi tiêm hằng năm nào đã được ghi lại chưa
+        const hasAnnualBooster = vaccines7in1.some(v => v.vaccineName.includes('hằng năm') || v.vaccineName.includes('nhắc lại') || v.vaccineName.includes('booster'));
+
+        if (numShots > 0 && hasAnnualBooster) {
+            // Nếu đã có mũi tiêm hằng năm, chuyển ngay sang logic nhắc lại hàng năm
+            let lastShotDate = last7in1 ? new Date(last7in1.date) : petDob;
+            const nextBoosterDate = new Date(lastShotDate);
+            nextBoosterDate.setFullYear(lastShotDate.getFullYear() + 1);
+
+            let boosterMessage = vaccines7in1.length > 0 ? 'Cần tiêm nhắc lại 7 bệnh' : 'Cần tiêm 7 bệnh';
+            
+            if (today > nextBoosterDate) {
+                reminders.push({ type: 'overdue', message: `${pet.name}: ${boosterMessage}! (Đã quá hạn từ ngày: ${nextBoosterDate.toISOString().split('T')[0]})`, petId: pet.id });
+            } else if ((nextBoosterDate - today) / (1000 * 60 * 60 * 24) <= 7) {
+                reminders.push({ type: 'upcoming', message: `${pet.name}: ${boosterMessage}! (Sắp đến hạn vào ngày: ${nextBoosterDate.toISOString().split('T')[0]})`, petId: pet.id });
+            }
+
+        } else if (numShots < 3) {
+            // Nếu chưa có mũi tiêm hằng năm và số mũi < 3, tính theo loạt tiêm cơ bản
+            let nextShotDate = null;
+            let nextShotMessage = '';
+
+            if (numShots === 0) {
+                nextShotDate = new Date(petDob);
+                nextShotDate.setDate(petDob.getDate() + 42);
+                nextShotMessage = 'Cần tiêm 7 bệnh mũi 1';
+            } else if (numShots === 1) {
+                nextShotDate = new Date(vaccines7in1[0].date);
+                nextShotDate.setDate(nextShotDate.getDate() + 21);
+                nextShotMessage = 'Cần tiêm 7 bệnh mũi 2';
+            } else if (numShots === 2) {
+                nextShotDate = new Date(vaccines7in1[1].date);
+                nextShotDate.setDate(nextShotDate.getDate() + 21);
+                nextShotMessage = 'Cần tiêm 7 bệnh mũi 3';
+            }
+
+            if (nextShotDate && today > nextShotDate) {
+                reminders.push({ type: 'overdue', message: `${pet.name}: ${nextShotMessage}! (Đã quá hạn từ ngày: ${nextShotDate.toISOString().split('T')[0]})`, petId: pet.id });
+            } else if (nextShotDate && (nextShotDate - today) / (1000 * 60 * 60 * 24) <= 7) {
+                reminders.push({ type: 'upcoming', message: `${pet.name}: ${nextShotMessage}! (Sắp đến hạn vào ngày: ${nextShotDate.toISOString().split('T')[0]})`, petId: pet.id });
+            }
+        } else {
+            // Trường hợp đã tiêm đủ 3 mũi nhưng chưa có mũi hằng năm, vẫn tính mũi hằng năm
+            let lastShotDate = last7in1 ? new Date(last7in1.date) : petDob;
+            const nextBoosterDate = new Date(lastShotDate);
+            nextBoosterDate.setFullYear(lastShotDate.getFullYear() + 1);
+
+            let boosterMessage = vaccines7in1.length > 0 ? 'Cần tiêm nhắc lại 7 bệnh' : 'Cần tiêm 7 bệnh';
+            
+            if (today > nextBoosterDate) {
+                reminders.push({ type: 'overdue', message: `${pet.name}: ${boosterMessage}! (Đã quá hạn từ ngày: ${nextBoosterDate.toISOString().split('T')[0]})`, petId: pet.id });
+            } else if ((nextBoosterDate - today) / (1000 * 60 * 60 * 24) <= 7) {
+                reminders.push({ type: 'upcoming', message: `${pet.name}: ${boosterMessage}! (Sắp đến hạn vào ngày: ${nextBoosterDate.toISOString().split('T')[0]})`, petId: pet.id });
+            }
+        }
+    } else if (pet.type === 'Mèo') {
+        const vaccines4in1 = existingVaccinations.filter(v => v.vaccineName.includes('4 bệnh')).sort((a,b) => new Date(a.date) - new Date(b.date));
+        const last4in1 = vaccines4in1[vaccines4in1.length - 1];
+        
+        // Khai báo lại biến numShots cho nhánh Mèo
+        const numShots = vaccines4in1.length;
+        const hasAnnualBooster = vaccines4in1.some(v => v.vaccineName.includes('hằng năm') || v.vaccineName.includes('nhắc lại') || v.vaccineName.includes('booster'));
+
+        if (numShots > 0 && hasAnnualBooster) {
+            let lastShotDate = last4in1 ? new Date(last4in1.date) : petDob;
+            const nextBoosterDate = new Date(lastShotDate);
+            nextBoosterDate.setFullYear(lastShotDate.getFullYear() + 1);
+
+            let boosterMessage = vaccines4in1.length > 0 ? 'Cần tiêm nhắc lại 4 bệnh' : 'Cần tiêm 4 bệnh';
+            
+            if (today > nextBoosterDate) {
+                reminders.push({ type: 'overdue', message: `${pet.name}: ${boosterMessage}! (Đã quá hạn từ ngày: ${nextBoosterDate.toISOString().split('T')[0]})`, petId: pet.id });
+            } else if ((nextBoosterDate - today) / (1000 * 60 * 60 * 24) <= 7) {
+                reminders.push({ type: 'upcoming', message: `${pet.name}: ${boosterMessage}! (Sắp đến hạn vào ngày: ${nextBoosterDate.toISOString().split('T')[0]})`, petId: pet.id });
+            }
+        } else if (numShots < 3) {
+            let nextShotDate = null;
+            let nextShotMessage = '';
+
+            if (numShots === 0) {
+                nextShotDate = new Date(petDob);
+                nextShotDate.setDate(petDob.getDate() + 60);
+                nextShotMessage = 'Cần tiêm 4 bệnh mũi 1';
+            } else if (numShots === 1) {
+                nextShotDate = new Date(vaccines4in1[0].date);
+                nextShotDate.setDate(nextShotDate.getDate() + 21);
+                nextShotMessage = 'Cần tiêm 4 bệnh mũi 2';
+            } else if (numShots === 2) {
+                nextShotDate = new Date(vaccines4in1[1].date);
+                nextShotDate.setDate(nextShotDate.getDate() + 21);
+                nextShotMessage = 'Cần tiêm 4 bệnh mũi 3';
+            }
+
+            if (nextShotDate && today > nextShotDate) {
+                reminders.push({ type: 'overdue', message: `${pet.name}: ${nextShotMessage}! (Đã quá hạn từ ngày: ${nextShotDate.toISOString().split('T')[0]})`, petId: pet.id });
+            } else if (nextShotDate && (nextShotDate - today) / (1000 * 60 * 60 * 24) <= 7) {
+                reminders.push({ type: 'upcoming', message: `${pet.name}: ${nextShotMessage}! (Sắp đến hạn vào ngày: ${nextShotDate.toISOString().split('T')[0]})`, petId: pet.id });
+            }
+        } else {
+            let lastShotDate = last4in1 ? new Date(last4in1.date) : petDob;
+            const nextBoosterDate = new Date(lastShotDate);
+            nextBoosterDate.setFullYear(lastShotDate.getFullYear() + 1);
+
+            let boosterMessage = vaccines4in1.length > 0 ? 'Cần tiêm nhắc lại 4 bệnh' : 'Cần tiêm 4 bệnh';
+            
+            if (today > nextBoosterDate) {
+                reminders.push({ type: 'overdue', message: `${pet.name}: ${boosterMessage}! (Đã quá hạn từ ngày: ${nextBoosterDate.toISOString().split('T')[0]})`, petId: pet.id });
+            } else if ((nextBoosterDate - today) / (1000 * 60 * 60 * 24) <= 7) {
+                reminders.push({ type: 'upcoming', message: `${pet.name}: ${boosterMessage}! (Sắp đến hạn vào ngày: ${nextBoosterDate.toISOString().split('T')[0]})`, petId: pet.id });
+            }
+        }
+    }
+    return reminders;
 };
 
-// --- Các hàm xử lý Form submissions ---
 
-addPetForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const petId = document.getElementById('pet-id').value;
-    const petName = document.getElementById('pet-name').value;
-    const petType = document.getElementById('pet-type').value;
-    const petBreed = document.getElementById('pet-breed').value;
-    const petGender = document.getElementById('pet-gender').value;
-    const petDob = document.getElementById('pet-dob').value;
-    const petColor = document.getElementById('pet-color').value;
-    const petOwner = document.getElementById('pet-owner').value;
-    const petAddress = document.getElementById('pet-address').value;
-    const petPhone = document.getElementById('pet-phone').value;
-
-    const isIdUsed = petsData.some(pet => pet.id.toLowerCase() === petId.toLowerCase());
-    if (isIdUsed) {
-        alertMessage('ID này đã tồn tại. Vui lòng chọn ID khác.', 'error');
-        return;
-    }
-
-    const newPet = {
-        id: petId,
-        name: petName,
-        type: petType,
-        breed: petBreed,
-        gender: petGender,
-        dob: petDob,
-        color: petColor,
-        owner: petOwner,
-        address: petAddress,
-        phone: petPhone,
-        photoUrl: generateAvatar(petName)
+    const renderVaccinationReminders = (petId) => {
+        const reminders = getVaccinationReminders(petId);
+        vaccinationRemindersList.innerHTML = '';
+        
+        if (reminders.length === 0) {
+            vaccinationRemindersList.innerHTML = '<p class="text-green-600 font-bold">Không có lịch tiêm nào cần nhắc nhở.</p>';
+        } else {
+            reminders.forEach(reminder => {
+                const li = document.createElement('li');
+                li.className = `p-4 mb-2 rounded-lg font-bold ${reminder.type === 'overdue' ? 'bg-red-200 text-red-700' : 'bg-yellow-200 text-yellow-700'}`;
+                li.textContent = reminder.message.replace(`${petsData.find(p => p.id === petId)?.name}: `, '');
+                vaccinationRemindersList.appendChild(li);
+            });
+        }
     };
 
-    try {
-        await set(ref(database, 'pets/' + petId), newPet);
-        closeModal('add-pet-modal');
-        alertMessage("Đã lưu thành công!", "success");
-    } catch (error) {
-        console.error("Lỗi khi lưu dữ liệu:", error);
-        alertMessage("Lỗi khi lưu dữ liệu. Vui lòng thử lại!", "error");
-    }
-});
+    const renderUpcomingReminders = () => {
+        upcomingPetsList.innerHTML = '';
+        const allReminders = petsData.flatMap(pet => getVaccinationReminders(pet.id));
 
-editPetForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const originalPetId = document.getElementById('current-edit-pet-id').value;
-    const newPetId = document.getElementById('edit-pet-id').value;
-    const petName = document.getElementById('edit-pet-name').value;
-    const petType = document.getElementById('edit-pet-type').value;
-    const petBreed = document.getElementById('edit-pet-breed').value;
-    const petGender = document.getElementById('edit-pet-gender').value;
-    const petDob = document.getElementById('edit-pet-dob').value;
-    const petColor = document.getElementById('edit-pet-color').value;
-    const petOwner = document.getElementById('edit-pet-owner').value;
-    const petAddress = document.getElementById('edit-pet-address').value;
-    const petPhone = document.getElementById('edit-pet-phone').value;
+    // Thêm dòng này để kiểm tra trên trình duyệt
+    console.log('Danh sách tất cả lời nhắc:', allReminders);
 
-    const updatedPet = {
-        id: newPetId,
-        name: petName,
-        type: petType,
-        breed: petBreed,
-        gender: petGender,
-        dob: petDob,
-        color: petColor,
-        owner: petOwner,
-        address: petAddress,
-        phone: petPhone,
-        photoUrl: generateAvatar(petName)
+        if (allReminders.length === 0) {
+            upcomingPetsList.innerHTML = '<p class="text-center text-gray-500 mt-4">Không có lịch tiêm nào sắp đến hạn hoặc quá hạn.</p>';
+        } else {
+            allReminders.forEach(reminder => {
+                const li = document.createElement('li');
+                li.className = `p-4 mb-2 rounded-lg cursor-pointer ${reminder.type === 'overdue' ? 'bg-red-200 text-red-700' : 'bg-yellow-200 text-yellow-700'}`;
+                li.textContent = reminder.message;
+                li.onclick = () => {
+                    closeModal('upcoming-vaccinations-modal');
+                    showPetDetail(reminder.petId);
+                };
+                upcomingPetsList.appendChild(li);
+            });
+        }
     };
 
-    try {
-        await update(ref(database, 'pets/' + originalPetId), updatedPet);
-        closeModal('edit-pet-modal');
-        closeModal('pet-detail-modal');
-        alertMessage("Đã lưu thành công!", "success");
-    } catch (error) {
-        console.error("Lỗi khi cập nhật dữ liệu:", error);
-        alertMessage("Lỗi khi cập nhật dữ liệu. Vui lòng thử lại!", "error");
-    }
-});
-
-addVaccinationForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const petId = currentDetailPetId.value;
-    const vaccineName = vaccineNameSelect.value;
-    const vaccineDate = document.getElementById('vaccine-date').value;
-    const vaccineNotes = document.getElementById('vaccine-notes').value;
-
-    const newVaccine = {
-        vaccineName: vaccineName,
-        date: vaccineDate,
-        notes: vaccineNotes,
-        created: new Date().toISOString()
+    const updateUpcomingReminderCount = () => {
+        const allReminders = petsData.flatMap(pet => getVaccinationReminders(pet.id));
+        const count = allReminders.length;
+        if (count > 0) {
+            upcomingReminderCount.textContent = count;
+            upcomingReminderCount.classList.remove('hidden');
+        } else {
+            upcomingReminderCount.classList.add('hidden');
+        }
     };
-    addVaccinationToDb(petId, newVaccine);
-    closeModal('add-vaccination-modal');
-});
 
-editVaccinationForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const petId = document.getElementById('current-edit-vaccination-pet-id').value;
-    const vaccineId = document.getElementById('current-edit-vaccination-id').value;
-    const vaccineName = editVaccineNameSelect.value;
-    const vaccineDate = document.getElementById('edit-vaccine-date').value;
-    const vaccineNotes = document.getElementById('edit-vaccine-notes').value;
+    // --- Các hàm xử lý Form submissions ---
+    addPetForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const petId = document.getElementById('pet-id').value;
+        const petName = document.getElementById('pet-name').value;
+        const petType = document.getElementById('pet-type').value;
+        const petBreed = document.getElementById('pet-breed').value;
+        const petGender = document.getElementById('pet-gender').value;
+        const petDob = document.getElementById('pet-dob').value;
+        const petColor = document.getElementById('pet-color').value;
+        const petOwner = document.getElementById('pet-owner').value;
+        const petAddress = document.getElementById('pet-address').value;
+        const petPhone = document.getElementById('pet-phone').value;
 
-    const updatedVaccine = {
-        vaccineName: vaccineName,
-        date: vaccineDate,
-        notes: vaccineNotes,
-    };
-    updateVaccinationInDb(petId, vaccineId, updatedVaccine);
-    closeModal('edit-vaccination-modal');
-});
-
-// --- Các hàm khác ---
-window.filterPets = () => {
-    const query = searchInput.value.toLowerCase();
-    const filtered = petsData.filter(pet =>
-        pet.name.toLowerCase().includes(query) || pet.id.toLowerCase().includes(query)
-    );
-    renderPetsList(filtered);
-};
-
-window.updateVaccineSelect = (petType, selectElement) => {
-    selectElement.innerHTML = '<option value="">Chọn vắc xin</option>';
-    let options = [];
-    if (petType === "Chó") {
-        options = ["Dại", "7 bệnh mũi 1", "7 bệnh mũi 2", "7 bệnh mũi 3", "7 bệnh hằng năm"];
-    } else if (petType === "Mèo") {
-        options = ["Dại", "4 bệnh mũi 1", "4 bệnh mũi 2", "4 bệnh mũi 3", "4 bệnh hằng năm"];
-    }
-
-    options.forEach(optionText => {
-        const optionElement = document.createElement('option');
-        optionElement.value = optionText;
-        optionElement.textContent = optionText;
-        selectElement.appendChild(optionElement);
-    });
-};
-
-const alertMessage = (message, type) => {
-    const alertBox = document.createElement('div');
-    alertBox.className = `fixed bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg shadow-xl text-white text-center transition-all duration-300 transform ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} z-50`;
-    alertBox.textContent = message;
-    document.body.appendChild(alertBox);
-    setTimeout(() => {
-        alertBox.classList.add('opacity-0');
-        setTimeout(() => alertBox.remove(), 300);
-    }, 3000);
-};
-
-// --- Các hàm xử lý Excel (ĐÃ HOÀN THIỆN) ---
-
-window.exportToExcel = () => {
-    try {
-        if (petsData.length === 0) {
-            alertMessage("Không có dữ liệu để xuất.", "error");
+        const isIdUsed = petsData.some(pet => pet.id.toLowerCase() === petId.toLowerCase());
+        if (isIdUsed) {
+            alertMessage('ID này đã tồn tại. Vui lòng chọn ID khác.', 'error');
             return;
         }
 
-        const exportData = [];
-        const headers = ["ID", "Tên Thú Cưng", "Loài", "Giống", "Giới Tính", "Ngày Sinh", "Màu Lông", "Chủ", "Địa Chỉ", "SĐT", "Tên Vắc Xin", "Ngày Tiêm", "Ghi Chú"];
-        exportData.push(headers);
+        const newPet = {
+            id: petId,
+            name: petName,
+            type: petType,
+            breed: petBreed,
+            gender: petGender,
+            dob: petDob,
+            color: petColor,
+            owner: petOwner,
+            address: petAddress,
+            phone: petPhone,
+            photoUrl: generateAvatar(petName)
+        };
 
-        petsData.forEach(pet => {
-            if (pet.vaccinations && Object.keys(pet.vaccinations).length > 0) {
-                Object.keys(pet.vaccinations).forEach(vacId => {
-                    const vac = pet.vaccinations[vacId];
+        try {
+            await set(ref(database, 'pets/' + petId), newPet);
+            closeModal('add-pet-modal');
+            alertMessage("Đã lưu thành công!", "success");
+        } catch (error) {
+            console.error("Lỗi khi lưu dữ liệu:", error);
+            alertMessage("Lỗi khi lưu dữ liệu. Vui lòng thử lại!", "error");
+        }
+    });
+
+    editPetForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const originalPetId = document.getElementById('current-edit-pet-id').value;
+        const newPetId = document.getElementById('edit-pet-id').value;
+        const petName = document.getElementById('edit-pet-name').value;
+        const petType = document.getElementById('edit-pet-type').value;
+        const petBreed = document.getElementById('edit-pet-breed').value;
+        const petGender = document.getElementById('edit-pet-gender').value;
+        const petDob = document.getElementById('edit-pet-dob').value;
+        const petColor = document.getElementById('edit-pet-color').value;
+        const petOwner = document.getElementById('edit-pet-owner').value;
+        const petAddress = document.getElementById('edit-pet-address').value;
+        const petPhone = document.getElementById('edit-pet-phone').value;
+
+        const updatedPet = {
+            id: newPetId,
+            name: petName,
+            type: petType,
+            breed: petBreed,
+            gender: petGender,
+            dob: petDob,
+            color: petColor,
+            owner: petOwner,
+            address: petAddress,
+            phone: petPhone,
+            photoUrl: generateAvatar(petName)
+        };
+
+        try {
+            await update(ref(database, 'pets/' + originalPetId), updatedPet);
+            closeModal('edit-pet-modal');
+            closeModal('pet-detail-modal');
+            alertMessage("Đã lưu thành công!", "success");
+        } catch (error) {
+            console.error("Lỗi khi cập nhật dữ liệu:", error);
+            alertMessage("Lỗi khi cập nhật dữ liệu. Vui lòng thử lại!", "error");
+        }
+    });
+
+    addVaccinationForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const petId = currentDetailPetId.value;
+        const vaccineName = vaccineNameSelect.value;
+        const vaccineDate = document.getElementById('vaccine-date').value;
+        const vaccineNotes = document.getElementById('vaccine-notes').value;
+
+        const newVaccine = {
+            vaccineName: vaccineName,
+            date: vaccineDate,
+            notes: vaccineNotes,
+            created: new Date().toISOString()
+        };
+        addVaccinationToDb(petId, newVaccine);
+    });
+
+    editVaccinationForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const petId = document.getElementById('current-edit-vaccination-pet-id').value;
+        const vaccineId = document.getElementById('current-edit-vaccination-id').value;
+        const vaccineName = editVaccineNameSelect.value;
+        const vaccineDate = document.getElementById('edit-vaccine-date').value;
+        const vaccineNotes = document.getElementById('edit-vaccine-notes').value;
+
+        const updatedVaccine = {
+            vaccineName: vaccineName,
+            date: vaccineDate,
+            notes: vaccineNotes,
+        };
+        updateVaccinationInDb(petId, vaccineId, updatedVaccine);
+    });
+
+    // --- Các hàm khác ---
+    const filterPets = () => {
+        const query = searchInput.value.toLowerCase();
+        const filtered = petsData.filter(pet =>
+            pet.name.toLowerCase().includes(query) || pet.id.toLowerCase().includes(query) || pet.owner.toLowerCase().includes(query)
+        );
+        renderPetsList(filtered);
+    };
+
+    const updateVaccineSelect = (petType, selectElement) => {
+        selectElement.innerHTML = '<option value="">Chọn vắc xin</option>';
+        let options = [];
+        if (petType === "Chó") {
+            options = ["Dại", "7 bệnh mũi 1", "7 bệnh mũi 2", "7 bệnh mũi 3", "7 bệnh hằng năm"];
+        } else if (petType === "Mèo") {
+            options = ["Dại", "4 bệnh mũi 1", "4 bệnh mũi 2", "4 bệnh mũi 3", "4 bệnh hằng năm"];
+        }
+
+        options.forEach(optionText => {
+            const optionElement = document.createElement('option');
+            optionElement.value = optionText;
+            optionElement.textContent = optionText;
+            selectElement.appendChild(optionElement);
+        });
+    };
+
+    const alertMessage = (message, type) => {
+        const alertBox = document.createElement('div');
+        alertBox.className = `fixed bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg shadow-xl text-white text-center transition-all duration-300 transform ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} z-50`;
+        alertBox.textContent = message;
+        document.body.appendChild(alertBox);
+        setTimeout(() => {
+            alertBox.classList.add('opacity-0');
+            setTimeout(() => alertBox.remove(), 300);
+        }, 3000);
+    };
+
+    // --- Các hàm xử lý Excel ---
+    const exportToExcel = () => {
+        try {
+            if (petsData.length === 0) {
+                alertMessage("Không có dữ liệu để xuất.", "error");
+                return;
+            }
+
+            const exportData = [];
+            const headers = ["ID", "Tên Thú Cưng", "Loài", "Giống", "Giới Tính", "Ngày Sinh", "Màu Lông", "Chủ", "Địa Chỉ", "SĐT", "Tên Vắc Xin", "Ngày Tiêm", "Ghi Chú"];
+            exportData.push(headers);
+
+            petsData.forEach(pet => {
+                if (pet.vaccinations && Object.keys(pet.vaccinations).length > 0) {
+                    Object.keys(pet.vaccinations).forEach(vacId => {
+                        const vac = pet.vaccinations[vacId];
+                        exportData.push([
+                            pet.id,
+                            pet.name,
+                            pet.type,
+                            pet.breed || '',
+                            pet.gender || '',
+                            pet.dob || '',
+                            pet.color || '',
+                            pet.owner || '',
+                            pet.address || '',
+                            pet.phone || '',
+                            vac.vaccineName,
+                            vac.date,
+                            vac.notes || ''
+                        ]);
+                    });
+                } else {
                     exportData.push([
                         pet.id,
                         pet.name,
@@ -947,190 +1194,184 @@ window.exportToExcel = () => {
                         pet.owner || '',
                         pet.address || '',
                         pet.phone || '',
-                        vac.vaccineName,
-                        vac.date,
-                        vac.notes || ''
+                        '', '', ''
                     ]);
-                });
-            } else {
-                // Thú cưng không có mũi tiêm nào
-                exportData.push([
-                    pet.id,
-                    pet.name,
-                    pet.type,
-                    pet.breed || '',
-                    pet.gender || '',
-                    pet.dob || '',
-                    pet.color || '',
-                    pet.owner || '',
-                    pet.address || '',
-                    pet.phone || '',
-                    '', '', '' // Cột vắc xin để trống
-                ]);
-            }
-        });
-
-        const worksheet = XLSX.utils.aoa_to_sheet(exportData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Lịch Tiêm Chủng");
-        XLSX.writeFile(workbook, "LichTiemChung_AnNhonPet.xlsx");
-        alertMessage("Đã xuất ra Excel thành công!", "success");
-
-    } catch (error) {
-        console.error("Lỗi khi xuất file Excel:", error);
-        alertMessage("Lỗi khi xuất file Excel. Vui lòng thử lại!", "error");
-    }
-};
-
-window.showExcelImportModal = () => {
-    showModal('import-excel-modal');
-};
-
-window.importExcelFile = () => {
-    const fileInput = document.getElementById('excel-file-input');
-    if (!fileInput.files.length) {
-        alertMessage("Vui lòng chọn một tệp Excel.", "error");
-        return;
-    }
-
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-
-    reader.onload = async (e) => {
-        try {
-            alertMessage("Đang nhập dữ liệu từ Excel...", "info");
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, {
-                type: 'array'
-            });
-            const firstSheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[firstSheetName];
-            const json = XLSX.utils.sheet_to_json(worksheet);
-
-            if (!json || json.length === 0) {
-                alertMessage("Tệp Excel không có dữ liệu.", "error");
-                return;
-            }
-
-            const petsFromDbSnapshot = await new Promise(resolve => {
-                onValue(petsRef, (snapshot) => {
-                    resolve(snapshot.val());
-                }, {
-                    onlyOnce: true
-                });
-            });
-            const petsFromDb = petsFromDbSnapshot || {};
-            const updates = {};
-            const processedPets = new Set();
-
-            // Hàm chuyển đổi số Excel sang ngày
-            const excelDateToJSDate = (serial) => {
-                const utc_days = Math.floor(serial - 25569);
-                const utc_value = utc_days * 86400;
-                const date_info = new Date(utc_value * 1000);
-                const year = date_info.getUTCFullYear();
-                const month = String(date_info.getUTCMonth() + 1).padStart(2, '0');
-                const day = String(date_info.getUTCDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            };
-
-            json.forEach(row => {
-                const petId = row["ID"] ? String(row["ID"]) : null;
-                if (!petId) return;
-
-                // Lấy thông tin thú cưng hiện có trong Firebase hoặc tạo mới
-                const existingPet = petsFromDb[petId] || {};
-                
-                // Cập nhật thông tin chung của thú cưng
-                const petDataFromExcel = {
-                    id: petId,
-                    name: row["Tên Thú Cưng"] || '',
-                    type: row["Loài"] || '',
-                    breed: row["Giống"] || '',
-                    gender: row["Giới Tính"] || '',
-                    dob: row["Ngày Sinh"] || '',
-                    color: row["Màu Lông"] || '',
-                    owner: row["Chủ"] || '',
-                    address: row["Địa Chỉ"] || '',
-                    phone: row["SĐT"] || '',
-                    photoUrl: existingPet.photoUrl || generateAvatar(row["Tên Thú Cưng"] || petId)
-                };
-
-                // Lấy danh sách mũi tiêm từ Excel (nếu có)
-                let newVaccination = null;
-                if (row["Tên Vắc Xin"] && row["Ngày Tiêm"]) {
-                    let dateValue = row["Ngày Tiêm"];
-                    if (typeof dateValue === 'number') {
-                        dateValue = excelDateToJSDate(dateValue);
-                    }
-                    newVaccination = {
-                        vaccineName: row["Tên Vắc Xin"],
-                        date: dateValue,
-                        notes: row["Ghi Chú"] || '',
-                        created: new Date().toISOString()
-                    };
-                }
-
-                // Kiểm tra xem đã xử lý thú cưng này chưa
-                if (!updates[`pets/${petId}`]) {
-                    // Lần đầu tiên xử lý thú cưng này trong vòng lặp
-                    const combinedVaccinations = { ...existingPet.vaccinations };
-                    if (newVaccination) {
-                        const isDuplicate = Object.values(combinedVaccinations).some(vac =>
-                            vac.vaccineName === newVaccination.vaccineName && vac.date === newVaccination.date
-                        );
-                        if (!isDuplicate) {
-                            const newVacKey = push(ref(database, 'dummy')).key; // Tạo key tạm thời
-                            combinedVaccinations[newVacKey] = newVaccination;
-                        }
-                    }
-                    updates[`pets/${petId}`] = { ...existingPet, ...petDataFromExcel, vaccinations: combinedVaccinations };
-                } else {
-                    // Thú cưng này đã được xử lý, chỉ thêm mũi tiêm mới
-                    if (newVaccination) {
-                        const existingVaccinations = updates[`pets/${petId}`].vaccinations;
-                        const isDuplicate = Object.values(existingVaccinations).some(vac =>
-                            vac.vaccineName === newVaccination.vaccineName && vac.date === newVaccination.date
-                        );
-                        if (!isDuplicate) {
-                            const newVacKey = push(ref(database, 'dummy')).key;
-                            updates[`pets/${petId}`].vaccinations[newVacKey] = newVaccination;
-                        }
-                    }
                 }
             });
 
-            // Ghi dữ liệu vào Firebase
-            if (Object.keys(updates).length > 0) {
-                await update(ref(database), updates);
-                alertMessage("Nhập Excel thành công!", "success");
-            } else {
-                alertMessage("Không tìm thấy dữ liệu thú cưng hợp lệ trong tệp.", "error");
-            }
-            closeModal('import-excel-modal');
+            const worksheet = XLSX.utils.aoa_to_sheet(exportData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Lịch Tiêm Chủng");
+            XLSX.writeFile(workbook, "LichTiemChung_AnNhonPet.xlsx");
+            alertMessage("Đã xuất ra Excel thành công!", "success");
+
         } catch (error) {
-            console.error("Lỗi khi nhập file Excel:", error);
-            alertMessage(`Lỗi: ${error.message}. Vui lòng kiểm tra định dạng file.`, "error");
+            console.error("Lỗi khi xuất file Excel:", error);
+            alertMessage("Lỗi khi xuất file Excel. Vui lòng thử lại!", "error");
         }
     };
-    reader.onerror = (error) => {
-        console.error("Lỗi khi đọc file:", error);
-        alertMessage("Lỗi khi đọc file. Vui lòng thử lại.", "error");
+
+    const showExcelImportModal = () => {
+        showModal('import-excel-modal');
     };
-    reader.readAsArrayBuffer(file);
-};
 
-window.showUpcomingVaccinationsModal = () => {
-    showModal('upcoming-vaccinations-modal');
-    alertMessage("Chức năng xem lịch tiêm sắp tới chưa được triển khai đầy đủ.", "info");
-    console.log("Mở modal lịch tiêm sắp tới...");
-};
+    const importExcelFile = () => {
+        const fileInput = document.getElementById('excel-file-input');
+        if (!fileInput.files.length) {
+            alertMessage("Vui lòng chọn một tệp Excel.", "error");
+            return;
+        }
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    loadPetsFromFirebase();
-});
+        const file = fileInput.files[0];
+        const reader = new FileReader();
 
-    </script>
+        reader.onload = async (e) => {
+            try {
+                alertMessage("Đang nhập dữ liệu từ Excel...", "info");
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                if (!json || json.length === 0) {
+                    alertMessage("Tệp Excel không có dữ liệu.", "error");
+                    return;
+                }
+
+                const petsFromDbSnapshot = await new Promise(resolve => {
+                    onValue(petsRef, (snapshot) => { resolve(snapshot.val()); }, { onlyOnce: true });
+                });
+                const petsFromDb = petsFromDbSnapshot || {};
+                const updates = {};
+
+                const excelDateToJSDate = (serial) => {
+                    const utc_days = Math.floor(serial - 25569);
+                    const utc_value = utc_days * 86400;
+                    const date_info = new Date(utc_value * 1000);
+                    const year = date_info.getUTCFullYear();
+                    const month = String(date_info.getUTCMonth() + 1).padStart(2, '0');
+                    const day = String(date_info.getUTCDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                };
+
+                json.forEach(row => {
+                    const petId = row["ID"] ? String(row["ID"]) : null;
+                    if (!petId) return;
+
+                    const existingPet = petsFromDb[petId] || {};
+                    const petDataFromExcel = {
+                        id: petId,
+                        name: row["Tên Thú Cưng"] || '',
+                        type: row["Loài"] || '',
+                        breed: row["Giống"] || '',
+                        gender: row["Giới Tính"] || '',
+                        dob: row["Ngày Sinh"] ? (typeof row["Ngày Sinh"] === 'number' ? excelDateToJSDate(row["Ngày Sinh"]) : row["Ngày Sinh"]) : '',
+                        color: row["Màu Lông"] || '',
+                        owner: row["Chủ"] || '',
+                        address: row["Địa Chỉ"] || '',
+                        phone: row["SĐT"] || '',
+                        photoUrl: existingPet.photoUrl || generateAvatar(row["Tên Thú Cưng"] || petId)
+                    };
+
+                    let newVaccination = null;
+                    if (row["Tên Vắc Xin"] && row["Ngày Tiêm"]) {
+                        let dateValue = row["Ngày Tiêm"];
+                        if (typeof dateValue === 'number') {
+                            dateValue = excelDateToJSDate(dateValue);
+                        }
+                        
+                        newVaccination = {
+                            vaccineName: row["Tên Vắc Xin"],
+                            date: dateValue,
+                            notes: row["Ghi Chú"] || '',
+                            created: new Date().toISOString()
+                        };
+                    }
+
+                    if (!updates[`pets/${petId}`]) {
+                        const combinedVaccinations = { ...existingPet.vaccinations };
+                        if (newVaccination) {
+                            const isDuplicate = Object.values(combinedVaccinations).some(vac =>
+                                vac.vaccineName === newVaccination.vaccineName && vac.date === newVaccination.date
+                            );
+                            if (!isDuplicate) {
+                                const newVacKey = push(ref(database, 'dummy')).key;
+                                combinedVaccinations[newVacKey] = newVaccination;
+                            }
+                        }
+                        updates[`pets/${petId}`] = { ...existingPet, ...petDataFromExcel, vaccinations: combinedVaccinations };
+                    } else {
+                        if (newVaccination) {
+                            const existingVaccinations = updates[`pets/${petId}`].vaccinations;
+                            const isDuplicate = Object.values(existingVaccinations).some(vac =>
+                                vac.vaccineName === newVaccination.vaccineName && vac.date === newVaccination.date
+                            );
+                            if (!isDuplicate) {
+                                const newVacKey = push(ref(database, 'dummy')).key;
+                                updates[`pets/${petId}`].vaccinations[newVacKey] = newVaccination;
+                            }
+                        }
+                    }
+                });
+
+                if (Object.keys(updates).length > 0) {
+                    await update(ref(database), updates);
+                    alertMessage("Nhập Excel thành công!", "success");
+                } else {
+                    alertMessage("Không tìm thấy dữ liệu thú cưng hợp lệ trong tệp.", "error");
+                }
+                closeModal('import-excel-modal');
+            } catch (error) {
+                console.error("Lỗi khi nhập file Excel:", error);
+                alertMessage(`Lỗi: ${error.message}. Vui lòng kiểm tra định dạng file.`, "error");
+            }
+        };
+        reader.onerror = (error) => {
+            console.error("Lỗi khi đọc file:", error);
+            alertMessage("Lỗi khi đọc file. Vui lòng thử lại.", "error");
+        };
+        reader.readAsArrayBuffer(file);
+    };
+
+    const showUpcomingVaccinationsModal = () => {
+        renderUpcomingReminders();
+        showModal('upcoming-vaccinations-modal');
+    };
+
+    // Export functions to the global scope for event listeners
+    window.showAddPetModal = showAddPetModal;
+    window.closeModal = closeModal;
+    window.showConfirmationModal = showConfirmationModal;
+    window.deletePetFromDb = deletePetFromDb;
+    window.showAddVaccinationModal = showAddVaccinationModal;
+    window.showExcelImportModal = showExcelImportModal;
+    window.exportToExcel = exportToExcel;
+    window.showUpcomingVaccinationsModal = showUpcomingVaccinationsModal;
+    window.filterPets = filterPets;
+    window.importExcelFile = importExcelFile;
+    window.updateVaccineSelect = updateVaccineSelect;
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        loadPetsFromFirebase();
+
+        // Gắn các trình nghe sự kiện trực tiếp vào các nút
+        document.body.addEventListener('click', (e) => {
+            if (e.target.closest('.edit-vaccine-btn')) {
+                const btn = e.target.closest('.edit-vaccine-btn');
+                const petId = btn.dataset.petId;
+                const vaccineId = btn.dataset.vaccineId;
+                showEditVaccinationModal(petId, vaccineId);
+            }
+            if (e.target.closest('.delete-vaccine-btn')) {
+                const btn = e.target.closest('.delete-vaccine-btn');
+                const petId = btn.dataset.petId;
+                const vaccineId = btn.dataset.vaccineId;
+                showConfirmationModal('Bạn có chắc chắn muốn xóa mũi tiêm này?', () => deleteVaccinationFromDb(petId, vaccineId));
+            }
+        });
+    });
+</script>
     
 
 </body>
