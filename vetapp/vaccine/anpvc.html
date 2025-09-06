@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
       /* Khai báo font Nokia */
@@ -98,6 +99,33 @@
                 transform: translateY(0);
             }
         }
+
+/* css riêng cho nút QR */
+        #qrOverlay {
+            display: none;
+        }
+        .overlay.active {
+            display: flex;
+        }
+        #lightbox {
+            display: none;
+        }
+        .qr-image-container {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            cursor: pointer; /* Thêm con trỏ để người dùng biết có thể click */
+        }
+        .qr-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
     </style>
 </head>
 
@@ -122,6 +150,44 @@
                 <span class="text-blue-500"></span>PHẦN MỀM QUẢN LÝ LỊCH TIÊM CHỦNG THÚ CƯNG
             </h1>
             <div class="flex flex-col sm:flex-row gap-2 justify-center">
+<!-- bắt đầu nút Hiện mã QR -->
+<button id="showQrBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 flex items-center space-x-2">
+        <i class="fas fa-qrcode text-xl"></i>
+        <span>Mã QR</span>
+    </button>
+
+    <div id="qrOverlay" class="overlay fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-xs w-full mx-4">
+            <button id="closeBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            <h3 class="text-xl font-semibold text-center mb-4">Mã QR số tài khoản</h3>
+            <div class="flex items-center justify-center">
+                <div class="qr-image-container">
+                    <img id="qrImage" src="" alt="QR Code">
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center mt-4 space-x-2">
+                <button id="prevBtn" class="p-2 text-gray-600 hover:text-blue-500 transition-colors duration-200">
+                    <i class="fas fa-chevron-left text-2xl"></i>
+                </button>
+                <div id="imageCounter" class="text-gray-500 text-sm"></div>
+                <button id="nextBtn" class="p-2 text-gray-600 hover:text-blue-500 transition-colors duration-200">
+                    <i class="fas fa-chevron-right text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+<!-- hết code nút Hiện mã QR -->
+<!-- BẮT ĐẦU CHỨC NĂNG PHÓNG TO ẢNH -->
+<div id="lightbox" class="overlay fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[100] transition-opacity duration-300">
+        <img id="lightboxImage" src="" alt="Large QR Code" class="max-w-[90%] max-h-[90%] object-contain">
+        <button id="lightboxClose" class="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors duration-200">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+    </div>
+<!-- KẾT THÚC CHỨC NĂNG PHÓNG TO ẢNH -->
                 <button id="export-excel-button" onclick="exportToExcel()"
                     class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 btn-action">
                     Xuất ra Excel
@@ -148,10 +214,22 @@
         <div class="mb-6">
             <input type="text" id="search-input" oninput="filterPets()"
                    class="block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
-                   placeholder="Lọc danh sách theo Tên/ID/Chủ">
+                   placeholder="Tìm kiếm theo Tên/ID/Chủ">
         </div>
 
-            <div><h2 class="text-2xl font-semibold text-center text-orange-600 mb-4">DANH SÁCH THÚ CƯNG</h2></div>
+            <div><h2 class="text-2xl font-bold text-center text-orange-600 mb-4">DANH SÁCH THÚ CƯNG</h2></div>
+
+<div class="flex justify-center gap-6 text-lg font-semibold text-gray-800 mb-4">
+    <div class="flex items-center space-x-2">
+        <span class="text-blue-500">Thống kê số lượng thú cưng: <span class="text-red-500">Chó:</span></span>
+        <span id="dog-count" class="font-bold">0</span>
+    </div>
+    <div class="flex items-center space-x-2">
+        <span class="text-pink-500">Mèo:</span>
+        <span id="cat-count" class="font-bold">0</span>
+    </div>
+</div>
+
         <div class="space-y-4 scrollable-content">
             <ul id="pets-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 </ul>
@@ -476,11 +554,11 @@
             <div class="md:flex md:justify-between">
                 <div class="mb-1 md:mb-0">
                     <h5 class="font-bold text-lg nokia-font">AN NHƠN PET</h5>
-                    <p class="text-sm text-green-200">Phần mềm quản lý tiêm chủng thú cưng</p>
+                    <p class="text-sm text-green-200">Healthy pet for your happiness!</p>
                 </div>
                 <div class="text-sm">
-                    <p>Địa chỉ: 21 Lương Văn Can, phường Bình Định, tỉnh Gia Lai</p>
-                    <p>Điện thoại: 0935.985.468 - 0388.13.8586</p>
+                    <p><span class="text-red-400">@annhonpetcare</span><span class="text-orange-500"> @annhonpetshop</span><span class="text-cyan-500"> @annhonpetspa</span><span class="text-blue-500"> @annhonpethotel</span></p>
+                    <p>Fanpage: https://www.facebook.com/annhonpet/</p>
                 </div>
             </div>
             <hr class="my-2 border-[#26ff4e] sm:mx-auto lg:my-3" />
@@ -491,7 +569,6 @@
   <!-- *******************************************************
 DÁN CODE JAVASCRIPT VÀO ĐÂY NHÉ
 ********************************************************** -->
-
 
 <script type="module">
     // Nhập các hàm cần thiết từ Firebase SDK
@@ -521,6 +598,9 @@ DÁN CODE JAVASCRIPT VÀO ĐÂY NHÉ
 
     // State variables
     let petsData = [];
+
+    // Biến toàn cục để lưu hàm xác nhận
+    let currentDeletionFunction = null;
 
     // UI elements
     const petsList = document.getElementById('pets-list');
@@ -561,26 +641,41 @@ DÁN CODE JAVASCRIPT VÀO ĐÂY NHÉ
     const deletePetBtn = document.getElementById('delete-pet-btn');
     const addVaccinationBtn = document.getElementById('add-vaccination-btn');
 
-// Biến toàn cục để lưu hàm xác nhận
-let currentDeletionFunction = null; 
-
     // --- Các hàm xử lý Firebase ---
+    // Khai báo hàm loadPetsFromFirebase ở ngoài để nó có phạm vi toàn cục
     const loadPetsFromFirebase = () => {
         onValue(petsRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
+                // Chuyển đối tượng thành mảng và gán ID
                 petsData = Object.keys(data).map(key => ({ ...data[key], id: key }));
             } else {
                 petsData = [];
             }
-            renderPetsList(petsData);
-            updateUpcomingReminderCount();
+            
+            // Gọi hàm render để hiển thị danh sách
+            window.renderPetsList(petsData);
+            
+            // Gọi hàm cập nhật số liệu thống kê
+            window.updatePetCounts();
+            
+            // Cập nhật số lượng nhắc lịch
+            updateUpcomingReminderCount(); 
+            
         }, (error) => {
             console.error("Lỗi khi tải dữ liệu từ Firebase:", error);
             alertMessage("Lỗi khi tải dữ liệu. Vui lòng kiểm tra kết nối!", "error");
         });
     };
-
+    
+    // Hàm thống kê số lượng chó và mèo
+    window.updatePetCounts = () => {
+        const dogCount = petsData.filter(pet => pet.type === 'Chó').length;
+        const catCount = petsData.filter(pet => pet.type === 'Mèo').length;
+        document.getElementById('dog-count').textContent = dogCount;
+        document.getElementById('cat-count').textContent = catCount;
+    };
+    
     const deletePetFromDb = (petId) => {
         remove(ref(database, 'pets/' + petId))
             .then(() => {
@@ -632,41 +727,42 @@ let currentDeletionFunction = null;
                 alertMessage("Lỗi khi xóa. Vui lòng thử lại!", "error");
             });
     };
-
+    
     // --- Các hàm render giao diện ---
-    const renderPetsList = (pets) => {
-    // Thêm dòng này để sắp xếp mảng pets trước khi hiển thị
-    pets.sort((a, b) => b.id.localeCompare(a.id));
+    // Gán hàm vào window để có thể truy cập được từ bên trong onValue
+    window.renderPetsList = (pets) => {
+        // Thêm dòng này để sắp xếp mảng pets trước khi hiển thị
+        pets.sort((a, b) => b.id.localeCompare(a.id));
 
-    petsList.innerHTML = '';
-    if (pets.length === 0) {
-        petsList.innerHTML = `<p class="text-center text-gray-500 mt-4">Chưa có thú cưng nào được tìm thấy. <br/>Hãy thử tìm kiếm khác hoặc thêm con đầu tiên của bạn!</p>`;
-        return;
-    }
-    pets.forEach(pet => {
-        const li = document.createElement('li');
-        li.className = 'bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition duration-300 ease-in-out transform hover:scale-105';
-        li.setAttribute('data-pet-id', pet.id);
-        li.innerHTML = `
-            <div class="flex items-center space-x-4">
-                <img src="${pet.photoUrl || generateAvatar(pet.name)}" alt="${pet.name}" class="w-16 h-16 object-cover rounded-full">
-                <div class="flex-grow">
-                    <h4 class="text-lg font-semibold text-gray-900">${pet.name}</h4>
-                    <p class="text-sm text-gray-600">ID: ${pet.id}</p>
-                    <p class="text-sm text-gray-600">Loài: ${pet.type}</p>
-                    <p class="text-sm text-gray-600">Chủ: ${pet.owner}</p>
+        petsList.innerHTML = '';
+        if (pets.length === 0) {
+            petsList.innerHTML = `<p class="text-center text-gray-500 mt-4">Chưa có thú cưng nào được tìm thấy. <br/>Hãy thử tìm kiếm khác hoặc thêm con đầu tiên của bạn!</p>`;
+            return;
+        }
+        pets.forEach(pet => {
+            const li = document.createElement('li');
+            li.className = 'bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition duration-300 ease-in-out transform hover:scale-105';
+            li.setAttribute('data-pet-id', pet.id);
+            li.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <img src="${pet.photoUrl || generateAvatar(pet.name)}" alt="${pet.name}" class="w-16 h-16 object-cover rounded-full">
+                    <div class="flex-grow">
+                        <h4 class="text-lg font-semibold text-gray-900">${pet.name}</h4>
+                        <p class="text-sm text-gray-600">ID: ${pet.id}</p>
+                        <p class="text-sm text-gray-600">Loài: ${pet.type}</p>
+                        <p class="text-sm text-gray-600">Chủ: ${pet.owner}</p>
+                    </div>
                 </div>
-            </div>
-        `;
-        // Gắn sự kiện click trực tiếp vào mỗi thẻ li
-        li.addEventListener('click', () => {
-            showPetDetail(pet.id);
+            `;
+            // Gắn sự kiện click trực tiếp vào mỗi thẻ li
+            li.addEventListener('click', () => {
+                showPetDetail(pet.id);
+            });
+            petsList.appendChild(li);
         });
-        petsList.appendChild(li);
-    });
-};
+    };
 
-    const renderVaccinations = (petId) => {
+    window.renderVaccinations = (petId) => {
         const pet = petsData.find(p => p.id === petId);
         vaccinationsList.innerHTML = '';
         if (pet && pet.vaccinations) {
@@ -701,135 +797,135 @@ let currentDeletionFunction = null;
             vaccinationsList.innerHTML = `<p class="text-center text-gray-500 mt-2">Chưa có mũi tiêm nào được ghi nhận.</p>`;
         }
     };
-
+    
     // --- Hàm xử lý UI và Modal ---
-const showModal = (modalId) => {
-    const modal = document.getElementById(modalId);
-    modal.classList.remove('hidden');
-};
+    const showModal = (modalId) => {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('hidden');
+    };
 
-const closeModal = (modalId) => {
-    const modal = document.getElementById(modalId);
-    modal.classList.add('hidden');
-};
+    const closeModal = (modalId) => {
+        const modal = document.getElementById(modalId);
+        modal.classList.add('hidden');
+    };
 
-// Export functions to the global scope so they can be called from HTML onclick attributes
-window.showAddPetModal = () => {
-    addPetForm.reset();
-    showModal('add-pet-modal');
-};
+    // Export functions to the global scope so they can be called from HTML onclick attributes
+    window.showAddPetModal = () => {
+        addPetForm.reset();
+        showModal('add-pet-modal');
+    };
 
-window.showEditPetModal = (petId) => {
-    closeModal('pet-detail-modal');
-    const pet = petsData.find(p => p.id === petId);
-    if (pet) {
-        document.getElementById('current-edit-pet-id').value = pet.id;
-        document.getElementById('edit-pet-id').value = pet.id;
-        document.getElementById('edit-pet-name').value = pet.name;
-        document.getElementById('edit-pet-type').value = pet.type;
-        document.getElementById('edit-pet-breed').value = pet.breed || '';
-        document.getElementById('edit-pet-gender').value = pet.gender;
-        document.getElementById('edit-pet-dob').value = pet.dob || '';
-        document.getElementById('edit-pet-color').value = pet.color || '';
-        document.getElementById('edit-pet-owner').value = pet.owner || '';
-        document.getElementById('edit-pet-address').value = pet.address || '';
-        document.getElementById('edit-pet-phone').value = pet.phone || '';
-        showModal('edit-pet-modal');
-    }
-};
+    window.showEditPetModal = (petId) => {
+        closeModal('pet-detail-modal');
+        const pet = petsData.find(p => p.id === petId);
+        if (pet) {
+            document.getElementById('current-edit-pet-id').value = pet.id;
+            document.getElementById('edit-pet-id').value = pet.id;
+            document.getElementById('edit-pet-name').value = pet.name;
+            document.getElementById('edit-pet-type').value = pet.type;
+            document.getElementById('edit-pet-breed').value = pet.breed || '';
+            document.getElementById('edit-pet-gender').value = pet.gender;
+            document.getElementById('edit-pet-dob').value = pet.dob || '';
+            document.getElementById('edit-pet-color').value = pet.color || '';
+            document.getElementById('edit-pet-owner').value = pet.owner || '';
+            document.getElementById('edit-pet-address').value = pet.address || '';
+            document.getElementById('edit-pet-phone').value = pet.phone || '';
+            showModal('edit-pet-modal');
+        }
+    };
 
-window.showPetDetail = (petId) => {
-    const pet = petsData.find(p => p.id === petId);
-    if (pet) {
-        currentDetailPetId.value = petId;
-        document.getElementById('pet-detail-pet-photo').src = pet.photoUrl || 'https://placehold.co/100x100';
-        petDetailPetId.textContent = `ID: ${pet.id}`;
-        petDetailPetName.textContent = pet.name;
-        petDetailPetType.textContent = `Loài: ${pet.type}`;
-        petDetailPetBreed.textContent = `Giống: ${pet.breed || 'Không có'}`;
-        petDetailPetDob.textContent = `Ngày sinh: ${pet.dob || 'Không có'}`;
-        petDetailPetGender.textContent = `Giới tính: ${pet.gender}`;
-        petDetailPetColor.textContent = `Màu lông: ${pet.color || 'Không có'}`;
-        petDetailPetOwner.textContent = `Chủ: ${pet.owner || 'Không có'}`;
-        petDetailPetAddress.textContent = `Địa chỉ: ${pet.address || 'Không có'}`;
-        petDetailPetPhone.textContent = `SĐT: ${pet.phone || 'Không có'}`;
+    window.showPetDetail = (petId) => {
+        const pet = petsData.find(p => p.id === petId);
+        if (pet) {
+            currentDetailPetId.value = petId;
+            document.getElementById('pet-detail-pet-photo').src = pet.photoUrl || 'https://placehold.co/100x100';
+            petDetailPetId.textContent = `ID: ${pet.id}`;
+            petDetailPetName.textContent = pet.name;
+            petDetailPetType.textContent = `Loài: ${pet.type}`;
+            petDetailPetBreed.textContent = `Giống: ${pet.breed || 'Không có'}`;
+            petDetailPetDob.textContent = `Ngày sinh: ${pet.dob || 'Không có'}`;
+            petDetailPetGender.textContent = `Giới tính: ${pet.gender}`;
+            petDetailPetColor.textContent = `Màu lông: ${pet.color || 'Không có'}`;
+            petDetailPetOwner.textContent = `Chủ: ${pet.owner || 'Không có'}`;
+            petDetailPetAddress.textContent = `Địa chỉ: ${pet.address || 'Không có'}`;
+            petDetailPetPhone.textContent = `SĐT: ${pet.phone || 'Không có'}`;
 
-        // Đảm bảo các hàm này được gán chính xác bên trong showPetDetail
-        document.getElementById('edit-pet-btn').onclick = () => window.showEditPetModal(petId);
-        document.getElementById('delete-pet-btn').onclick = () => window.showConfirmationModal('Bạn có chắc chắn muốn xóa thú cưng này? Lịch tiêm chủng của nó cũng sẽ bị xóa.', () => window.deletePetFromDb(petId));
+            // Đảm bảo các hàm này được gán chính xác bên trong showPetDetail
+            document.getElementById('edit-pet-btn').onclick = () => window.showEditPetModal(petId);
+            document.getElementById('delete-pet-btn').onclick = () => window.showConfirmationModal('Bạn có chắc chắn muốn xóa thú cưng này? Lịch tiêm chủng của nó cũng sẽ bị xóa.', () => window.deletePetFromDb(petId));
 
-        // Bổ sung code cho nút "Gọi điện"
-        document.getElementById('call-btn').onclick = () => {
-            const phoneNumber = pet.phone;
-            if (phoneNumber) {
-                window.location.href = `tel:${phoneNumber.replace(/\s/g, '')}`;
-            } else {
-                alert('Không có số điện thoại để gọi.');
-            }
-        };
+            // Bổ sung code cho nút "Gọi điện"
+            document.getElementById('call-btn').onclick = () => {
+                const phoneNumber = pet.phone;
+                if (phoneNumber) {
+                    window.location.href = `tel:${phoneNumber.replace(/\s/g, '')}`;
+                } else {
+                    alert('Không có số điện thoại để gọi.');
+                }
+            };
 
-        // Bổ sung code cho nút "Chat Zalo"
-        document.getElementById('zalo-btn').onclick = () => {
-            const phoneNumber = pet.phone;
-            if (phoneNumber) {
-                window.open(`https://zalo.me/${phoneNumber.replace(/\s/g, '')}`, '_blank');
-            } else {
-                alert('Không có số điện thoại để chat Zalo.');
-            }
-        };
+            // Bổ sung code cho nút "Chat Zalo"
+            document.getElementById('zalo-btn').onclick = () => {
+                const phoneNumber = pet.phone;
+                if (phoneNumber) {
+                    window.open(`https://zalo.me/${phoneNumber.replace(/\s/g, '')}`, '_blank');
+                } else {
+                    alert('Không có số điện thoại để chat Zalo.');
+                }
+            };
 
-        renderVaccinations(pet.id);
-        showModal('pet-detail-modal');
-    }
-};
+            renderVaccinations(pet.id);
+            showModal('pet-detail-modal');
+        }
+    };
 
-window.showAddVaccinationModal = () => {
-    const petId = currentDetailPetId.value;
-    const pet = petsData.find(p => p.id === petId);
-    if (pet) {
-        updateVaccineSelect(pet.type, vaccineNameSelect);
-        addVaccinationForm.reset();
-        showModal('add-vaccination-modal');
-    }
-};
+    window.showAddVaccinationModal = () => {
+        const petId = currentDetailPetId.value;
+        const pet = petsData.find(p => p.id === petId);
+        if (pet) {
+            updateVaccineSelect(pet.type, vaccineNameSelect);
+            addVaccinationForm.reset();
+            showModal('add-vaccination-modal');
+        }
+    };
 
-window.showEditVaccinationModal = (petId, vaccineId) => {
-    const pet = petsData.find(p => p.id === petId);
-    if (pet && pet.vaccinations && pet.vaccinations[vaccineId]) {
-        const vac = pet.vaccinations[vaccineId];
-        document.getElementById('current-edit-vaccination-pet-id').value = petId;
-        document.getElementById('current-edit-vaccination-id').value = vaccineId;
-        updateVaccineSelect(pet.type, editVaccineNameSelect);
-        editVaccineNameSelect.value = vac.vaccineName;
-        document.getElementById('edit-vaccine-date').value = vac.date;
-        document.getElementById('edit-vaccine-notes').value = vac.notes || '';
-        showModal('edit-vaccination-modal');
-    }
-};
+    window.showEditVaccinationModal = (petId, vaccineId) => {
+        const pet = petsData.find(p => p.id === petId);
+        if (pet && pet.vaccinations && pet.vaccinations[vaccineId]) {
+            const vac = pet.vaccinations[vaccineId];
+            document.getElementById('current-edit-vaccination-pet-id').value = petId;
+            document.getElementById('current-edit-vaccination-id').value = vaccineId;
+            updateVaccineSelect(pet.type, editVaccineNameSelect);
+            editVaccineNameSelect.value = vac.vaccineName;
+            document.getElementById('edit-vaccine-date').value = vac.date;
+            document.getElementById('edit-vaccine-notes').value = vac.notes || '';
+            showModal('edit-vaccination-modal');
+        }
+    };
 
-window.closeModal = (modalId) => {
-    closeModal(modalId);
-};
+    window.closeModal = (modalId) => {
+        closeModal(modalId);
+    };
 
-window.showConfirmationModal = (message, confirmAction) => {
-    document.getElementById('confirmation-message').textContent = message;
-    currentDeletionFunction = confirmAction;
-    showModal('confirmation-modal');
-};
+    window.showConfirmationModal = (message, confirmAction) => {
+        document.getElementById('confirmation-message').textContent = message;
+        currentDeletionFunction = confirmAction;
+        showModal('confirmation-modal');
+    };
 
-window.confirmDeletion = () => {
-    if (currentDeletionFunction) {
-        currentDeletionFunction();
+    window.confirmDeletion = () => {
+        if (currentDeletionFunction) {
+            currentDeletionFunction();
+            closeModal('confirmation-modal');
+        }
+    };
+
+    window.cancelDeletion = () => {
+        currentDeletionFunction = null;
         closeModal('confirmation-modal');
-    }
-};
+    };
 
-window.cancelDeletion = () => {
-    currentDeletionFunction = null;
-    closeModal('confirmation-modal');
-};
-
-window.deleteVaccinationFromDb = deleteVaccinationFromDb;
+    window.deleteVaccinationFromDb = deleteVaccinationFromDb;
 
     // --- Hàm tạo ảnh đại diện từ tên ---
     const generateAvatar = (name) => {
@@ -860,6 +956,104 @@ window.deleteVaccinationFromDb = deleteVaccinationFromDb;
 
         return canvas.toDataURL();
     };
+
+    // --- Gọi hàm khi trang web tải xong ---
+    document.addEventListener('DOMContentLoaded', () => {
+        loadPetsFromFirebase();// Hàm này sẽ đọc dữ liệu ở mục pets của firebase
+// Bắt đầu hàm hiển thị mã QR
+const qrOverlay = document.getElementById('qrOverlay');
+            const showQrBtn = document.getElementById('showQrBtn');
+
+            const closeBtn = document.getElementById('closeBtn');
+            const qrImage = document.getElementById('qrImage');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const imageCounter = document.getElementById('imageCounter');
+
+            // BẮT ĐẦU PHẦN BỔ SUNG LIGHTBOX
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxClose = document.getElementById('lightboxClose');
+            // KẾT THÚC PHẦN BỔ SUNG LIGHTBOX
+
+            const qrImages = [
+                'qr-t-agri.png',
+                'qr-q-bidv.png'
+            ];
+
+            let currentImageIndex = 0;
+
+            const updateQrImage = () => {
+                if (qrImages.length > 0) {
+                    qrImage.src = qrImages[currentImageIndex];
+                    imageCounter.textContent = `${currentImageIndex + 1} / ${qrImages.length}`;
+                }
+            };
+
+            // Ẩn khung ảnh khi trang tải xong
+            qrOverlay.style.display = 'none';
+
+            updateQrImage(); // Tải ảnh ngay khi hiện khung hiển thị ảnh
+
+            showQrBtn.addEventListener('click', () => {
+                qrOverlay.style.display = 'flex';
+
+            });
+
+            closeBtn.addEventListener('click', () => {
+                qrOverlay.style.display = 'none';
+            });
+
+            qrOverlay.addEventListener('click', (e) => {
+                if (e.target === qrOverlay) {
+                    qrOverlay.style.display = 'flex';
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentImageIndex = (currentImageIndex + 1) % qrImages.length;
+                updateQrImage();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentImageIndex = (currentImageIndex - 1 + qrImages.length) % qrImages.length;
+                updateQrImage();
+            });
+// Kết thúc hàm hiển thị mã QR
+
+        // BẮT ĐẦU LOGIC XỬ LÝ LIGHTBOX
+        qrImage.addEventListener('click', () => {
+            lightboxImage.src = qrImage.src; // Gán nguồn ảnh hiện tại cho lightbox
+            lightbox.style.display = 'flex'; // Hiển thị lightbox
+        });
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.style.display = 'none'; // Ẩn lightbox khi nhấn nút đóng
+        });
+        
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) { // Ẩn lightbox khi nhấn ra ngoài
+                lightbox.style.display = 'none';
+            }
+        });
+        // KẾT THÚC LOGIC XỬ LÝ LIGHTBOX
+
+// Bổ sung hỗ trợ phím ESC để đóng cả hai khung
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        // Kiểm tra xem khung overlay có đang hiển thị không
+        if (qrOverlay.style.display === 'flex') {
+            qrOverlay.style.display = 'none';
+        }
+        // Kiểm tra xem lightbox có đang hiển thị không
+        if (lightbox.style.display === 'flex') {
+            lightbox.style.display = 'none';
+        }
+    }
+});
+    });
+
+//ĐOẠN DƯỚI ĐÂY ĐƯỢC GIỮ NGUYÊN
 
     // --- Logic nhắc nhở lịch tiêm ---
     const getVaccinationReminders = (petId) => {
@@ -1446,5 +1640,6 @@ window.deleteVaccinationFromDb = deleteVaccinationFromDb;
 // Export hàm deletePetFromDb ra ngoài phạm vi toàn cục
 window.deletePetFromDb = deletePetFromDb;
 </script>
+
 </body>
 </html>
