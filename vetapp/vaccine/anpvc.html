@@ -729,39 +729,92 @@ DÁN CODE JAVASCRIPT VÀO ĐÂY NHÉ
             });
     };
     
-    // --- Các hàm render giao diện ---
-    // Gán hàm vào window để có thể truy cập được từ bên trong onValue
-    window.renderPetsList = (pets) => {
-        // Thêm dòng này để sắp xếp mảng pets trước khi hiển thị
-        pets.sort((a, b) => b.id.localeCompare(a.id));
+// --- Các hàm render giao diện DANH SÁCH THÚ CƯNG ---
+// Gán hàm vào window để có thể truy cập được từ bên trong onValue
+window.renderPetsList = (pets) => {
+    // Sắp xếp mảng pets trước khi hiển thị
+    pets.sort((a, b) => b.id.localeCompare(a.id));
 
-        petsList.innerHTML = '';
-        if (pets.length === 0) {
-            petsList.innerHTML = `<p class="text-center text-gray-500 mt-4">Chưa có thú cưng nào được tìm thấy. <br/>Hãy thử tìm kiếm khác hoặc thêm con đầu tiên của bạn!</p>`;
-            return;
+    // Lấy danh sách 5 thú cưng vừa tiêm gần nhất
+    const recentlyVaccinatedIds = getRecentlyVaccinatedPets().map(pet => pet.id);
+
+    petsList.innerHTML = '';
+    if (pets.length === 0) {
+        petsList.innerHTML = `<p class="text-center text-gray-500 mt-4">Chưa có thú cưng nào được tìm thấy. <br/>Hãy thử tìm kiếm khác hoặc thêm con đầu tiên của bạn!</p>`;
+        return;
+    }
+    
+    pets.forEach(pet => {
+        // Kiểm tra xem thú cưng có mũi tiêm "Dừng quản lý" không
+        const hasTerminationRecord = pet.vaccinations ? Object.values(pet.vaccinations).some(v => v.vaccineName === 'Dừng quản lý') : false;
+        
+        // Kiểm tra xem thú cưng có nằm trong danh sách vừa tiêm gần nhất không
+        const isRecentlyVaccinated = recentlyVaccinatedIds.includes(pet.id);
+
+        const li = document.createElement('li');
+        li.className = 'bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition duration-300 ease-in-out transform hover:scale-105';
+        li.setAttribute('data-pet-id', pet.id);
+        
+        // Thêm tag "Dừng quản lý" và "Mới tiêm"
+        let tagsHtml = '';
+        if (hasTerminationRecord) {
+            tagsHtml += `<span class="ml-2 inline-flex items-center rounded-full bg-blue-0 px-2.5 py-0.5 text-xs font-medium text-gray-800"><i class="fa-solid fa-ban text-lg text-[#ff6969]"></i></span>`;
         }
-        pets.forEach(pet => {
-            const li = document.createElement('li');
-            li.className = 'bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition duration-300 ease-in-out transform hover:scale-105';
-            li.setAttribute('data-pet-id', pet.id);
-            li.innerHTML = `
-                <div class="flex items-center space-x-4">
-                    <img src="${pet.photoUrl || generateAvatar(pet.name)}" alt="${pet.name}" class="w-16 h-16 object-cover rounded-full">
-                    <div class="flex-grow">
-                        <h4 class="text-lg font-semibold text-gray-900">${pet.name}</h4>
-                        <p class="text-sm text-gray-600">ID: ${pet.id}</p>
-                        <p class="text-sm text-gray-600">Loài: ${pet.type}</p>
-                        <p class="text-sm text-gray-600">Chủ: ${pet.owner}</p>
-                    </div>
+        if (isRecentlyVaccinated) {
+            tagsHtml += `<span class="ml-0 inline-flex items-center rounded-full bg-blue-0 px-2.5 py-0.5 text-xs font-medium text-blue-800"><i class="fa-solid fa-syringe text-lg text-[#006eff]"></i></span>`;
+        }
+
+li.innerHTML = `
+            <div class="flex items-center space-x-4">
+                <img src="${pet.photoUrl || generateAvatar(pet.name)}" alt="${pet.name}" class="w-16 h-16 object-cover rounded-full">
+                <div class="flex-grow">
+                    <h4 class="text-lg font-semibold text-gray-900 flex items-center justify-between">
+                        <div class="flex items-center">
+                            ${pet.name}
+                        </div>
+                        <div class="flex items-center">
+                            ${tagsHtml}
+                        </div>
+                    </h4>
+                    <p class="text-sm text-gray-600">ID: ${pet.id}</p>
+                    <p class="text-sm text-gray-600">Loài: ${pet.type}</p>
+                    <p class="text-sm text-gray-600">Chủ: ${pet.owner}</p>
                 </div>
-            `;
-            // Gắn sự kiện click trực tiếp vào mỗi thẻ li
-            li.addEventListener('click', () => {
-                showPetDetail(pet.id);
-            });
-            petsList.appendChild(li);
+            </div>
+        `;
+        // Gắn sự kiện click trực tiếp vào mỗi thẻ li
+        li.addEventListener('click', () => {
+            showPetDetail(pet.id);
         });
-    };
+        petsList.appendChild(li);
+    });
+};
+
+// Hàm này cần được thêm vào code của bạn nếu chưa có
+const getRecentlyVaccinatedPets = () => {
+    const recentlyVaccinated = petsData.map(pet => {
+        const vaccinations = pet.vaccinations ? Object.values(pet.vaccinations) : [];
+        if (vaccinations.length === 0) {
+            return null;
+        }
+        
+        const latestVaccination = vaccinations.sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+        
+        return {
+            ...pet,
+            latestVaccinationDate: new Date(latestVaccination.date),
+            latestVaccineName: latestVaccination.vaccineName
+        };
+    }).filter(pet => pet !== null);
+    
+    recentlyVaccinated.sort((a, b) => b.latestVaccinationDate - a.latestVaccinationDate);
+
+    return recentlyVaccinated.slice(0, 5);
+};
+
+// Đảm bảo hàm getRecentlyVaccinatedPets có thể truy cập được trong scope của renderPetsList.
+// Nếu hàm này đã được đặt ở ngoài và có phạm vi toàn cục, bạn không cần phải thêm lại.
+// KẾT THÚC CODE HIỆN DANH SÁCH THÚ CƯNG
 
     window.renderVaccinations = (petId) => {
         const pet = petsData.find(p => p.id === petId);
@@ -1056,18 +1109,25 @@ document.addEventListener('keydown', (e) => {
 
 //ĐOẠN DƯỚI ĐÂY ĐƯỢC GIỮ NGUYÊN
 
-    // --- Logic nhắc nhở lịch tiêm ---
-    const getVaccinationReminders = (petId) => {
+    // --- BẮT ĐẦU LOGIC NHẮC LỊCH ---
+
+const getVaccinationReminders = (petId) => {
     const pet = petsData.find(p => p.id === petId);
     if (!pet || !pet.dob) return [];
     
+    const existingVaccinations = pet.vaccinations ? Object.values(pet.vaccinations).sort((a, b) => new Date(a.date) - new Date(b.date)) : [];
+
+    // Kiểm tra nếu có mũi tiêm "Dừng quản lý", thì không tạo nhắc nhở
+    const hasTerminationRecord = existingVaccinations.some(v => v.vaccineName === 'Dừng quản lý');
+    if (hasTerminationRecord) {
+        return [];
+    }
+
     const reminders = [];
     const today = new Date();
     const petDob = new Date(pet.dob);
     const ageInYears = (today - petDob) / (1000 * 60 * 60 * 24 * 365.25);
     
-    const existingVaccinations = pet.vaccinations ? Object.values(pet.vaccinations).sort((a, b) => new Date(a.date) - new Date(b.date)) : [];
-
     // Logic tiêm dại (chung cho chó và mèo)
     const rabiesVaccinations = existingVaccinations.filter(v => v.vaccineName.includes('Dại')).reverse();
     let nextRabiesDate = null;
@@ -1215,55 +1275,57 @@ document.addEventListener('keydown', (e) => {
 };
 
 
-    const renderVaccinationReminders = (petId) => {
-        const reminders = getVaccinationReminders(petId);
-        vaccinationRemindersList.innerHTML = '';
-        
-        if (reminders.length === 0) {
-            vaccinationRemindersList.innerHTML = '<p class="text-green-600 font-bold">Không có lịch tiêm nào cần nhắc nhở.</p>';
-        } else {
-            reminders.forEach(reminder => {
-                const li = document.createElement('li');
-                li.className = `p-4 mb-2 rounded-lg font-bold ${reminder.type === 'overdue' ? 'bg-red-200 text-red-700' : 'bg-yellow-200 text-yellow-700'}`;
-                li.textContent = reminder.message.replace(`${petsData.find(p => p.id === petId)?.name}: `, '');
-                vaccinationRemindersList.appendChild(li);
-            });
-        }
-    };
+const renderVaccinationReminders = (petId) => {
+    const reminders = getVaccinationReminders(petId);
+    vaccinationRemindersList.innerHTML = '';
+    
+    if (reminders.length === 0) {
+        vaccinationRemindersList.innerHTML = '<p class="text-green-600 font-bold">Không có lịch tiêm nào cần nhắc nhở.</p>';
+    } else {
+        reminders.forEach(reminder => {
+            const li = document.createElement('li');
+            li.className = `p-4 mb-2 rounded-lg font-bold ${reminder.type === 'overdue' ? 'bg-red-200 text-red-700' : 'bg-yellow-200 text-yellow-700'}`;
+            li.textContent = reminder.message.replace(`${petsData.find(p => p.id === petId)?.name}: `, '');
+            vaccinationRemindersList.appendChild(li);
+        });
+    }
+};
 
-    const renderUpcomingReminders = () => {
-        upcomingPetsList.innerHTML = '';
-        const allReminders = petsData.flatMap(pet => getVaccinationReminders(pet.id));
+const renderUpcomingReminders = () => {
+    upcomingPetsList.innerHTML = '';
+    const allReminders = petsData.flatMap(pet => getVaccinationReminders(pet.id));
 
-    // Thêm dòng này để kiểm tra trên trình duyệt
-    console.log('Danh sách tất cả lời nhắc:', allReminders);
+// Thêm dòng này để kiểm tra trên trình duyệt
+console.log('Danh sách tất cả lời nhắc:', allReminders);
 
-        if (allReminders.length === 0) {
-            upcomingPetsList.innerHTML = '<p class="text-center text-gray-500 mt-4">Không có lịch tiêm nào sắp đến hạn hoặc quá hạn.</p>';
-        } else {
-            allReminders.forEach(reminder => {
-                const li = document.createElement('li');
-                li.className = `p-4 mb-2 rounded-lg cursor-pointer ${reminder.type === 'overdue' ? 'bg-red-200 text-red-700' : 'bg-yellow-200 text-yellow-700'}`;
-                li.textContent = reminder.message;
-                li.onclick = () => {
-                    closeModal('upcoming-vaccinations-modal');
-                    showPetDetail(reminder.petId);
-                };
-                upcomingPetsList.appendChild(li);
-            });
-        }
-    };
+    if (allReminders.length === 0) {
+        upcomingPetsList.innerHTML = '<p class="text-center text-gray-500 mt-4">Không có lịch tiêm nào sắp đến hạn hoặc quá hạn.</p>';
+    } else {
+        allReminders.forEach(reminder => {
+            const li = document.createElement('li');
+            li.className = `p-4 mb-2 rounded-lg cursor-pointer ${reminder.type === 'overdue' ? 'bg-red-200 text-red-700' : 'bg-yellow-200 text-yellow-700'}`;
+            li.textContent = reminder.message;
+            li.onclick = () => {
+                closeModal('upcoming-vaccinations-modal');
+                showPetDetail(reminder.petId);
+            };
+            upcomingPetsList.appendChild(li);
+        });
+    }
+};
 
-    const updateUpcomingReminderCount = () => {
-        const allReminders = petsData.flatMap(pet => getVaccinationReminders(pet.id));
-        const count = allReminders.length;
-        if (count > 0) {
-            upcomingReminderCount.textContent = count;
-            upcomingReminderCount.classList.remove('hidden');
-        } else {
-            upcomingReminderCount.classList.add('hidden');
-        }
-    };
+const updateUpcomingReminderCount = () => {
+    const allReminders = petsData.flatMap(pet => getVaccinationReminders(pet.id));
+    const count = allReminders.length;
+    if (count > 0) {
+        upcomingReminderCount.textContent = count;
+        upcomingReminderCount.classList.remove('hidden');
+    } else {
+        upcomingReminderCount.classList.add('hidden');
+    }
+};
+
+// KẾT THÚC CODE NHẮC LỊCH
 
     // --- Các hàm xử lý Form submissions ---
     addPetForm.addEventListener('submit', async (e) => {
@@ -1393,9 +1455,9 @@ document.addEventListener('keydown', (e) => {
         selectElement.innerHTML = '<option value="">Chọn vắc xin</option>';
         let options = [];
         if (petType === "Chó") {
-            options = ["Dại", "7 bệnh mũi 1", "7 bệnh mũi 2", "7 bệnh mũi 3", "7 bệnh hằng năm"];
+            options = ["Dại", "7 bệnh mũi 1", "7 bệnh mũi 2", "7 bệnh mũi 3", "7 bệnh hằng năm", "Dừng quản lý"];
         } else if (petType === "Mèo") {
-            options = ["Dại", "4 bệnh mũi 1", "4 bệnh mũi 2", "4 bệnh mũi 3", "4 bệnh hằng năm"];
+            options = ["Dại", "4 bệnh mũi 1", "4 bệnh mũi 2", "4 bệnh mũi 3", "4 bệnh hằng năm", "Dừng quản lý"];
         }
 
         options.forEach(optionText => {
