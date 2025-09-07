@@ -151,9 +151,9 @@
             </h1>
             <div class="flex flex-col sm:flex-row gap-2 justify-center">
 <!-- bắt đầu nút Hiện mã QR -->
-<button id="showQrBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 flex items-center space-x-2">
+<button id="showQrBtn" class="bg-blue-500 hover:bg-blue-600  hover:scale-105 text-white py-3 px-6 rounded-xl shadow-lg transition-all duration-300 flex items-center justify-center space-x-2">
         <i class="fas fa-qrcode text-xl"></i>
-        <span>Mã QR</span>
+        <span class="text-base sm:text-sm">Mã QR</span>
     </button>
 
     <div id="qrOverlay" class="overlay fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 transition-opacity duration-300">
@@ -190,24 +190,24 @@
 <!-- KẾT THÚC CHỨC NĂNG PHÓNG TO ẢNH -->
                 <button id="export-excel-button" onclick="exportToExcel()"
                     class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 btn-action">
-                    Xuất ra Excel
+                    <span class="text-base sm:text-sm">Xuất ra Excel</span>
                 </button>
                 <button id="import-excel-button" onclick="showExcelImportModal()"
                     class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 btn-action">
-                    Nhập từ Excel
+                    <span class="text-base sm:text-sm">Nhập từ Excel</span>
                 </button>
                 <button id="add-pet-button" onclick="showAddPetModal()"
                     class="bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105 btn-action">
-                    + Thêm thú cưng
+                    <span class="text-base sm:text-sm">+ Thêm thú cưng</span>
                 </button>
                 <button id="check-upcoming-button" onclick="showUpcomingVaccinationsModal()"
-    class="relative bg-yellow-500 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105 btn-action">
-    Kiểm tra nhắc lịch tiêm
-    <span id="upcoming-reminder-count"
-        class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">
-        0
-    </span>
-</button>
+                    class="relative bg-yellow-500 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105 btn-action">
+                    <span class="text-base sm:text-sm">Kiểm tra nhắc lịch tiêm</span>
+                    <span id="upcoming-reminder-count"
+                    class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">
+                    0
+                    </span>
+                </button>
             </div>
         </div>
 
@@ -220,8 +220,9 @@
             <div><h2 class="text-2xl font-bold text-center text-orange-600 mb-4">DANH SÁCH THÚ CƯNG</h2></div>
 
 <div class="flex justify-center gap-6 text-lg font-semibold text-gray-800 mb-4">
+    <p class="text-blue-500">Thống kê số lượng thú cưng:</p>
     <div class="flex items-center space-x-2">
-        <span class="text-blue-500">Thống kê số lượng thú cưng: <span class="text-red-500">Chó:</span></span>
+        <span class="text-red-500">Chó:</span></span>
         <span id="dog-count" class="font-bold">0</span>
     </div>
     <div class="flex items-center space-x-2">
@@ -454,7 +455,7 @@
                         class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
                 </div>
                 <div>
-                    <label for="vaccine-notes" class="block text-sm font-medium text-gray-700">Ghi chú (Tùy chọn)</label>
+                    <label for="vaccine-notes" class="block text-sm font-medium text-gray-700">Ghi chú <span style="font-size: 0.7rem;">(Số phiếu Dại, thân nhiệt, kg, hẹn xổ giun...)</span></label>
                     <textarea id="vaccine-notes" rows="3"
                         class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"></textarea>
                 </div>
