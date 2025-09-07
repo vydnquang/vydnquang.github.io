@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Phòng Khám Thú Y</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .form-container {
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div id="content-container" class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl p-6 pb-5 mb-5">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800">Hệ Thống Quản Lý Phòng Khám Thú Y</h1>
+            <p class="text-lg text-gray-600 mt-2">Nơi chăm sóc sức khỏe cho những người bạn bốn chân</p>
+        </header>
+
+        <div class="form-container bg-white p-8 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Tiếp nhận</h2>
+            <form id="reception-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                        <label for="receptionId" class="block text-gray-700 font-medium mb-2">Số ID</label>
+                        <input type="text" id="receptionId" name="receptionId" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="dateTime" class="block text-gray-700 font-medium mb-2">Ngày-giờ</label>
+                        <input type="text" id="dateTime" name="dateTime" readonly
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 focus:outline-none">
+                    </div>
+                    
+                    <div>
+                        <label for="ownerName" class="block text-gray-700 font-medium mb-2">Chủ vật nuôi</label>
+                        <input type="text" id="ownerName" name="ownerName" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="phoneNumber" class="block text-gray-700 font-medium mb-2">Số điện thoại</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 lg:col-span-3">
+                        <label for="address" class="block text-gray-700 font-medium mb-2">Địa chỉ</label>
+                        <textarea id="address" name="address" rows="2"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-container bg-white p-8 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Thông tin vật nuôi/Bệnh súc</h2>
+            <form id="pet-info-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                        <label for="petName" class="block text-gray-700 font-medium mb-2">Tên</label>
+                        <input type="text" id="petName" name="petName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="species" class="block text-gray-700 font-medium mb-2">Loài vật nuôi</label>
+                        <select id="species" name="species" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Chọn loài</option>
+                            <option value="Chó">Chó</option>
+                            <option value="Mèo">Mèo</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="breed" class="block text-gray-700 font-medium mb-2">Giống</label>
+                        <input type="text" id="breed" name="breed" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="dob" class="block text-gray-700 font-medium mb-2">Ngày sinh</label>
+                        <input type="date" id="dob" name="dob" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="gender" class="block text-gray-700 font-medium mb-2">Giới tính</label>
+                        <select id="gender" name="gender" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Chọn giới tính</option>
+                            <option value="Đực">Đực</option>
+                            <option value="Cái">Cái</option>
+                        </select>
+                    </div>
+                    <div class="col-span-1 md:col-span-2 lg:col-span-3">
+                        <label for="identification" class="block text-gray-700 font-medium mb-2">Dấu hiệu nhận dạng/Màu lông</label>
+                        <textarea id="identification" name="identification" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="neutered" name="neutered" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700 font-medium">Thiến/Triệt sản</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="pregnant" name="pregnant" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700 font-medium">Mang thai</span>
+                    </label>
+                    <div class="flex items-center space-x-2">
+                        <label for="pregnantDays" class="text-gray-700">Số ngày:</label>
+                        <input type="number" id="pregnantDays" name="pregnantDays" min="0" class="w-20 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="gaveBirth" name="gaveBirth" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700 font-medium">Đã đẻ vào ngày</span>
+                    </label>
+                    <div class="flex items-center space-x-2">
+                        <input type="date" id="gaveBirthDate" name="gaveBirthDate" class="px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label class="block text-gray-700 font-medium mb-2">Các loại vaccine đã tiêm</label>
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="vaccine" value="Dại" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Dại</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="vaccine" value="7 bệnh mũi 1" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">7 bệnh mũi 1</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="vaccine" value="7 bệnh mũi 2" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">7 bệnh mũi 2</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="vaccine" value="7 bệnh mũi 3" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">7 bệnh mũi 3</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="vaccine" value="7 bệnh hằng năm" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">7 bệnh hằng năm</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="vaccine" value="4 bệnh mũi 1" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">4 bệnh mũi 1</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="vaccine" value="4 bệnh mũi 2" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">4 bệnh mũi 2</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="vaccine" value="4 bệnh hằng năm" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">4 bệnh hằng năm</span>
+                        </label>
+                        <div class="flex items-center space-x-2">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="vaccine" value="Vaccine khác" id="other-vaccine-checkbox" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Vaccine khác</span>
+                            </label>
+                            <input type="text" id="otherVaccineName" name="otherVaccineName" class="w-40 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label for="parasiteControl" class="block text-gray-700 font-medium mb-2">Lịch phòng, trị ký sinh trùng, tẩy giun sán</label>
+                    <textarea id="parasiteControl" name="parasiteControl" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+
+                <div class="mt-6">
+                    <label for="reasonForVisit" class="block text-gray-700 font-medium mb-2">Lý do vào viện (ghi trình bày của chủ):</label>
+                    <textarea id="reasonForVisit" name="reasonForVisit" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-container bg-white p-8 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">3. Khám bệnh</h2>
+            <h3 class="text-xl font-medium text-gray-700 mb-4">3.1. Kiểm tra lâm sàng:</h3>
+            <form id="examination-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div>
+                        <label for="weight" class="block text-gray-700 font-medium mb-2">Cân nặng (kg)</label>
+                        <input type="number" id="weight" name="weight" step="0.1" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="temperature" class="block text-gray-700 font-medium mb-2">Thân nhiệt (°C)</label>
+                        <input type="number" id="temperature" name="temperature" step="0.1" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="respiratoryRate" class="block text-gray-700 font-medium mb-2">Nhịp thở</label>
+                        <input type="text" id="respiratoryRate" name="respiratoryRate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="bloodPressure" class="block text-gray-700 font-medium mb-2">Huyết áp</label>
+                        <input type="text" id="bloodPressure" name="bloodPressure" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="col-span-full">
+                        <label for="mucousMembrane" class="block text-gray-700 font-medium mb-2">Niêm mạc</label>
+                        <input type="text" id="mucousMembrane" name="mucousMembrane" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <span class="block text-gray-700 font-medium mb-2">Điểm thể trạng</span>
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="bodyCondition" value="Trung bình" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Trung bình</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="bodyCondition" value="Gầy" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Gầy</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="bodyCondition" value="Béo" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Béo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <span class="block text-gray-700 font-medium mb-2">Tiêu hóa</span>
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="digestive" value="Ăn bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Ăn bình thường</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="digestive" value="Bỏ ăn" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Bỏ ăn</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="digestive" value="Nôn" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Nôn</span>
+                        </label>
+                        <input type="text" id="vomitInfo" name="vomitInfo" placeholder="Mô tả nôn" class="w-60 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="stool" class="text-gray-700">Phân:</label>
+                        <input type="text" id="stool" name="stool" class="w-60 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="digestive" value="Chảy dãi" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Chảy dãi</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="digestive" value="Mất nước" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Mất nước</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="digestive" value="Tích nước/Báng bụng" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Tích nước/Báng bụng</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <span class="block text-gray-700 font-medium mb-2">Hô hấp</span>
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="respiratory" value="Ho" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Ho</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="respiratory" value="Khạc" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Khạc</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="respiratory" value="Khó thở" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Khó thở</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="respiratory" value="Chảy dịch mũi" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Chảy dịch mũi</span>
+                        </label>
+                        <input type="text" id="nasalDischarge" name="nasalDischarge" placeholder="Mô tả dịch mũi" class="w-60 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <span class="block text-gray-700 font-medium mb-2">Tinh thần</span>
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="mental" value="Tỉnh táo" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Tỉnh táo</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="mental" value="Mệt mỏi" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Mệt mỏi</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="mental" value="Kích động" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Kích động</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="mental" value="Sốc" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Sốc</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="mental" value="Li bì" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Li bì</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="mental" value="Hôn mê" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Hôn mê</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="mental" value="Không phản xạ" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Không phản xạ</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label for="medicalHistory" class="block text-gray-700 font-medium mb-2">Tiền sử mắc bệnh</label>
+                    <textarea id="medicalHistory" name="medicalHistory" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="mt-6">
+                    <label for="epidemiology" class="block text-gray-700 font-medium mb-2">Dịch tễ bệnh</label>
+                    <input type="text" id="epidemiology" name="epidemiology" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="text-sm text-gray-500 mt-1">Ghi chú: Có thú bệnh cùng nhà? Có thú bệnh nhà xung quanh?</p>
+                </div>
+                <div class="mt-6">
+                    <label for="otherInfo" class="block text-gray-700 font-medium mb-2">Các thông tin khác</label>
+                    <textarea id="otherInfo" name="otherInfo" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+            </form>
+        </div>
+        
+        <div class="form-container bg-white p-8 mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">3.2. Khám các cơ quan:</h3>
+            <form id="organ-examination-form">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Khoang miệng:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="oralCavity" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="oralCavity" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="oralCavityNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Mắt:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="eyes" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="eyes" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="eyesNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Tai:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="ears" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="ears" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="earsNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Mũi:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="nose" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="nose" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="noseNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Tim:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="heart" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="heart" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="heartNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Phổi:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="lungs" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="lungs" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="lungsNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Bụng:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="abdomen" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="abdomen" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="abdomenNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Hạch bạch huyết:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="lymphNodes" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="lymphNodes" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="lymphNodesNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Da, lông:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="skinCoat" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="skinCoat" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="skinCoatNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Đệm chân:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="paws" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="paws" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="pawsNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Cơ-Xương-Khớp:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="musculoskeletal" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="musculoskeletal" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="musculoskeletalNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Hệ thống thần kinh:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="nervousSystem" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="nervousSystem" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="nervousSystemNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center gap-x-4 flex-wrap">
+                        <span class="w-32 text-gray-700 font-medium">Tiết niệu, sinh dục:</span>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="urinaryReproductive" value="Bình thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bình thường</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="urinaryReproductive" value="Bất thường" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Bất thường</span>
+                            </label>
+                        </div>
+                        <input type="text" name="urinaryReproductiveNote" placeholder="Ghi dấu hiệu bất thường" class="flex-1 min-w-48 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-container bg-white p-8 mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">3.3. Chẩn đoán chỉ định thêm:</h3>
+            <form id="additional-diagnostics-form">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="CBC" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">CBC (Xét nghiệm máu toàn phần)</span>
+                        </label>
+                        <input type="text" name="cbcResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Xét nghiệm máu tiền phẫu" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Xét nghiệm máu tiền phẫu</span>
+                        </label>
+                        <input type="text" name="preoperativeBloodResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Chem" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Chem (Sinh hóa máu)</span>
+                        </label>
+                        <input type="text" name="chemResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Ion đồ/Khí máu" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Ion đồ/Khí máu</span>
+                        </label>
+                        <input type="text" name="ionBloodGasResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Đường huyết" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Đường huyết</span>
+                        </label>
+                        <input type="text" name="bloodSugarResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Miễn dịch huỳnh quang" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Miễn dịch huỳnh quang</span>
+                        </label>
+                        <input type="text" name="immunofluorescenceResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Phết máu soi kính" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Phết máu soi kính</span>
+                        </label>
+                        <input type="text" name="bloodSmearResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Siêu âm ổ bụng" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Siêu âm ổ bụng</span>
+                        </label>
+                        <input type="text" name="abdominalUltrasoundResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Siêu âm tim" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Siêu âm tim</span>
+                        </label>
+                        <input type="text" name="cardiacUltrasoundResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="X-quang" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">X-quang</span>
+                        </label>
+                        <input type="text" name="xrayResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="ECG" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">ECG (Điện tâm đồ)</span>
+                        </label>
+                        <input type="text" name="ecgResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Kiểm tra giun tim" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Kiểm tra giun tim</span>
+                        </label>
+                        <input type="text" name="heartwormResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Phân tích nước tiểu" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Phân tích nước tiểu</span>
+                        </label>
+                        <input type="text" name="urinalysisResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Cấy nước tiểu" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Cấy nước tiểu</span>
+                        </label>
+                        <input type="text" name="urineCultureResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Hiếu khí C và S" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Hiếu khí C và S</span>
+                        </label>
+                        <input type="text" name="aerobicCSResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Xét nghiệm phân" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Xét nghiệm phân</span>
+                        </label>
+                        <input type="text" name="fecalTestResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="T4" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">T4 (Thyroxine)</span>
+                        </label>
+                        <input type="text" name="t4Result" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Cạo da" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Cạo da</span>
+                        </label>
+                        <input type="text" name="skinScrapingResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Hiệu giá Lyme" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Hiệu giá Lyme</span>
+                        </label>
+                        <input type="text" name="lymeTiterResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Sinh thiết" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Sinh thiết</span>
+                        </label>
+                        <input type="text" name="biopsyResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2 w-72">
+                            <input type="checkbox" name="diagnostic" value="Kháng sinh đồ" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Kháng sinh đồ</span>
+                        </label>
+                        <input type="text" name="antibiogramResult" placeholder="Kết quả" class="flex-1 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-container bg-white p-8 mb-8">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">3.4. Các test nhanh:</h3>
+            <form id="rapid-tests-form">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="rapidTestCheck" value="Parvo virus" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700 min-w-40">Parvo virus</span>
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="parvoResult" value="Dương tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Dương tính</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="parvoResult" value="Âm tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Âm tính</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="rapidTestCheck" value="Carré virus" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700 min-w-40">Carré virus</span>
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="carreResult" value="Dương tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Dương tính</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="carreResult" value="Âm tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Âm tính</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="rapidTestCheck" value="Corona virus" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700 min-w-40">Corona virus</span>
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="coronaResult" value="Dương tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Dương tính</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="coronaResult" value="Âm tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Âm tính</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="rapidTestCheck" value="Leptospira" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700 min-w-40">Leptospira</span>
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="leptoResult" value="Dương tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Dương tính</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="leptoResult" value="Âm tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Âm tính</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="rapidTestCheck" value="FPV" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700 min-w-40">FPV</span>
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="fpvResult" value="Dương tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Dương tính</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="fpvResult" value="Âm tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Âm tính</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="rapidTestCheck" value="FHV" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700 min-w-40">FHV</span>
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="fhvResult" value="Dương tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Dương tính</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="fhvResult" value="Âm tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Âm tính</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="rapidTestCheck" value="FeCV/FIP" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700 min-w-40">FeCV/FIP</span>
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="fecvFipResult" value="Dương tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Dương tính</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="fecvFipResult" value="Âm tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Âm tính</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="rapidTestCheck" value="FeLV" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700 min-w-40">FeLV</span>
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="felvResult" value="Dương tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Dương tính</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="felvResult" value="Âm tính" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Âm tính</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-x-4">
+                        <label for="otherTestName" class="flex items-center space-x-2 min-w-max">
+                            <span class="text-gray-700">Các test khác</span>
+                        </label>
+                        <input type="text" id="otherTestName" name="otherTestName" placeholder="Tên test và kết quả" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-container bg-white p-8 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">4. Hướng chẩn đoán</h2>
+            <form id="diagnosis-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="diagnosis" class="block text-gray-700 font-medium mb-2">Chẩn đoán bệnh</label>
+                        <input type="text" id="diagnosis" name="diagnosis" placeholder="Nhập tên bệnh" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Tiên lượng</label>
+                        <div class="flex items-center space-x-6">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="prognosis" value="Tốt" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Tốt</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="prognosis" value="Xấu" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Xấu</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="prognosis" value="Nghi ngờ" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Nghi ngờ</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="prognosis" value="Cần theo dõi" class="rounded text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Cần theo dõi</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-container bg-white p-8 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">5. Hướng điều trị & Toa thuốc</h2>
+            <form id="treatment-form">
+                <h3 class="text-xl font-medium text-gray-700 mb-4">5.1. Tư vấn điều trị:</h3>
+                <div class="space-y-4">
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="treatmentType" value="Nội khoa" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Nội khoa</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="treatmentType" value="Ngoại khoa" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Ngoại khoa</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="treatmentType" value="Nội trú" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Nội trú</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="treatmentType" value="Tại nhà" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Tại nhà</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="treatmentType" value="Tự điều trị" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Tự điều trị</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="treatmentType" value="Không điều trị" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-700">Không điều trị</span>
+                        </label>
+                    </div>
+                    <textarea id="treatmentAdvisory" name="treatmentAdvisory" rows="4" placeholder="Tư vấn điều trị và dặn dò chủ vật nuôi..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                
+                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-4">5.2. Toa thuốc:</h3>
+                <div id="prescription-list" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 text-sm font-semibold text-gray-700 border-b border-gray-300 pb-2">
+                        <div class="col-span-1 md:col-span-2">Tên thuốc</div>
+                        <div>Liều (ml/kg hoặc mg/kg)</div>
+                        <div>Tổng liều (ml hoặc mg)</div>
+                        <div>Đơn giá (VND)</div>
+                        <div>Thành tiền (VND)</div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName1" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage1" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage1" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice1" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice1" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName2" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage2" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage2" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice2" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice2" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName3" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage3" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage3" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice3" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice3" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName4" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage4" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage4" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice4" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice4" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName5" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage5" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage5" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice5" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice5" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName6" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage6" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage6" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice6" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice6" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName7" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage7" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage7" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice7" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice7" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName8" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage8" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage8" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice8" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice8" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName9" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage9" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage9" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice9" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice9" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-2 items-center">
+                        <div class="col-span-1 md:col-span-2">
+                            <input type="text" name="drugName10" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="dosage10" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalDosage10" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                        <div>
+                            <input type="text" name="unitPrice10" class="w-full px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <input type="text" name="totalPrice10" class="w-full px-2 py-1 border border-gray-300 rounded-lg bg-gray-200" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-4">5.3. Liệu trình điều trị:</h3>
+                <div id="treatment-schedule-section" class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                    <p class="text-gray-600 italic">Đây là khu vực để xây dựng các chức năng theo dõi ngày điều trị, ngày hẹn tái khám và công nợ. Chúng ta sẽ cùng nhau phát triển chi tiết các tính năng này sau nhé.</p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+            document.getElementById('dateTime').value = formattedDateTime;
+        });
+    </script>
+</body>
+</html>
