@@ -126,6 +126,21 @@
             max-height: 100%;
             object-fit: contain;
         }
+
+#pets-list.list-view li {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+#pets-list.list-view h4 {
+    margin: 0;
+}
+
+#pets-list.list-view img {
+    width: 2.5rem;
+    height: 2.5rem;
+}
     </style>
 </head>
 
@@ -219,15 +234,20 @@
 
             <div><h2 class="text-2xl font-bold text-center text-orange-600 mb-4">DANH SÁCH THÚ CƯNG</h2></div>
 
-<div class="flex justify-center gap-6 text-lg font-semibold text-gray-800 mb-4">
-    <p class="text-blue-500">Thống kê số lượng thú cưng:</p>
-    <div class="flex items-center space-x-2">
-        <span class="text-red-500">Chó:</span></span>
-        <span id="dog-count" class="font-bold">0</span>
-    </div>
-    <div class="flex items-center space-x-2">
-        <span class="text-pink-500">Mèo:</span>
-        <span id="cat-count" class="font-bold">0</span>
+<div class="flex items-center justify-center relative text-lg font-semibold text-gray-800 mb-4">
+    <button id="view-toggle-btn" class="absolute left-0 bg-gray-200 text-gray-700 w-8 h-8 rounded-md hover:bg-gray-300 transition duration-300 flex items-center justify-center">
+      <i class="fa-solid fa-list-ul fa-xs"></i>
+    </button>
+    <div class="flex justify-center gap-6 items-center">
+        <p class="text-blue-500">Tổng số lượng thú cưng:</p>
+        <div class="flex items-center space-x-2">
+            <span class="text-red-500">Chó:</span>
+            <span id="dog-count" class="font-bold">0</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <span class="text-pink-500">Mèo:</span>
+            <span id="cat-count" class="font-bold">0</span>
+        </div>
     </div>
 </div>
 
@@ -240,6 +260,7 @@
     <div id="add-pet-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
             <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Thêm thú cưng mới</h3>
+            <p class="text-sm text-gray-500 mb-4 text-center"><strong>Ghi chú:</strong> Vui lòng nhập đầy đủ các thông tin bên dưới.</p>
             <form id="add-pet-form" class="space-y-4">
                 <div>
                     <label for="pet-id" class="block text-sm font-medium text-gray-700">Số ID</label>
@@ -441,6 +462,7 @@
     <div id="add-vaccination-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
             <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Thêm mũi tiêm mới</h3>
+            <p class="text-sm text-gray-500 mb-4 text-center"><strong>Ghi chú:</strong> Nếu thú cưng bị mất, chết hoặc chuyển nhượng thì chọn "Dừng quản lý" trong mục tên vaccine.</p>
             <form id="add-vaccination-form" class="space-y-4">
                 <div>
                     <label for="vaccine-name-select" class="block text-sm font-medium text-gray-700">Tên vắc xin</label>
@@ -472,6 +494,7 @@
     <div id="edit-vaccination-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
             <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Chỉnh sửa mũi tiêm</h3>
+            <p class="text-sm text-gray-500 mb-4 text-center"><strong>Ghi chú:</strong> Nếu thú cưng bị mất, chết hoặc chuyển nhượng thì chọn "Dừng quản lý" trong mục tên vaccine.</p>
             <form id="edit-vaccination-form" class="space-y-4">
                 <input type="hidden" id="current-edit-vaccination-pet-id">
                 <input type="hidden" id="current-edit-vaccination-id">
@@ -487,7 +510,7 @@
                         class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
                 </div>
                 <div>
-                    <label for="edit-vaccine-notes" class="block text-sm font-medium text-gray-700">Ghi chú (Tùy chọn)</label>
+                    <label for="edit-vaccine-notes" class="block text-sm font-medium text-gray-700">Ghi chú <span style="font-size: 0.7rem;">(Số phiếu Dại, thân nhiệt, kg, hẹn xổ giun...)</span></label>
                     <textarea id="edit-vaccine-notes" rows="3"
                         class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"></textarea>
                 </div>
@@ -536,8 +559,8 @@
 
     <div id="upcoming-vaccinations-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-xl fade-in modal-scrollable">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold text-gray-800">Lịch tiêm chủng sắp tới</h3>
+            <div class="flex items-center mb-4">
+                <h3 class="flex-grow text-2xl font-bold text-gray-800 text-center">Lịch tiêm chủng sắp tới</h3>
                 <button onclick="closeModal('upcoming-vaccinations-modal')"
                     class="text-gray-500 hover:text-gray-800 transition duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -728,16 +751,40 @@ DÁN CODE JAVASCRIPT VÀO ĐÂY NHÉ
                 alertMessage("Lỗi khi xóa. Vui lòng thử lại!", "error");
             });
     };
+
+    // Thêm hàm để cập nhật dữ liệu và hiển thị danh sách
+    window.updateAndRenderPets = (data) => {
+        petsData = data; // Cập nhật dữ liệu vào biến toàn cục
+        window.renderPetsList(petsData); // Gọi hàm render ban đầu
+    };
+
+    // --- Logic chuyển đổi chế độ xem ---
+    // Lưu chế độ xem dạng card.
+    let isCardView = true;
+
+window.toggleView = () => {
+    isCardView = !isCardView;
+    const petsList = document.getElementById('pets-list');
+    const viewToggleBtn = document.getElementById('view-toggle-btn');
+    if (isCardView) {
+        petsList.classList.remove('list-view');
+        viewToggleBtn.innerHTML = '<i class="fa-solid fa-list-ul fa-xs"></i>';
+    } else {
+        petsList.classList.add('list-view');
+        viewToggleBtn.innerHTML = '<i class="fa-solid fa-border-all fa-xs"></i>';
+    }
+    // Gọi lại hàm render với dữ liệu đã được lưu
+    window.renderPetsList(petsData);
+};
     
 // --- Các hàm render giao diện DANH SÁCH THÚ CƯNG ---
-// Gán hàm vào window để có thể truy cập được từ bên trong onValue
 window.renderPetsList = (pets) => {
     // Sắp xếp mảng pets trước khi hiển thị
     pets.sort((a, b) => b.id.localeCompare(a.id));
 
-    // Lấy danh sách 5 thú cưng vừa tiêm gần nhất
     const recentlyVaccinatedIds = getRecentlyVaccinatedPets().map(pet => pet.id);
 
+    const petsList = document.getElementById('pets-list'); // Đảm bảo lấy đúng element
     petsList.innerHTML = '';
     if (pets.length === 0) {
         petsList.innerHTML = `<p class="text-center text-gray-500 mt-4">Chưa có thú cưng nào được tìm thấy. <br/>Hãy thử tìm kiếm khác hoặc thêm con đầu tiên của bạn!</p>`;
@@ -745,50 +792,63 @@ window.renderPetsList = (pets) => {
     }
     
     pets.forEach(pet => {
-        // Kiểm tra xem thú cưng có mũi tiêm "Dừng quản lý" không
         const hasTerminationRecord = pet.vaccinations ? Object.values(pet.vaccinations).some(v => v.vaccineName === 'Dừng quản lý') : false;
-        
-        // Kiểm tra xem thú cưng có nằm trong danh sách vừa tiêm gần nhất không
         const isRecentlyVaccinated = recentlyVaccinatedIds.includes(pet.id);
 
         const li = document.createElement('li');
-        li.className = 'bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition duration-300 ease-in-out transform hover:scale-105';
-        li.setAttribute('data-pet-id', pet.id);
         
-        // Thêm tag "Dừng quản lý" và "Mới tiêm"
         let tagsHtml = '';
         if (hasTerminationRecord) {
-            tagsHtml += `<span class="ml-2 inline-flex items-center rounded-full bg-blue-0 px-2.5 py-0.5 text-xs font-medium text-gray-800"><i class="fa-solid fa-ban text-lg text-[#ff6969]"></i></span>`;
+            tagsHtml += `<span class="ml-2 inline-flex items-center rounded-full bg-blue-0 px-2.5 py-0.5 text-xs font-medium text-blue-800"><i class="fa-solid fa-ban text-lg mr-1 text-[#ff6969]"></i></span>`;
         }
         if (isRecentlyVaccinated) {
-            tagsHtml += `<span class="ml-0 inline-flex items-center rounded-full bg-blue-0 px-2.5 py-0.5 text-xs font-medium text-blue-800"><i class="fa-solid fa-syringe text-lg text-[#006eff]"></i></span>`;
+        // Chỉ thêm ml-2 nếu đây là tag đầu tiên, nếu không thì không thêm khoảng cách
+        const mlClass = hasTerminationRecord ? '' : 'ml-2';
+            tagsHtml += `<span class="${mlClass} inline-flex items-center rounded-full bg-blue-0 px-2.5 py-0.5 text-xs font-medium text-blue-800"><i class="fa-solid fa-syringe text-lg mr-1 text-[#006eff]"></i></span>`;
         }
-
-li.innerHTML = `
-            <div class="flex items-center space-x-4">
-                <img src="${pet.photoUrl || generateAvatar(pet.name)}" alt="${pet.name}" class="w-16 h-16 object-cover rounded-full">
-                <div class="flex-grow">
-                    <h4 class="text-lg font-semibold text-gray-900 flex items-center justify-between">
-                        <div class="flex items-center">
-                            ${pet.name}
-                        </div>
-                        <div class="flex items-center">
-                            ${tagsHtml}
-                        </div>
-                    </h4>
-                    <p class="text-sm text-gray-600">ID: ${pet.id}</p>
-                    <p class="text-sm text-gray-600">Loài: ${pet.type}</p>
-                    <p class="text-sm text-gray-600">Chủ: ${pet.owner}</p>
+        
+        if (isCardView) {
+            li.className = 'bg-white p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition duration-300 ease-in-out transform hover:scale-105';
+            li.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <img src="${pet.photoUrl || generateAvatar(pet.name)}" alt="${pet.name}" class="w-16 h-16 object-cover rounded-full">
+                    <div class="flex-grow">
+                        <h4 class="text-lg font-semibold text-gray-900 flex items-center justify-between">
+                            <div class="flex items-center">${pet.name}</div>
+                            <div class="flex items-center">${tagsHtml}</div>
+                        </h4>
+                        <p class="text-sm text-gray-600">ID: ${pet.id}</p>
+                        <p class="text-sm text-gray-600">Loài: ${pet.type}</p>
+                        <p class="text-sm text-gray-600">Chủ: ${pet.owner}</p>
+                    </div>
                 </div>
-            </div>
-        `;
-        // Gắn sự kiện click trực tiếp vào mỗi thẻ li
+            `;
+        } else {
+            li.className = 'bg-white p-4 rounded-lg shadow-md cursor-pointer mb-2';
+            li.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div class="flex-grow">
+                        <h4 class="text-lg font-semibold text-gray-900 flex items-center">
+                            ${pet.name}${tagsHtml}
+                        </h4>
+                        <p class="text-sm text-gray-600">ID: ${pet.id} - ${pet.type} - Chủ: ${pet.owner}</p>
+                    </div>
+                    <div>
+                        <img src="${pet.photoUrl || generateAvatar(pet.name)}" alt="${pet.name}" class="w-10 h-10 object-cover rounded-full">
+                    </div>
+                </div>
+            `;
+        }
+        
         li.addEventListener('click', () => {
             showPetDetail(pet.id);
         });
         petsList.appendChild(li);
     });
 };
+// Gắn sự kiện click cho nút chuyển đổi chế độ xem
+document.getElementById('view-toggle-btn').addEventListener('click', window.toggleView);
+
 
 // Hàm này cần được thêm vào code của bạn nếu chưa có
 const getRecentlyVaccinatedPets = () => {
@@ -811,9 +871,6 @@ const getRecentlyVaccinatedPets = () => {
 
     return recentlyVaccinated.slice(0, 5);
 };
-
-// Đảm bảo hàm getRecentlyVaccinatedPets có thể truy cập được trong scope của renderPetsList.
-// Nếu hàm này đã được đặt ở ngoài và có phạm vi toàn cục, bạn không cần phải thêm lại.
 // KẾT THÚC CODE HIỆN DANH SÁCH THÚ CƯNG
 
     window.renderVaccinations = (petId) => {
