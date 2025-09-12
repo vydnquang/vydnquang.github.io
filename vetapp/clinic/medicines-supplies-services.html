@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Danh mục & Toa thuốc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .form-container, .list-container {
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .item-card {
+            border-left: 4px solid;
+        }
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .collapsible-content.expanded {
+            max-height: 1000px; /* Giá trị đủ lớn để chứa nội dung */
+        }
+        .collapsible-header {
+            cursor: pointer;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease-out;
+        }
+        .collapsible-icon.expanded {
+            transform: rotate(180deg);
+        }
+        .medicines .item-card { border-color: #3b82f6; /* blue-500 */ }
+        .supplies .item-card { border-color: #10b981; /* emerald-500 */ }
+        .services .item-card { border-color: #8b5cf6; /* violet-500 */ }
+        .surgeries .item-card { border-color: #f97316; /* orange-500 */ }
+        .labtests .item-card { border-color: #ef4444; /* red-500 */ }
+        .fasttests .item-card { border-color: #f59e0b; /* amber-500 */ }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="w-full max-w-7xl mx-auto bg-gray-50 rounded-2xl shadow-2xl p-6 mb-5">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">QUẢN LÝ DANH MỤC & TOA THUỐC</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div id="medicines-section" class="medicines form-container bg-white p-6">
+                <div class="collapsible-header flex items-center justify-between border-b-2 border-blue-500 pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-blue-600 flex items-center">
+                        <i class="fas fa-pills mr-2"></i>Quản lý Thuốc
+                    </h2>
+                    <button type="button" class="collapsible-btn bg-blue-100 text-blue-600 p-2 rounded-full hover:bg-blue-200 transition" data-target="medicines">
+                    <i class="fas fa-chevron-down collapsible-icon"></i>
+                </div>
+                <div class="collapsible-content">
+                    <form id="medicines-form" class="space-y-4">
+                        <input type="hidden" id="medicines-docId">
+                        <div>
+                            <label for="medicines-name" class="block text-gray-700 font-medium">Tên thuốc</label>
+                            <input type="text" id="medicines-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="medicines-unit" class="block text-gray-700 font-medium">Đơn vị tính</label>
+                            <input type="text" id="medicines-unit" name="unit" placeholder="ml, viên" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div class="flex space-x-2">
+                            <div class="flex-1">
+                                <label for="medicineDosage" class="block text-sm font-medium text-gray-700">Liều dùng thuốc</label>
+                                <input type="number" step="any" id="medicineDosage" name="itemDosage" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                            </div>
+                            <div class="flex-1">
+                                <label for="medicineDosageUnit" class="block text-sm font-medium text-gray-700">Đơn vị tính liều</label>
+                                <select id="medicineDosageUnit" name="itemDosageUnit" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                                    <option value="ml/kg">ml/kg</option>
+                                    <option value="mg/kg">mg/kg</option>
+                                    <option value="viên/kg">viên/kg</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="medicines-price" class="block text-gray-700 font-medium">Giá bán (VND)</label>
+                            <input type="number" id="medicines-price" name="price" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="medicines-usage" class="block text-gray-700 font-medium">Cách dùng</label>
+                            <input type="text" id="medicines-usage" name="usage" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                        </div>
+                    <div class="flex space-x-2 justify-end">
+                        <button type="button" class="cancel-btn px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu</button>
+                    </div>
+                    </form>
+                    <div id="medicines-list" class="mt-6 space-y-3 list-container h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <div id="supplies-section" class="supplies form-container bg-white p-6">
+                <div class="collapsible-header flex items-center justify-between border-b-2 border-emerald-500 pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-emerald-600 flex items-center">
+                        <i class="fas fa-toolbox mr-2"></i>Quản lý Vật tư
+                    </h2>
+                    <button type="button" class="collapsible-btn bg-purple-100 text-purple-600 p-2 rounded-full hover:bg-purple-200 transition" data-target="supplies">
+                        <i class="fas fa-chevron-down collapsible-icon"></i>
+                    </button>
+                </div>
+                <div class="collapsible-content">
+                    <form id="supplies-form" class="space-y-4">
+                        <input type="hidden" id="supplies-docId">
+                        <div>
+                            <label for="supplies-name" class="block text-gray-700 font-medium">Tên vật tư</label>
+                            <input type="text" id="supplies-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="supplies-unit" class="block text-gray-700 font-medium">Đơn vị tính</label>
+                            <input type="text" id="supplies-unit" name="unit" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="supplies-price" class="block text-gray-700 font-medium">Giá bán (VND)</label>
+                            <input type="number" id="supplies-price" name="price" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                    <div class="flex space-x-2 justify-end">
+                        <button type="button" class="cancel-btn px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu</button>
+                    </div>
+                    </form>
+                    <div id="supplies-list" class="mt-6 space-y-3 list-container h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <div id="services-section" class="services form-container bg-white p-6">
+                <div class="collapsible-header flex items-center justify-between border-b-2 border-violet-500 pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-violet-600 flex items-center">
+                        <i class="fas fa-stethoscope mr-2"></i>Quản lý Dịch vụ
+                    </h2>
+                    <button type="button" class="collapsible-btn bg-green-100 text-green-600 p-2 rounded-full hover:bg-green-200 transition" data-target="services">
+                        <i class="fas fa-chevron-down collapsible-icon"></i>
+                    </button>
+                </div>
+                <div class="collapsible-content">
+                    <form id="services-form" class="space-y-4">
+                        <input type="hidden" id="services-docId">
+                        <div>
+                            <label for="services-name" class="block text-gray-700 font-medium">Tên dịch vụ</label>
+                            <input type="text" id="services-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="services-price" class="block text-gray-700 font-medium">Giá bán (VND)</label>
+                            <input type="number" id="services-price" name="price" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="serviceDescription" class="block text-sm font-medium text-gray-700">Mô tả dịch vụ</label>
+                            <input type="text" id="serviceDescription" name="itemDescription" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="serviceUnit" class="block text-sm font-medium text-gray-700">Đơn vị tính</label>
+                            <select id="serviceUnit" name="itemUnit" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                                <option value="lần">lần</option>
+                                <option value="giờ">giờ</option>
+                                <option value="ngày">ngày</option>
+                            </select>
+                        </div>
+                    <div class="flex space-x-2 justify-end">
+                        <button type="button" class="cancel-btn px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu</button>
+                    </div>
+                    </form>
+                    <div id="services-list" class="mt-6 space-y-3 list-container h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <div id="surgeries-section" class="surgeries form-container bg-white p-6">
+                <div class="collapsible-header flex items-center justify-between border-b-2 border-orange-500 pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-orange-600 flex items-center">
+                        <i class="fas fa-band-aid mr-2"></i>Quản lý Phẫu thuật
+                    </h2>
+                    <button type="button" class="collapsible-btn bg-red-100 text-red-600 p-2 rounded-full hover:bg-red-200 transition" data-target="surgeries">
+                        <i class="fas fa-chevron-down collapsible-icon"></i>
+                    </button>
+                </div>
+                <div class="collapsible-content">
+                    <form id="surgeries-form" class="space-y-4">
+                        <input type="hidden" id="surgeries-docId">
+                        <div>
+                            <label for="surgeries-name" class="block text-gray-700 font-medium">Tên phẫu thuật</label>
+                            <input type="text" id="surgeries-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="surgeries-price" class="block text-gray-700 font-medium">Giá bán (VND)</label>
+                            <input type="number" id="surgeries-price" name="price" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="surgeryDescription" class="block text-sm font-medium text-gray-700">Mô tả phẫu thuật</label>
+                            <input type="text" id="surgeryDescription" name="itemDescription" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                        </div>
+                    <div class="flex space-x-2 justify-end">
+                        <button type="button" class="cancel-btn px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu</button>
+                    </div>
+                    </form>
+                    <div id="surgeries-list" class="mt-6 space-y-3 list-container h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <div id="labtests-section" class="labtests form-container bg-white p-6">
+                <div class="collapsible-header flex items-center justify-between border-b-2 border-red-500 pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-red-600 flex items-center">
+                        <i class="fas fa-microscope mr-2"></i>Quản lý Xét nghiệm
+                    </h2>
+                    <button type="button" class="collapsible-btn bg-orange-100 text-orange-600 p-2 rounded-full hover:bg-orange-200 transition" data-target="labtests">
+                        <i class="fas fa-chevron-down collapsible-icon"></i>
+                    </button>
+                </div>
+                <div class="collapsible-content">
+                    <form id="labtests-form" class="space-y-4">
+                        <input type="hidden" id="labtests-docId">
+                        <div>
+                            <label for="labtests-name" class="block text-gray-700 font-medium">Tên xét nghiệm</label>
+                            <input type="text" id="labtests-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="labtests-price" class="block text-gray-700 font-medium">Giá bán (VND)</label>
+                            <input type="number" id="labtests-price" name="price" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="labtestDescription" class="block text-sm font-medium text-gray-700">Mô tả xét nghiệm</label>
+                            <input type="text" id="labtestDescription" name="itemDescription" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                        </div>
+                    <div class="flex space-x-2 justify-end">
+                        <button type="button" class="cancel-btn px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu</button>
+                    </div>
+                    </form>
+                    <div id="labtests-list" class="mt-6 space-y-3 list-container h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <div id="fasttests-section" class="fasttests form-container bg-white p-6">
+                <div class="collapsible-header flex items-center justify-between border-b-2 border-amber-500 pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-amber-600 flex items-center">
+                        <i class="fas fa-syringe mr-2"></i>Quản lý Test nhanh
+                    </h2>
+                    <button type="button" class="collapsible-btn bg-pink-100 text-pink-600 p-2 rounded-full hover:bg-pink-200 transition" data-target="fasttests">
+                        <i class="fas fa-chevron-down collapsible-icon"></i>
+                    </button>
+                </div>
+                <div class="collapsible-content">
+                    <form id="fasttests-form" class="space-y-4">
+                        <input type="hidden" id="fasttests-docId">
+                        <div>
+                            <label for="fasttests-name" class="block text-gray-700 font-medium">Tên test nhanh</label>
+                            <input type="text" id="fasttests-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="fasttests-price" class="block text-gray-700 font-medium">Giá bán (VND)</label>
+                            <input type="number" id="fasttests-price" name="price" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                            <label for="fasttests-type" class="block text-sm font-medium text-gray-700">Loại test nhanh</label>
+                            <select id="fasttests-type" name="item-fasttests-type" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                                <option value="đơn">đơn</option>
+                                <option value="2in1">2in1</option>
+                                <option value="3in1">3in1</option>
+                                <option value="snap test">snap test</option>
+                            </select>
+                        </div>
+                    <div class="flex space-x-2 justify-end">
+                        <button type="button" class="cancel-btn px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu</button>
+                    </div>
+                    </form>
+                    <div id="fasttests-list" class="mt-6 space-y-3 list-container h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <div id="templates-section" class="form-container bg-white p-6 col-span-1 md:col-span-2 lg:col-span-3">
+                <div class="collapsible-header flex items-center justify-between border-b-2 border-gray-500 pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-file-prescription mr-2"></i>Quản lý Toa thuốc mẫu
+                    </h2>
+                    <button type="button" class="collapsible-btn bg-indigo-100 text-indigo-600 p-2 rounded-full hover:bg-indigo-200 transition" data-target="templates">
+                        <i class="fas fa-chevron-down collapsible-icon"></i>
+                    </button>
+                </div>
+                <div class="collapsible-content">
+                    <form id="templates-form" class="space-y-4">
+                        <input type="hidden" id="templates-docId">
+                        <div>
+                            <label for="templates-name" class="block text-gray-700 font-medium">Tên toa thuốc mẫu</label>
+                            <input type="text" id="templates-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                        <div id="templates-items-container" class="space-y-2 p-4 border rounded-md bg-gray-50">
+
+
+                        </div>
+                            <button type="button" id="add-template-item" class="text-blue-600 hover:text-blue-800 font-medium transition"><i class="fas fa-plus-circle mr-1"></i>Thêm thuốc</button>
+                        </div>
+
+                        <div class="flex space-x-2">
+                            <div class="flex-1">
+                                <label for="templates-regimen" class="block text-md font-medium text-gray-700">Liệu trình dùng thuốc</label>
+                                <input type="number" step="any" id="templates-regimen" name="regimen" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm required">
+                            </div>
+                            <div class="flex-1">
+                                <label for="templates-regimen-unit" class="block text-md font-medium text-gray-700">Đơn vị tính</label>
+                                <select id="templates-regimen-unit" name="itemRegimenUnit" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                                    <option value="ngày">ngày</option>
+                                    <option value="giờ">giờ</option>
+                                    <option value="tháng">tháng</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="templates-note" class="block text-sm font-medium text-gray-700">Lưu ý của toa thuốc</label>
+                            <input type="text" id="templates-note" name="note" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm required">
+                        </div>
+
+                        <div class="flex space-x-2 justify-end">
+                        <button type="button" class="cancel-btn px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Lưu toa thuốc mẫu</button>
+                        </div>
+                    </form>
+                    <div id="templates-list" class="mt-6 space-y-3 list-container h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+
+<!-- ===========================MỚI=================== -->
+<div id="treatmentplan-section" class="form-container bg-white p-6 col-span-1 md:col-span-2 lg:col-span-3">
+    <div class="collapsible-header flex items-center justify-between border-b-2 border-gray-500 pb-2 mb-4">
+        <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+            <i class="fas fa-notes-medical mr-2"></i>Quản lý Kế hoạch điều trị mẫu
+        </h2>
+        <button type="button" class="collapsible-btn bg-red-100 text-red-600 p-2 rounded-full hover:bg-red-200 transition" data-target="treatmentplan">
+            <i class="fas fa-chevron-down collapsible-icon"></i>
+        </button>
+    </div>
+    <div class="collapsible-content">
+        <form id="treatmentplan-form" class="space-y-4">
+            <input type="hidden" id="treatmentplan-docId">
+            <div>
+                <label for="treatmentplan-name" class="block text-gray-700 font-medium">Tên Kế hoạch điều trị mẫu</label>
+                <input type="text" id="treatmentplan-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+            </div>
+            <div>
+                <div id="treatmentplan-items-container" class="space-y-2 p-4 border rounded-md bg-gray-50">
+                    <div class="flex space-x-2 mb-2">
+                        <input type="text" placeholder="Kế hoạch chi tiết" class="treatmentplan-item-content px-3 py-2 border rounded-md flex-1">
+                        <button type="button" class="remove-item-btn text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+                    </div>
+                </div>
+                <button type="button" id="add-treatmentplan-item" class="text-blue-600 hover:text-blue-800 font-medium transition"><i class="fas fa-plus-circle mr-1"></i>Thêm kế hoạch</button>
+            </div>
+            <p><strong>Chi tiết dùng thuốc</strong></p>
+            <div>
+                <div id="drug-items-container" class="space-y-2 p-4 border rounded-md bg-gray-50">
+                    <div class="flex flex-wrap space-y-4 md:space-y-0 md:flex-row md:space-x-5 mb-2 items-end">
+                    </div>
+                </div>
+                <button type="button" id="add-drug-item" class="text-blue-600 hover:text-blue-800 font-medium transition"><i class="fas fa-plus-circle mr-1"></i>Thêm thuốc</button>
+            </div>
+            <div>
+                <label for="treatmentplan-note" class="block text-sm font-medium text-gray-700">Lưu ý của kế hoạch điều trị</label>
+                <input type="text" id="treatmentplan-note" name="note" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+            </div>
+            <div class="flex space-x-2 justify-end">
+                <button type="button" class="cancel-btn px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Lưu kế hoạch điều trị</button>
+            </div>
+        </form>
+        <div id="treatmentplans-list" class="mt-6 space-y-3 list-container h-80 overflow-y-auto"></div>
+    </div>
+</div>
+<!-- =============MỚI============== -->
+
+            <div id="consultations-section" class="form-container bg-white p-6 col-span-1 md:col-span-2 lg:col-span-3">
+                <div class="collapsible-header flex items-center justify-between border-b-2 border-gray-500 pb-2 mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-comments mr-2"></i>Quản lý Tư vấn & Dặn dò
+                    </h2>
+                    <button type="button" class="collapsible-btn bg-gray-200 text-gray-600 p-2 rounded-full hover:bg-gray-300 transition" data-target="consultations">
+                        <i class="fas fa-chevron-down collapsible-icon"></i>
+                    </button>
+                </div>
+                <div class="collapsible-content">
+                    <form id="consultations-form" class="space-y-4">
+                        <input type="hidden" id="consultations-docId">
+                        <div>
+                            <label for="consultations-name" class="block text-gray-700 font-medium">Tên nhóm tư vấn</label>
+                            <input type="text" id="consultations-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                        </div>
+                        <div>
+                        <div id="consultations-items-container" class="space-y-2 p-4 border rounded-md bg-gray-50">
+                            <div class="flex space-x-2 mb-2">
+                                <input type="text" placeholder="Nội dung tư vấn/dặn dò" class="consultation-item-content px-3 py-2 border rounded-md flex-1">
+                                <button type="button" class="remove-item-btn text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+                            </div>
+                        </div>
+                            <button type="button" id="add-consultation-item" class="text-blue-600 hover:text-blue-800 font-medium transition"><i class="fas fa-plus-circle mr-1"></i>Thêm nội dung</button>
+                        </div>
+            
+                        <div class="flex space-x-2 justify-end">
+                        <button type="button" class="cancel-btn px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Lưu nhóm tư vấn</button>
+                        </div>
+                    </form>
+                    <div id="consultations-list" class="mt-6 space-y-3 list-container h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./firebase-config.js"></script>
+    <script type="module" src="./medicines-supplies-services.js"></script>
+</body>
+</html>
