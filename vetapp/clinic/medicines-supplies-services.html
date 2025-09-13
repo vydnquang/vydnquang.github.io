@@ -50,10 +50,13 @@
 </head>
 <body class="bg-gray-100 p-8">
     <div class="w-full max-w-7xl mx-auto bg-gray-50 rounded-2xl shadow-2xl p-6 mb-5">
+                            <div class="flex justify-between">
+<a href="anpclinic.html" id="home-btn" class="px-6 py-2 bg-yellow-300 text-blue-700 font-medium rounded-lg hover:bg-yellow-400 border border-gray-300 transition"><i class="fas fa-house-laptop"></i><strong> Trang chủ</strong></a>
         <div id="auth-status" class="text-right mb-4">
             <span id="user-display" class="font-medium text-gray-700"></span>
             <button id="logout-btn" class="text-red-600 hover:text-red-800 font-semibold transition hidden">Đăng xuất</button>
         </div>
+</div>
 
         <div id="login-form-container" class="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg">
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Đăng nhập vào hệ thống</h2>
@@ -72,7 +75,7 @@
         </div>
         
         <div id="app-container">
-            <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">QUẢN LÝ DANH MỤC & TOA THUỐC</h1>
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">QUẢN LÝ DANH MỤC, TOA THUỐC & KẾ HOẠCH ĐIỀU TRỊ</h1>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -89,7 +92,18 @@
                             <input type="hidden" id="medicines-docId">
                             <div>
                                 <label for="medicines-name" class="block text-gray-700 font-medium">Tên thuốc</label>
-                                <input type="text" id="medicines-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" required>
+                                <input type="text" id="medicines-name" name="name" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm required">
+                            </div>
+                            <div>
+                                <label for="medicines-type" class="block text-gray-700 font-medium">Loại thuốc</label>
+                                <select id="medicines-type" name="type" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                                        <option value="Kháng sinh">Kháng sinh</option>
+                                        <option value="Kháng viêm">Kháng viêm</option>
+                                        <option value="Kháng nấm">Kháng nấm</option>
+                                        <option value="Kháng virus">Kháng virus</option>
+                                        <option value="Thuốc bổ">Thuốc bổ</option>
+                                        <option value="Chuyên biệt">Chuyên biệt</option>
+                                </select>
                             </div>
                             <div>
                                 <label for="medicines-unit" class="block text-gray-700 font-medium">Đơn vị tính</label>
@@ -284,7 +298,12 @@
                             </div>
                             <div>
                                 <label for="fasttests-type" class="block text-gray-700 font-medium">Loại test nhanh</label>
-                                <input type="text" id="fasttests-type" name="item-fasttests-type" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                            <select id="fasttests-type" name="item-fasttests-type" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm">
+                                <option value="đơn">đơn</option>
+                                <option value="2in1">2in1</option>
+                                <option value="3in1">3in1</option>
+                                <option value="snap test">snap test</option>
+                            </select>
                             </div>
                         <div class="flex space-x-2 justify-end">
                             <button type="button" class="cancel-btn px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
@@ -348,7 +367,7 @@
                 <div id="consultations-section" class="consultations form-container bg-white p-6">
                     <div class="collapsible-header flex items-center justify-between border-b-2 border-green-500 pb-2 mb-4">
                         <h2 class="text-xl font-semibold text-green-600 flex items-center">
-                            <i class="fas fa-comments-medical mr-2"></i>Quản lý Nhóm tư vấn
+                            <i class="fa-solid fa-comment-medical mr-2"></i>Quản lý Nhóm tư vấn
                         </h2>
                         <button type="button" class="collapsible-btn bg-green-100 text-green-600 p-2 rounded-full hover:bg-green-200 transition" data-target="consultations">
                             <i class="fas fa-chevron-down collapsible-icon"></i>
@@ -422,7 +441,7 @@
     </div>
 
     <script type="module" src="./firebase-config.js"></script>
-    <script type="module" src="./auth.js"></script>
+    <script type="module" src="./auth-logic.js"></script>
     <script type="module" src="./medicines-supplies-services.js"></script>
 </body>
 </html>
