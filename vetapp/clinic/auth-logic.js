@@ -1,79 +1,83 @@
 import { auth } from './firebase-config.js';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { setDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { db } from './firebase-config.js';
 
-// Khai báo các phần tử DOM liên quan đến xác thực
-const authModal = document.getElementById('auth-modal');
-const authForm = document.getElementById('auth-form');
-const authButton = document.getElementById('auth-button');
-const toggleAuthModeBtn = document.getElementById('toggle-auth-mode');
-const mainContent = document.getElementById('main-content');
-const currentUserIdSpan = document.getElementById('current-user-id');
-const customModalBackdrop = document.getElementById('custom-modal-backdrop');
-const customModalMessage = document.getElementById('custom-modal-message');
+// Khai báo các phần tử DOM
+const appContainer = document.getElementById('app-container');
+const loginFormContainer = document.getElementById('login-form-container');
+const loginForm = document.getElementById('login-form');
+const registerBtn = document.getElementById('register-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const userDisplay = document.getElementById('user-display');
 
-let isLoginMode = false;
-
-// Hàm hiển thị modal thông báo tùy chỉnh
-function showCustomModal(message) {
-    customModalMessage.textContent = message;
-    customModalBackdrop.style.display = 'flex';
-}
-
-// Xử lý sự kiện sau khi toàn bộ DOM đã được tải
-window.addEventListener('DOMContentLoaded', () => {
-    // Lắng nghe trạng thái xác thực
+/**
+ * Thiết lập các listeners cho trạng thái xác thực.
+ * @param {function} callback - Hàm callback sẽ được gọi khi trạng thái đăng nhập thay đổi.
+ */
+export function setupAuthListeners(callback) {
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            authModal.style.display = 'none';
-            mainContent.classList.remove('hidden');
-            currentUserIdSpan.textContent = user.uid;
-            // Bắt đầu lắng nghe dữ liệu hoặc thực hiện các hành động khác sau khi đăng nhập
+            // Đã đăng nhập
+            userDisplay.textContent = `Xin chào, ${user.email}`;
+            logoutBtn.classList.remove('hidden');
+            loginFormContainer.style.display = 'none';
+            appContainer.style.display = 'block';
+            callback(user.uid);
         } else {
-            authModal.style.display = 'flex';
-            mainContent.classList.add('hidden');
-            currentUserIdSpan.textContent = '';
+            // Chưa đăng nhập
+            userDisplay.textContent = '';
+            logoutBtn.classList.add('hidden');
+            loginFormContainer.style.display = 'block';
+            appContainer.style.display = 'none';
+            callback(null);
         }
     });
 
-    // Chuyển đổi giữa chế độ đăng nhập và đăng ký
-    toggleAuthModeBtn.addEventListener('click', () => {
-        isLoginMode = !isLoginMode;
-        if (isLoginMode) {
-            authButton.textContent = 'Đăng nhập';
-            toggleAuthModeBtn.textContent = 'Chưa có tài khoản? Đăng ký ngay';
-        } else {
-            authButton.textContent = 'Đăng ký';
-            toggleAuthModeBtn.textContent = 'Đã có tài khoản? Đăng nhập ngay';
-        }
-    });
-
-    // Xử lý form đăng nhập/đăng ký
-    authForm.addEventListener('submit', async (e) => {
+    // Gắn sự kiện cho các form và nút
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const email = authForm.email.value;
-        const password = authForm.password.value;
-        
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
         try {
-            if (isLoginMode) {
-                await signInWithEmailAndPassword(auth, email, password);
-                showCustomModal("Đăng nhập thành công!");
-            } else {
-                await createUserWithEmailAndPassword(auth, email, password);
-                showCustomModal("Đăng ký thành công!");
-            }
+            await signInWithEmailAndPassword(auth, email, password);
+            alert("Đăng nhập thành công!");
         } catch (error) {
-            console.error("Authentication failed:", error);
-            let message = "Đã xảy ra lỗi. Vui lòng thử lại.";
-            if (error.code === 'auth/email-already-in-use') {
-                message = "Email này đã được sử dụng. Vui lòng chọn Đăng nhập hoặc sử dụng Email khác.";
-            } else if (error.code === 'auth/invalid-email') {
-                message = "Địa chỉ email không hợp lệ.";
-            } else if (error.code === 'auth/weak-password') {
-                message = "Mật khẩu phải có ít nhất 6 ký tự.";
-            } else if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                message = "Sai email hoặc mật khẩu.";
-            }
-            showCustomModal(message);
+            alert("Lỗi đăng nhập: " + error.message);
+            console.error("Login error: ", error);
         }
     });
-});
+
+    registerBtn.addEventListener('click', async () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        if (!email || !password) {
+            alert("Vui lòng nhập email và mật khẩu để đăng ký.");
+            return;
+        }
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            
+            // Thêm trường dữ liệu ban đầu cho người dùng mới
+            await setDoc(doc(db, "users", user.uid), {
+                email: user.email,
+                createdAt: new Date()
+            });
+            
+            alert("Đăng ký thành công! Bạn đã được tự động đăng nhập.");
+        } catch (error) {
+            alert("Lỗi đăng ký: " + error.message);
+            console.error("Registration error: ", error);
+        }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+            alert("Đã đăng xuất thành công.");
+        } catch (error) {
+            console.error("Logout error: ", error);
+        }
+    });
+}
