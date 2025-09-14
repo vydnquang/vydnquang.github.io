@@ -16,9 +16,7 @@
             border-radius: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .item-card {
-            border-left: 4px solid;
-        }
+/* xóa        .item-card {border-left: 4px solid;} */
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
@@ -36,13 +34,37 @@
         .collapsible-icon.expanded {
             transform: rotate(180deg);
         }
-        .medicines .item-card { border-color: #3b82f6; /* blue-500 */ }
-        .supplies .item-card { border-color: #10b981; /* emerald-500 */ }
-        .services .item-card { border-color: #8b5cf6; /* violet-500 */ }
-        .surgeries .item-card { border-color: #f97316; /* orange-500 */ }
-        .labtests .item-card { border-color: #ef4444; /* red-500 */ }
-        .fasttests .item-card { border-color: #f59e0b; /* amber-500 */ }
+        /* quy định màu viền cho các thẻ render của từng mục */
+        .medicines .item-card { border-left: 4px solid #3b82f6; /* blue-500 */ border-right: 1px solid #E5E7EB; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);}
+        .supplies .item-card { border-left: 4px solid #10b981; /* emerald-500 */ border-right: 1px solid #E5E7EB; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);}
+        .services .item-card { border-left: 4px solid #8b5cf6; /* violet-500 */ border-right: 1px solid #E5E7EB; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);}
+        .surgeries .item-card { border-left: 4px solid #f97316; /* orange-500 */ border-right: 1px solid #E5E7EB; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);}
+        .labtests .item-card { border-left: 4px solid #ef4444; /* red-500 */ border-right: 1px solid #E5E7EB; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);}
+        .fasttests .item-card { border-left: 4px solid #f59e0b; /* amber-500 */ border-right: 1px solid #E5E7EB; border-top: 1px solid #E5E7EB; border-bottom: 1px solid #E5E7EB; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);}
         
+        /* trang trí riêng cho viền bao thẻ render, lưu ý trùng tên với file js đoạn card.className = 'template-card p-4 bg-gray-50 rounded-lg shadow-sm mb-2 card-templates-border'; */
+        .template-card.card-templates-border {
+            border-top: 1px solid #E5E7EB;
+            border-right: 1px solid #E5E7EB;
+            border-bottom: 1px solid #E5E7EB;
+            border-left: 4px solid #2563EB; /* Viền trái dày hơn và màu xanh */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+         }
+        .consultation-card.card-consultations-border {
+            border-top: 1px solid #E5E7EB;
+            border-right: 1px solid #E5E7EB;
+            border-bottom: 1px solid #E5E7EB;
+            border-left: 4px solid #06a600; /* Viền trái dày hơn và màu xanh */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+         }
+        .treatmentplan-card.card-treatmentplans-border {
+            border-top: 1px solid #E5E7EB;
+            border-right: 1px solid #E5E7EB;
+            border-bottom: 1px solid #E5E7EB;
+            border-left: 4px solid #8E24AA; /* Viền trái dày hơn và màu xanh */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+         }
+
         /* Hiển thị/Ẩn giao diện */
         #login-form-container { display: none; }
         #app-container { display: none; }
