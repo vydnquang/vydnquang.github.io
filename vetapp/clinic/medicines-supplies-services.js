@@ -146,7 +146,7 @@ function createItemCard(docId, data, type) {
             contentHtml = `<div><h3 class="font-semibold text-amber-600">${data.name}</h3><p class="text-sm text-gray-600"><strong>Giá:</strong> ${data.price.toLocaleString()} VND</p><p class="text-sm text-gray-600"><strong>Loại test nhanh:</strong> ${data['item-fasttests-type'] || 'Chưa có'}</p></div>`;
             break;
     }
-    const buttonHtml = `<div class="flex space-x-2"><button type="button" class="edit-btn text-blue-500 hover:text-blue-700 transition" data-id="${docId}" data-type="${type}"><i class="fas fa-edit"></i></button><button type="button" class="delete-btn text-red-500 hover:text-red-700 transition" data-id="${docId}" data-type="${type}"><i class="fas fa-trash-alt"></i></button></div>`;
+    const buttonHtml = `<div class="flex space-x-4 text-xl"><button type="button" class="edit-btn text-blue-500 hover:text-blue-700 transition" data-id="${docId}" data-type="${type}"><i class="fas fa-edit"></i></button><button type="button" class="delete-btn text-red-500 hover:text-red-700 transition" data-id="${docId}" data-type="${type}"><i class="fas fa-trash-alt"></i></button></div>`;
     card.innerHTML = contentHtml + buttonHtml;
     return card;
 }
@@ -269,8 +269,8 @@ function renderTemplates(templates) {
     }
     templates.forEach(template => {
         const card = document.createElement('div');
-        card.className = 'template-card p-4 bg-gray-50 rounded-lg shadow-sm mb-2';
-        card.innerHTML = `<h3 class="font-semibold text-lg text-blue-600">${template.name}</h3><ul class="list-disc list-inside mt-2 text-sm text-gray-600">${(template.medicines || []).map(item => `<li>${item.drugname} - ${item.drugdosage} ${item.drugdosageunit}</li>`).join('')}</ul><div class="mt-2 text-sm text-gray-600"><p><strong>Liệu trình:</strong> ${template.regimen || 'Chưa có'} ${template.itemRegimenUnit || ''}</p><p><strong>Lưu ý:</strong> ${template.note || 'Chưa có'}</p></div><div class="flex justify-end space-x-2 mt-4"><button type="button" class="edit-template-btn text-blue-500 hover:text-blue-700 transition" data-id="${template.id}"><i class="fas fa-edit"></i></button><button type="button" class="delete-template-btn text-red-500 hover:text-red-700 transition" data-id="${template.id}"><i class="fas fa-trash-alt"></i></button></div>`;
+        card.className = 'template-card p-4 bg-gray-50 rounded-lg shadow-sm mb-2 card-templates-border';
+        card.innerHTML = `<h3 class="font-semibold text-lg text-blue-600">${template.name}</h3><ul class="list-disc list-inside mt-2 text-sm text-gray-600">${(template.medicines || []).map(item => `<li>${item.drugname} - ${item.drugdosage} ${item.drugdosageunit}</li>`).join('')}</ul><div class="mt-2 text-sm text-gray-600"><p><strong>Liệu trình:</strong> ${template.regimen || 'Chưa có'} ${template.itemRegimenUnit || ''}</p><p><strong>Lưu ý:</strong> ${template.note || 'Chưa có'}</p></div><div class="flex justify-end space-x-4 mt-2 text-xl"><button type="button" class="edit-template-btn text-blue-500 hover:text-blue-700 transition" data-id="${template.id}"><i class="fas fa-edit"></i></button><button type="button" class="delete-template-btn text-red-500 hover:text-red-700 transition" data-id="${template.id}"><i class="fas fa-trash-alt"></i></button></div>`;
         templatesListDiv.appendChild(card);
     });
 }
@@ -381,10 +381,10 @@ function renderTreatmentPlans(plans) {
     }
     plans.forEach(plan => {
         const card = document.createElement('div');
-        card.className = 'treatmentplan-card p-4 bg-gray-50 rounded-lg shadow-sm mb-2';
+        card.className = 'treatmentplan-card p-4 bg-gray-50 rounded-lg shadow-sm mb-2 card-treatmentplans-border';
         const itemsHtml = (plan.items || []).map(item => ` <li>${item.content}</li> `).join('');
         const drugsHtml = (plan.drugs || []).map(drug => ` <li>${drug.name}: Liều dùng ${drug.dosage} ${drug.unit}, ${drug.usage}, mỗi ${drug.interval} ${drug.intervalUnit} trong ${drug.duration} ${drug.durationUnit}</li> `).join('');
-        card.innerHTML = `<h3 class="font-semibold text-lg text-blue-600">${plan.name}</h3>${(plan.items && plan.items.length > 0) ? `<p class="font-semibold mt-2 text-sm text-gray-700">Kế hoạch chi tiết:</p><ul class="list-disc list-inside mt-1 text-sm text-gray-600">${itemsHtml}</ul>` : ''}${(plan.drugs && plan.drugs.length > 0) ? `<p class="font-semibold mt-2 text-sm text-gray-700">Chi tiết dùng thuốc:</p><ul class="list-disc list-inside mt-1 text-sm text-gray-600">${drugsHtml}</ul>` : ''}${plan.note ? `<p class="mt-2 text-sm text-gray-500"><strong>Lưu ý:</strong> ${plan.note}</p>` : ''}<div class="flex justify-end space-x-2 mt-4"><button type="button" class="edit-treatmentplan-btn text-blue-500 hover:text-blue-700 transition" data-id="${plan.id}"><i class="fas fa-edit"></i></button><button type="button" class="delete-treatmentplan-btn text-red-500 hover:text-red-700 transition" data-id="${plan.id}"><i class="fas fa-trash-alt"></i></button></div>`;
+        card.innerHTML = `<h3 class="font-semibold text-lg text-blue-600">${plan.name}</h3>${(plan.items && plan.items.length > 0) ? `<p class="font-semibold mt-2 text-sm text-gray-700">Kế hoạch chi tiết:</p><ul class="list-disc list-inside mt-1 text-sm text-gray-600">${itemsHtml}</ul>` : ''}${(plan.drugs && plan.drugs.length > 0) ? `<p class="font-semibold mt-2 text-sm text-gray-700">Chi tiết dùng thuốc:</p><ul class="list-disc list-inside mt-1 text-sm text-gray-600">${drugsHtml}</ul>` : ''}${plan.note ? `<p class="mt-2 text-sm text-gray-500"><strong>Lưu ý:</strong> ${plan.note}</p>` : ''}<div class="flex justify-end space-x-4 mt-2 text-xl"><button type="button" class="edit-treatmentplan-btn text-blue-500 hover:text-blue-700 transition" data-id="${plan.id}"><i class="fas fa-edit"></i></button><button type="button" class="delete-treatmentplan-btn text-red-500 hover:text-red-700 transition" data-id="${plan.id}"><i class="fas fa-trash-alt"></i></button></div>`;
         treatmentplansListDiv.appendChild(card);
     });
 }
@@ -425,8 +425,8 @@ function renderConsultations(consultations) {
     }
     consultations.forEach(consultation => {
         const card = document.createElement('div');
-        card.className = 'consultation-card p-4 bg-gray-50 rounded-lg shadow-sm mb-2';
-        card.innerHTML = `<h3 class="font-semibold text-lg text-blue-600">${consultation.name}</h3><ul class="list-disc list-inside mt-2 text-sm text-gray-600">${(consultation.items || []).map(item => `<li>${item.content}</li>`).join('')}</ul><div class="flex justify-end space-x-2 mt-4"><button type="button" class="edit-consultation-btn text-blue-500 hover:text-blue-700 transition" data-id="${consultation.id}"><i class="fas fa-edit"></i></button><button type="button" class="delete-consultation-btn text-red-500 hover:text-red-700 transition" data-id="${consultation.id}"><i class="fas fa-trash-alt"></i></button></div>`;
+        card.className = 'consultation-card p-4 bg-gray-50 rounded-lg shadow-sm mb-2 card-consultations-border';
+        card.innerHTML = `<h3 class="font-semibold text-lg text-blue-600">${consultation.name}</h3><ul class="list-disc list-inside mt-2 text-sm text-gray-600">${(consultation.items || []).map(item => `<li>${item.content}</li>`).join('')}</ul><div class="flex justify-end space-x-4 mt-2 text-xl"><button type="button" class="edit-consultation-btn text-blue-500 hover:text-blue-700 transition" data-id="${consultation.id}"><i class="fas fa-edit"></i></button><button type="button" class="delete-consultation-btn text-red-500 hover:text-red-700 transition" data-id="${consultation.id}"><i class="fas fa-trash-alt"></i></button></div>`;
         consultationsListDiv.appendChild(card);
     });
 }
