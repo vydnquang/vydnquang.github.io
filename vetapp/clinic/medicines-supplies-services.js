@@ -214,10 +214,12 @@ function addTemplateItem(item = null) {
     itemDiv.className = 'flex flex-wrap space-y-4 md:space-y-0 md:flex-row md:space-x-5 mb-2 items-end';
     // code cũ itemDiv.className = 'flex space-x-2 mb-2 items-end'; //
     const select = document.createElement('select');
-    select.className = 'template-item-select px-3 py-2 border rounded-md w-full';
+    select.className = 'template-item-select px-3 py-2 border rounded-md w-full md:flex-1';
     // Chọn tên item.drugId để khớp với dữ liệu từ Firestore
     select.innerHTML = createMedicineOptions(item ? item.drugId : null);
     
+    // nameDiv.className = 'w-full md:flex-1';
+
     select.addEventListener('change', (e) => {
         const selectedMed = allMedicines.find(med => med.id === e.target.value);
         const dosageInput = itemDiv.querySelector('.template-item-dosage');
@@ -235,13 +237,13 @@ function addTemplateItem(item = null) {
     dosageInput.type = 'number';
     dosageInput.step = 'any';
     dosageInput.placeholder = 'Liều lượng cho 1kg';
-    dosageInput.className = 'template-item-dosage px-3 py-2 border rounded-md w-full';
+    dosageInput.className = 'template-item-dosage px-3 py-2 border rounded-md w-full md:flex-1';
     dosageInput.value = item ? item.drugdosage : '';
 
     const unitInput = document.createElement('input');
     unitInput.type = 'text';
     unitInput.placeholder = 'Đơn vị liều lượng';
-    unitInput.className = 'template-item-unit px-3 py-2 border rounded-md w-full';
+    unitInput.className = 'template-item-unit px-3 py-2 border rounded-md w-full md:flex-1';
     unitInput.readOnly = true;
     unitInput.value = item ? item.drugdosageunit : '';
 
