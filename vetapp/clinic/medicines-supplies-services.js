@@ -211,9 +211,10 @@ function createMedicineOptions(selectedId = null) {
  */
 function addTemplateItem(item = null) {
     const itemDiv = document.createElement('div');
-    itemDiv.className = 'flex space-x-2 mb-2 items-end';
+    itemDiv.className = 'flex flex-wrap space-y-4 md:space-y-0 md:flex-row md:space-x-5 mb-2 items-end';
+    // code cũ itemDiv.className = 'flex space-x-2 mb-2 items-end'; //
     const select = document.createElement('select');
-    select.className = 'template-item-select px-3 py-2 border rounded-md flex-1';
+    select.className = 'template-item-select px-3 py-2 border rounded-md w-full';
     // Chọn tên item.drugId để khớp với dữ liệu từ Firestore
     select.innerHTML = createMedicineOptions(item ? item.drugId : null);
     
@@ -234,13 +235,13 @@ function addTemplateItem(item = null) {
     dosageInput.type = 'number';
     dosageInput.step = 'any';
     dosageInput.placeholder = 'Liều lượng cho 1kg';
-    dosageInput.className = 'template-item-dosage px-3 py-2 border rounded-md w-50';
+    dosageInput.className = 'template-item-dosage px-3 py-2 border rounded-md w-full';
     dosageInput.value = item ? item.drugdosage : '';
 
     const unitInput = document.createElement('input');
     unitInput.type = 'text';
     unitInput.placeholder = 'Đơn vị liều lượng';
-    unitInput.className = 'template-item-unit px-3 py-2 border rounded-md w-30';
+    unitInput.className = 'template-item-unit px-3 py-2 border rounded-md w-full';
     unitInput.readOnly = true;
     unitInput.value = item ? item.drugdosageunit : '';
 
@@ -287,8 +288,9 @@ addTemplateItemBtn.addEventListener('click', () => addTemplateItem());
  * @returns {string}
  */
 function createTreatmentplanItemHtml(item = null) {
-    return `<div class="flex space-x-2 mb-2"><input type="text" placeholder="Kế hoạch chi tiết" value="${item?.content || ''}" class="treatmentplan-item-content px-3 py-2 border rounded-md flex-1"><button type="button" class="remove-item-btn text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button></div>`;
+    return `<div class="flex items-center space-x-2 w-full"><input type="text" placeholder="Kế hoạch chi tiết" value="${item?.content || ''}" class="treatmentplan-item-content px-3 py-2 border rounded-md w-full"><button type="button" class="remove-item-btn text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button></div>`;
 }
+// code cũ: <div class="flex space-x-2 mb-2"> /
 
 /**
  * Hàm thêm một mục kế hoạch chi tiết mới.
@@ -408,7 +410,7 @@ drugItemsContainer.addEventListener('click', (e) => {
 function addConsultationItem(item = null) {
     const itemDiv = document.createElement('div');
     itemDiv.className = 'flex space-x-2 mb-2';
-    itemDiv.innerHTML = `<input type="text" placeholder="Nội dung tư vấn/dặn dò" value="${item ? item.content : ''}" class="consultation-item-content px-3 py-2 border rounded-md flex-1"><button type="button" class="remove-item-btn text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>`;
+    itemDiv.innerHTML = `<input type="text" placeholder="Nội dung tư vấn/dặn dò" value="${item ? item.content : ''}" class="consultation-item-content px-3 py-2 border rounded-md w-full"><button type="button" class="remove-item-btn text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>`;
     consultationsItemsContainer.appendChild(itemDiv);
     itemDiv.querySelector('.remove-item-btn').addEventListener('click', () => { itemDiv.remove(); });
 }
