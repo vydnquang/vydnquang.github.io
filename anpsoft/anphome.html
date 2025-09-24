@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ Dự Án ANP Clinic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+    /* Tạo một container riêng cho nội dung chính */
+    #main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        #login-form-container, #app-container {
+            transition: all 0.5s ease-in-out;
+        }
+        
+        /* Bố cục mới cho card - flex row */
+        .card-item {
+            @apply flex flex-col sm:flex-row items-center justify-center sm:justify-between p-6 bg-white rounded-2xl transition transform duration-300 cursor-pointer;
+            /* Tạo hiệu ứng multiple box-shadow */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-item:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08);
+            transform: translateY(2px) scale(1.03); /* Tạo cảm giác nhấn xuống */
+        }
+
+        .card-item-border {
+            border-top: 1px solid #E5E7EB;
+            border-right: 1px solid #E5E7EB;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        /* Định nghĩa viền trái và màu nền cho từng card */
+        .card-1 { border-left: 4px solid #F56565; } /* Đỏ */
+        .card-2 { border-left: 4px solid #48BB78; } /* Xanh lá */
+        .card-3 { border-left: 4px solid #F6AD55; } /* Cam */
+        .card-4 { border-left: 4px solid #667EEA; } /* Tím */
+        .card-5 { border-left: 4px solid #00B5D8; } /* Xanh da trời */
+        .card-6 { border-left: 4px solid #ECC94B; } /* Vàng */
+        .card-7 { border-left: 4px solid #ED8936; } /* Cam cháy */
+        .card-8 { border-left: 4px solid #D53F8C; } /* Hồng đậm */
+        .card-9 { border-left: 4px solid #A0AEC0; } /* Xám */
+        .card-10 { border-left: 4px solid #E53E3E; } /* Đỏ sẫm */
+
+        .card-1-bg { background: linear-gradient(to right, #FEE2E2, #F5656515); }
+        .card-2-bg { background: linear-gradient(to right, #D1FAE5, #48BB7815); }
+        .card-3-bg { background: linear-gradient(to right, #FDE68A, #F6AD5515); }
+        .card-4-bg { background: linear-gradient(to right, #E0E7FF, #667EEA15); }
+        .card-5-bg { background: linear-gradient(to right, #E0F7FA, #00B5D815); }
+        .card-6-bg { background: linear-gradient(to right, #FEF3C7, #ECC94B15); }
+        .card-7-bg { background: linear-gradient(to right, #FCE8D8, #ED893615); }
+        .card-8-bg { background: linear-gradient(to right, #FAD6E8, #D53F8C15); }
+        .card-9-bg { background: linear-gradient(to right, #E5E7EB, #A0AEC015); }
+        .card-10-bg { background: linear-gradient(to right, #FEECEB, #E53E3E15); }
+        .card-11-bg { background: linear-gradient(to right, #ff9eef, #ffe6fb); }
+
+        .card-text {
+            @apply flex flex-col justify-center text-center sm:text-left;
+        }
+
+        .card-item:hover .card-title {
+            color: #1d4ed8;
+        }
+        
+        .icon-container {
+            @apply flex-shrink-0 mb-2 sm:mb-0 sm:mr-4;
+        }
+
+        .icon {
+            @apply w-16 h-16;
+            font-size: 2.5rem; /* Tăng kích thước font của icon */
+			padding-left: 1rem;
+        }
+
+        /* Màu sắc cho từng icon */
+        .icon-red { color: #F56565; }
+        .icon-green { color: #48BB78; }
+        .icon-orange { color: #F6AD55; }
+        .icon-purple { color: #667EEA; }
+        .icon-cyan { color: #00B5D8; }
+        .icon-yellow { color: #ECC94B; }
+        .icon-pink { color: #ED8936; }
+        .icon-dark-pink { color: #D53F8C; }
+        .icon-gray { color: #A0AEC0; }
+        .icon-dark-red { color: #E53E3E; }
+        
+        /* Hiệu ứng bóng loáng */
+        .card-item-shiny {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .card-item-shiny::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to right, 
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .card-item-shiny:hover::after {
+            transform: translateX(100%);
+        }
+
+      /* Khai báo font Nokia */
+      @font-face {
+      font-family: 'UTM Nokia';
+      src: url('UTM-Nokia.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      }
+
+      /* Style riêng cho dòng chữ "AN NHƠN PET" */
+      .nokia-font {
+      font-family: 'UTM Nokia', sans-serif;
+      }
+
+        /* Hiển thị/Ẩn giao diện */
+        #login-form-container { display: block; }
+        #app-container { display: none; }
+    </style>
+</head>
+
+<body class="bg-[#f4f4f4] max-w flex flex-col">
+
+    <header class="bg-[#ffff9e] p-4 shadow-md flex flex-col sm:flex-row items-center sm:justify-center gap-1 mb-5">
+    <div class="flex-shrink-0 mb-1 sm:mb-0">
+        <img src="./components/anp-logo.png" alt="AN NHON PET Logo" class="w-24 h-24 sm:w-32 sm:h-32 object-contain">
+    </div>
+    <div class="text-center sm:text-left flex flex-col items-center sm:items-start">
+        <h1 class="text-xl sm:text-2xl font-bold text-blue-600 text-center">DỊCH VỤ THÚ CƯNG AN NHƠN<br><span class="nokia-font">AN NHƠN PET</span></h1>
+        <p class="text-gray-700 text-sm sm:text-base">Địa chỉ: 21 Lương Văn Can, P. Bình Định, T. Gia Lai</p>
+        <p class="text-gray-700 text-sm sm:text-base">Điện thoại: 0935.985.468 - 0388.13.8586</p>
+    </div>
+</header>
+
+    <div class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl p-6 pb-5 mb-5">
+        <div id="auth-status" class="text-right mb-4">
+            <span id="user-display" class="font-medium text-gray-700"></span>
+            <button id="logout-btn" class="text-red-600 hover:text-red-800 font-semibold transition hidden">Đăng xuất</button>
+        </div>
+
+    <div id="login-form-container" class="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg mb-4">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">DỊCH VỤ THÚ CƯNG AN NHƠN</h2>
+
+    <form id="login-form" class="space-y-4">
+        <h2 class="text-3xl font-bold text-center text-gray-800">Đăng nhập</h2>
+        <div>
+            <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="login-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div>
+            <label for="login-password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+            <input type="password" id="login-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div class="flex items-center justify-between">
+            <a href="#" id="forgot-password-link" class="text-sm text-indigo-600 hover:text-indigo-500">Quên mật khẩu?</a>
+        </div>
+        <button id="login-submit-btn" type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Đăng nhập</button>
+        <div class="text-center text-sm">
+            <p>Nếu bạn chưa có tài khoản, hãy bấm nút bên dưới.</p>
+        </div>
+        <a href="#" id="register-btn" class="w-full mt-4 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">Đăng ký tài khoản mới</a>
+    </form>
+    
+    <form id="register-form" class="space-y-4 hidden">
+        <h2 class="text-3xl font-bold text-center text-gray-800">Đăng ký</h2>
+        <div>
+            <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="register-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div>
+            <label for="register-password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+            <input type="password" id="register-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <button id="register-submit-btn" type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Đăng ký</button>
+        <div class="text-center text-sm">
+            <p>Bạn đã có tài khoản? <a href="#" id="show-login-form" class="text-indigo-600 hover:text-indigo-500">Đăng nhập</a></p>
+        </div>
+    </form>
+    </div>
+        
+        <div id="app-container" class="mt-10">
+            <h1 class="text-4xl font-extrabold text-center text-gray-900 mb-10">PHẦN MỀM QUẢN LÝ HỆ THỐNG AN NHƠN PET</h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+			    <a href="./components/owner_pet_management.html" class="card-item card-item-border card-3 card-3-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fa-solid fa-people-group icon icon-orange"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý Chủ & Vật nuôi</h2>
+                    </div>
+                </a>
+
+                <a href="#" class="card-item card-item-border card-1 card-1-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container">
+                        <i class="fa-solid fa-file-prescription icon icon-red"></i>
+                    </div>
+                    <div class="card-text">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Tạo mới Phiếu khám bệnh</h2>
+                    </div>
+                </a>
+
+                <a href="./components/medical_records.html" class="card-item card-item-border card-2 card-2-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fa-solid fa-notes-medical icon icon-green"></i>
+                    </div>
+                    <div class="card-text">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý tất cả Phiếu khám</h2>
+                    </div>
+                </a>
+                <a href="#" class="card-item card-item-border card-8 card-8-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fas fa-calendar-alt icon icon-dark-pink"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý Lịch tái khám</h2>
+                    </div>
+                </a>
+
+                <a href="./components/anpvaccination.html" class="card-item card-item-border card-2 card-2-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container">
+                        <i class="fa-solid fa-shield-dog icon icon-red"></i>
+                    </div>
+                    <div class="card-text">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý Tiêm phòng</h2>
+                    </div>
+                </a>
+
+                <a href="./components/anpetspa.html" class="card-item card-item-border card-8 card-11-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fa-solid fa-bath icon icon-green"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý Spa & Grooming</h2>
+                    </div>
+                </a>
+
+                <a href="./components/anpethotel.html" class="card-item card-item-border card-3 card-3-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fa-solid fa-hotel icon icon-orange"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý Pet Hotel</h2>
+                    </div>
+                </a>
+
+                <a href="./components/medicines-supplies-services.html#medicines-section" class="card-item card-item-border card-4 card-4-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fas fa-pills icon icon-purple"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý Danh mục thuốc</h2>
+                    </div>
+                </a>
+                <a href="./components/medicines-supplies-services.html#treatmentplans-section" class="card-item card-item-border card-5 card-5-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fas fa-file-invoice icon icon-cyan"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý Kế hoạch điều trị</h2>
+                    </div>
+                </a>
+                <a href="#" class="card-item card-item-border card-6 card-6-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fa-solid fa-file-invoice-dollar icon icon-yellow"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý Thanh toán</h2>
+                    </div>
+                </a>
+                <a href="#" class="card-item card-item-border card-7 card-7-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fa-solid fa-money-check-dollar icon icon-pink"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Quản lý công nợ</h2>
+                    </div>
+                </a>
+
+                <a href="#" class="card-item card-item-border card-9 card-9-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fa-solid fa-file-signature icon icon-gray"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Hướng dẫn sử dụng phần mềm</h2>
+                    </div>
+                </a>
+                <a href="#" class="card-item card-item-border card-10 card-10-bg card-item-shiny rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-2 sm:gap-4 p-6">
+                    <div class="icon-container pl-4">
+                        <i class="fa-solid fa-comment-medical icon icon-dark-red"></i>
+                    </div>
+                    <div class="card-text pl-2">
+                        <h2 class="card-title text-xl font-semibold text-gray-800 mb-1">Liên hệ</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-[#706055] text-white text-center py-3 mt-auto w-full">
+        <div class="container mx-auto px-4">
+            <div class="md:flex md:justify-between">
+                <div class="mb-1 md:mb-0">
+                    <h5 class="font-bold text-lg nokia-font">AN NHƠN PET</h5>
+                    <p class="text-sm text-green-200">Healthy pet for your happiness!</p>
+                </div>
+                <div class="text-sm">
+                    <p><span class="text-red-500">@annhonpetcare</span><span class="text-orange-400"> @annhonpetshop</span><span class="text-cyan-500"> @annhonpetspa</span><span class="text-blue-500"> @annhonpethotel</span></p>
+                    <p>Fanpage: https://www.facebook.com/annhonpet/</p>
+                </div>
+            </div>
+            <hr class="my-2 border-[#26ff4e] sm:mx-auto lg:my-3" />
+            <span class="block text-sm sm:text-center text-gray-200">© 2025 <a href="#" class="hover:underline">AnNhonPet™</a>. All Rights Reserved.</span>
+        </div>
+    </footer>
+
+    <script type="module" src="./components/anp-home.js"></script>
+
+</body>
+</html>

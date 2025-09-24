@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý tiêm chủng thú cưng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+      /* Khai báo font Nokia */
+      @font-face {
+      font-family: 'UTM Nokia';
+      src: url('UTM-Nokia.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      }
+
+      /* Style riêng cho dòng chữ "AN NHƠN PET" */
+      .nokia-font {
+      font-family: 'UTM Nokia', sans-serif;
+      }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .scrollable-content {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        /* Tùy chỉnh thanh cuộn cho webkit (Chrome, Safari) */
+        .scrollable-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background-color: #9ca3af;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        /* Tùy chỉnh thanh cuộn cho các modal */
+        .modal-scrollable {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-scrollable::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-scrollable::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+
+        .modal-scrollable::-webkit-scrollbar-thumb {
+            background-color: #9ca3af;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+
+        /* CSS cho các nút tương tác */
+        .btn-action {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hiệu ứng mờ khi tải */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+.fa-spin {
+    animation: fa-spin 2s linear infinite !important;
+}
+
+@keyframes fa-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* css riêng cho nút QR */
+        #qrOverlay {
+            display: none;
+        }
+        .overlay.active {
+            display: flex;
+        }
+        #lightbox {
+            display: none;
+        }
+        .qr-image-container {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            cursor: pointer; /* Thêm con trỏ để người dùng biết có thể click */
+        }
+        .qr-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+/* Hiển thị form đăng nhập và ẩn khối ứng dụng chính */
+#login-form-container { display: block; }
+#app-container { display: none; }
+    </style>
+</head>
+
+<body class="bg-[#f4f4f4] min-h-screen flex flex-col">
+
+    <header class="bg-[#ffff9e] p-4 shadow-md flex flex-col sm:flex-row items-center sm:justify-center gap-1 mb-5">
+    <div class="flex-shrink-0 mb-1 sm:mb-0">
+        <img src="./anp-logo.png" alt="AN NHON PET Logo" class="w-24 h-24 sm:w-32 sm:h-32 object-contain">
+    </div>
+    <div class="text-center sm:text-left flex flex-col items-center sm:items-start">
+        <h1 class="text-xl sm:text-2xl font-bold text-blue-600 text-center">DỊCH VỤ THÚ CƯNG AN NHƠN<br><span class="nokia-font">AN NHƠN PET</span></h1>
+        <p class="text-gray-700 text-sm sm:text-base">Địa chỉ: 21 Lương Văn Can, P. Bình Định, T. Gia Lai</p>
+        <p class="text-gray-700 text-sm sm:text-base">Điện thoại: 0935.985.468 - 0388.13.8586</p>
+    </div>
+</header>
+
+<div id="login-status" class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl pl-6 pr-6 pt-3 pb-2 mb-1">
+        <div class="flex flex-col sm:flex-row sm:justify-between items-center mb-1 space-y-2 sm:space-y-0">
+            <a href="../anphome.html" id="home-btn" class="px-6 py-2 bg-yellow-300 text-blue-700 font-medium rounded-lg hover:bg-yellow-400 border border-gray-300 transition w-full sm:w-auto text-center">
+            <i class="fas fa-house-laptop"></i><strong> Trang chủ</strong>
+            </a>
+            <div id="auth-status" class="text-center sm:text-right w-full sm:w-auto">
+               <span id="user-display" class="font-medium text-gray-700 block sm:inline"></span>
+               <button id="logout-btn" class="text-red-600 hover:text-red-800 font-semibold transition hidden mt-2 sm:mt-0">Đăng xuất</button>
+           </div>
+        </div>
+</div>
+
+<!-- <div id="login-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center"> -->
+    
+    <div id="login-form-container" class="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg mb-4">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">DỊCH VỤ THÚ CƯNG AN NHƠN</h2>
+
+    <form id="login-form" class="space-y-4">
+        <h2 class="text-3xl font-bold text-center text-gray-800">Đăng nhập</h2>
+        <div>
+            <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="login-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div>
+            <label for="login-password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+            <input type="password" id="login-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div class="flex items-center justify-between">
+            <a href="#" id="forgot-password-link" class="text-sm text-indigo-600 hover:text-indigo-500">Quên mật khẩu?</a>
+        </div>
+        <button id="login-submit-btn" type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Đăng nhập</button>
+        <div class="text-center text-sm">
+            <p>Nếu bạn chưa có tài khoản, hãy bấm nút bên dưới.</p>
+        </div>
+        <a href="#" id="register-btn" class="w-full mt-4 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">Đăng ký tài khoản mới</a>
+    </form>
+    
+    <form id="register-form" class="space-y-4 hidden">
+        <h2 class="text-3xl font-bold text-center text-gray-800">Đăng ký</h2>
+        <div>
+            <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="register-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div>
+            <label for="register-password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+            <input type="password" id="register-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <button id="register-submit-btn" type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Đăng ký</button>
+        <div class="text-center text-sm">
+            <p>Bạn đã có tài khoản? <a href="#" id="show-login-form" class="text-indigo-600 hover:text-indigo-500">Đăng nhập</a></p>
+        </div>
+    </form>
+    </div>
+
+<!-- </div> -->
+
+    <div id="app-container" style="display: none;">
+
+    <div id="content-container" class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl p-6 pb-5 mb-5">
+        <div class="flex flex-col items-center gap-6 mb-6">
+            <h1 class="text-3xl text-center font-bold text-red-500">
+                <span class="text-blue-500"></span>PHẦN MỀM QUẢN LÝ LỊCH TIÊM VACCINE THÚ CƯNG
+            </h1>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <button id="export-excel-btn"
+                    class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 btn-action">
+                    Xuất ra Excel
+                </button>
+
+                <button id="manage-payments-btn"
+                    class="bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105 btn-action">
+                    Quản lý thanh toán
+                </button>
+                <button id="check-reminder-btn"
+                    class="relative bg-yellow-500 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105 btn-action">
+                    Kiểm tra nhắc lịch tiêm
+                      <span id="upcoming-reminder-count"
+                         class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">
+                         0
+                      </span>
+                </button>
+
+<!-- bắt đầu nút Hiện mã QR -->
+<button id="showQrpayBtn" class="bg-blue-500 hover:bg-blue-600  hover:scale-105 text-white py-3 px-6 rounded-xl shadow-lg transition-all duration-300 flex items-center justify-center space-x-2">
+        <i class="fas fa-qrcode text-xl"></i>
+        <span class="text-base sm:text-sm">QR-code Banking</span>
+    </button>
+
+    <div id="qrOverlay" class="overlay fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-xs w-full mx-4">
+            <button id="closeQrpayBtn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            <h3 class="text-xl font-semibold text-center mb-4">Mã QR số tài khoản</h3>
+            <div class="flex items-center justify-center">
+                <div class="qr-image-container">
+                    <img id="qrImage" src="" alt="QR Code">
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center mt-4 space-x-2">
+                <button id="prevBtn" class="p-2 text-gray-600 hover:text-blue-500 transition-colors duration-200">
+                    <i class="fas fa-chevron-left text-2xl"></i>
+                </button>
+                <div id="imageCounter" class="text-gray-500 text-sm"></div>
+                <button id="nextBtn" class="p-2 text-gray-600 hover:text-blue-500 transition-colors duration-200">
+                    <i class="fas fa-chevron-right text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+<!-- hết code nút Hiện mã QR -->
+<!-- BẮT ĐẦU CHỨC NĂNG PHÓNG TO ẢNH -->
+<div id="lightbox" class="overlay fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[100] transition-opacity duration-300">
+        <img id="lightboxImage" src="" alt="Large QR Code" class="max-w-[90%] max-h-[90%] object-contain">
+        <button id="lightboxClose" class="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors duration-200">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+    </div>
+<!-- KẾT THÚC CHỨC NĂNG PHÓNG TO ẢNH -->
+
+            </div>
+        </div>
+
+<div id="loading-spinner" class="fixed inset-0 z-[100] bg-gray-900 bg-opacity-50 hidden flex items-center justify-center">
+    <i class="fas fa-hourglass-half fa-spin text-cyan-300 text-4xl"></i>
+</div>
+
+<div id="filter-search-qr" class="flex items-center justify-start gap-x-4 px-4 mb-4">
+    <input type="text" id="search-input"
+           class="block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+           placeholder="Quét mã QR hoặc nhập tên Thú cưng/Tên chủ để tìm kiếm">
+    
+    <button id="qr-scan-btn" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-md transition duration-300">
+        <i class="fas fa-qrcode text-gray-700"></i>
+    </button>
+    
+    <div id="qr-reader" style="width: 500px; display: none;"></div>
+
+    <button id="close-qr-btn" style="display: none;" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md">
+        Tắt Camera
+    </button>
+</div>
+
+            <div><h2 class="text-2xl font-semibold text-center text-orange-600 mb-4">DANH SÁCH THÚ CƯNG</h2></div>
+        <div class="space-y-4 scrollable-content">
+            <ul id="pets-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                </ul>
+        </div>
+    </div>
+
+
+    <div id="pet-detail-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl fade-in modal-scrollable">
+        <div class="flex justify-between items-start mb-4">
+            <div class="w-full text-center">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Thông tin chi tiết thú cưng</h2>
+            </div>
+            <button id="close-pet-detail-modal" class="text-gray-400 hover:text-gray-600 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <h3 id="pet-detail-pet-name" class="text-3xl font-bold text-gray-800 mb-4">Tên thú cưng</h3>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="md:col-span-1 flex flex-col items-start">
+                <img id="pet-detail-pet-photo" class="w-40 h-40 rounded-full object-cover border-4 border-indigo-200 shadow-md mb-4" src="" alt="Ảnh thú cưng">
+
+                <div class="flex justify-center">
+                    <div class="space-y-1">
+                       <p class="text-sm text-gray-600" id="pet-detail-pet-id">ID: 12345</p>
+                       <p class="text-sm text-gray-600" id="pet-detail-pet-type">Loài: Chó</p>
+                       <p class="text-sm text-gray-600" id="pet-detail-pet-breed">Giống: Poodle</p>
+                       <p class="text-sm text-gray-600" id="pet-detail-pet-dob">Ngày sinh: N/A</p>
+                       <p class="text-sm text-gray-600" id="pet-detail-pet-gender">Giới tính: N/A</p>
+                       <p class="text-sm text-gray-600" id="pet-detail-pet-owner">Chủ: Nguyễn Văn A</p>
+                       <p class="text-sm text-gray-600" id="pet-detail-pet-phone">SĐT: 0912345678</p>
+                       <p class="text-sm text-gray-600" id="pet-detail-pet-address">Địa chỉ: N/A</p>
+                       <div class="flex flex-col items-center">
+                          <div id="pet-qr-code" class="mt-4 w-16 h-16"></div>
+                          <div>
+                              <button id="print-qr-btn" class="mt-2 text-sm text-white font-semibold border p-1 border-blue-400 rounded-lg bg-gray-400 hover:bg-gray-500">
+                                 <i class="fas fa-print"></i> In mã QR
+                              </button>
+                          </div>
+
+                       </div>
+                    </div>
+                </div>
+
+                       <div class="flex justify-center space-x-2 mt-6">
+                          <button id="call-btn" class="bg-[#ff9429] text-white px-4 py-2 rounded-xl shadow-md hover:bg-[#fa6000] transition duration-300">Gọi điện</button>
+                          <button id="zalo-btn" class="bg-[#0088cc] text-white px-4 py-2 rounded-xl shadow-md hover:bg-[#006699] transition duration-300">Chat Zalo</button>
+                       </div>
+            </div>
+
+
+            <div class="md:col-span-2">
+                <div class="flex flex-col md:flex-row justify-between items-start mb-4">
+                    <h4 class="text-xl font-semibold text-blue-600">Lịch sử tiêm phòng</h4>
+                    <button id="add-vaccination-btn" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 w-auto md:w-auto mt-2 md:mt-0">
+                      <i class="fas fa-plus"></i> Thêm mũi tiêm
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên vắc xin</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày tiêm</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày tiêm kế tiếp</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bác sĩ</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ghi chú</th>
+                                <th scope="col" class="relative px-6 py-3"><span class="sr-only">Hành động</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="vaccination-history-table-body" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="add-vaccination-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
+            <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Thêm mũi tiêm mới</h3>
+            <form id="add-vaccination-form" class="space-y-4">
+                <div>
+                    <label for="vaccine-name-select" class="block text-sm font-medium text-gray-700">Tên vắc xin</label>
+                    <select id="vaccine-name-select" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                        <option value="">Chọn vắc xin</option>
+                        </select>
+                </div>
+                <div>
+                    <label for="vaccine-date" class="block text-sm font-medium text-gray-700">Ngày tiêm</label>
+                    <input type="date" id="vaccine-date" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="doctor-add" class="block text-sm font-medium text-gray-700">Bác sĩ</label>
+                    <select id="doctor-add" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                        <option value="">Bác sĩ thực hiện</option>
+                        <option value="BSTY. Quang">BSTY. Quang</option>
+                        <option value="BSTY. Thanh">BSTY. Thanh</option>
+                        <option value="BSTY. Thu">BSTY. Thu</option>
+                        <option value="BSTY. Nhơn">BSTY. Nhơn</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="vaccine-notes" class="block text-sm font-medium text-gray-700">Ghi chú</label>
+                    <textarea id="vaccine-notes" rows="3"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"></textarea>
+                </div>
+                <div>
+                    <label for="deworming-date-add" class="block text-sm font-medium text-gray-700">Ngày tẩy giun</label>
+                    <input type="date" id="deworming-date-add"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" id="close-add-vaccination-modal"
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">Hủy</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu mũi tiêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-vaccination-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md fade-in modal-scrollable">
+            <h3 class="text-2xl font-bold mb-4 text-center text-gray-800">Chỉnh sửa mũi tiêm</h3>
+            <form id="edit-vaccination-form" class="space-y-4">
+                <input type="hidden" id="current-edit-vaccination-id">
+                <div>
+                    <label for="edit-vaccine-name-select" class="block text-sm font-medium text-gray-700">Tên vắc xin</label>
+                    <select id="edit-vaccine-name-select" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                        </select>
+                </div>
+                <div>
+                    <label for="edit-vaccine-date" class="block text-sm font-medium text-gray-700">Ngày tiêm</label>
+                    <input type="date" id="edit-vaccine-date" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div>
+                    <label for="doctor-edit" class="block text-sm font-medium text-gray-700">Bác sĩ</label>
+                    <select id="doctor-edit" required
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                        <option value="BSTY. Quang">BSTY. Quang</option>
+                        <option value="BSTY. Thanh">BSTY. Thanh</option>
+                        <option value="BSTY. Thu">BSTY. Thu</option>
+                        <option value="BSTY. Nhơn">BSTY. Nhơn</option>
+                    </select>
+
+                </div>
+                <div>
+                    <label for="edit-vaccine-notes" class="block text-sm font-medium text-gray-700">Ghi chú</label>
+                    <textarea id="edit-vaccine-notes" rows="3"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"></textarea>
+                </div>
+                <div>
+                    <label for="deworming-date-edit" class="block text-sm font-medium text-gray-700">Ngày tẩy giun</label>
+                    <input type="date" id="deworming-date-edit"
+                        class="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2">
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" id="close-edit-vaccination-modal"
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">Hủy</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<div id="export-modal" class="hidden fixed inset-0 z-50 hidden items-center justify-center bg-gray-900 bg-opacity-50">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-2xl mx-4">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200">
+          <div class="w-full text-center">
+            <h3 class="text-xl font-bold text-gray-800">Xuất dữ liệu ra Excel</h3>
+        </div>
+            <button id="close-modal-btn" class="text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div class="p-6">
+            <div id="filter-form" class="bg-white">
+                <h5 class="text-lg font-semibold mb-4 text-gray-800">Lọc dữ liệu trước khi xuất</h5>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="vaccine-select" class="block text-sm font-medium text-gray-700">Chọn loại Vaccine:</label>
+                        <select id="vaccine-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <option value="">Tất cả các loại</option>
+                            <option value="Dại">Dại</option>
+                            <option value="7 bệnh hằng năm">7 bệnh hằng năm</option>
+                            <option value="4 bệnh hằng năm">4 bệnh hằng năm</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="start-date" class="block text-sm font-medium text-gray-700">Từ ngày:</label>
+                        <input type="date" id="start-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="end-date" class="block text-sm font-medium text-gray-700">Đến ngày:</label>
+                        <input type="date" id="end-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-6 border-t border-gray-200 text-right">
+            <button id="execute-export-btn" class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 btn-action">
+                Xuất file Excel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="loading-spinner" class="fixed inset-0 z-[100] bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="spinner"></div>
+</div>
+
+<div id="reminder-modal" class="hidden fixed inset-0 z-50 overflow-auto bg-gray-900 bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-xl fade-in">
+        <div class="flex justify-between items-center mb-4">
+          <div class="w-full text-center">
+            <h3 id="reminder-list-title" class="text-2xl font-bold text-orange-500">Lịch tiêm sắp tới</h3>
+          </div>
+            <button id="close-reminder-modal" class="text-gray-400 hover:text-gray-600 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div id="reminder-list" class="overflow-y-auto max-h-[60vh]">
+            </div>
+    </div>
+</div>
+
+    <div id="manage-payments-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-6xl fade-in flex flex-col h-[90vh]">
+        
+        <div class="flex justify-between items-center mb-4 flex-shrink-0">
+            <h3 class="text-2xl font-bold text-gray-800">Danh mục các thanh toán</h3>
+            <div class="flex items-center gap-4">
+                <button id="save-payments-status-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                    Lưu trạng thái thanh toán
+                </button>
+                <button id="close-manage-payments-modal" class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="mb-4">
+                <label id="total-payment-amount" class="block text-lg font-medium text-red-500">Tổng số tiền đã thanh toán: 0 VNĐ</label>
+                <label id="total-amount-owed" class="block text-lg font-medium text-orange-500">Tổng số tiền còn nợ: 0 VNĐ</label>
+        </div>
+
+        <div class="overflow-y-auto overflow-x-auto flex-grow">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50 sticky top-0">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên thú cưng</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày, giờ tiêm</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên mũi tiêm</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thành tiền</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái thanh toán</th>
+                    </tr>
+                </thead>
+                <tbody id="payments-table-body" class="bg-white divide-y divide-gray-200">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+    <footer class="bg-[#706055] text-white text-center py-3 mt-auto w-full">
+        <div class="container mx-auto px-4">
+            <div class="md:flex md:justify-between">
+                <div class="mb-1 md:mb-0">
+                    <h5 class="font-bold text-lg nokia-font">AN NHƠN PET</h5>
+                    <p class="text-sm text-green-200">Healthy pet for your happiness!</p>
+                </div>
+                <div class="text-sm">
+                    <p><span class="text-red-500">@annhonpetcare</span><span class="text-orange-400"> @annhonpetshop</span><span class="text-cyan-500"> @annhonpetspa</span><span class="text-blue-500"> @annhonpethotel</span></p>
+                    <p>Fanpage: https://www.facebook.com/annhonpet/</p>
+                </div>
+            </div>
+            <hr class="my-2 border-[#26ff4e] sm:mx-auto lg:my-3" />
+            <span class="block text-sm sm:text-center text-gray-200">© 2025 <a href="#" class="hover:underline">AnNhonPet™</a>. All Rights Reserved.</span>
+        </div>
+    </footer>
+
+
+    <script type="module" src="vaccination-logic.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    </body>
+</html>

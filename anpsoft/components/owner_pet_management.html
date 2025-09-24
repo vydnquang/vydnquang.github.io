@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Chủ Vật Nuôi - Pet Clinic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+    /* Tạo một container riêng cho nội dung chính */
+    #main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .form-container, .list-container {
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .owner-item, .pet-item, .payment-item {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .owner-item:hover, .pet-item:hover, .payment-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        }
+        .collapsible-header {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+        }
+        .collapsible-icon.rotated {
+            transform: rotate(180deg);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 24px;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+      /* Khai báo font Nokia */
+      @font-face {
+      font-family: 'UTM Nokia';
+      src: url('UTM-Nokia.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      }
+
+      /* Style riêng cho dòng chữ "AN NHƠN PET" */
+      .nokia-font {
+      font-family: 'UTM Nokia', sans-serif;
+      }
+
+        /* Hiển thị/Ẩn giao diện */
+        #login-form-container { display: block; }
+        #app-container { display: none; }
+    </style>
+</head>
+<body class="bg-[#f4f4f4] max-w flex flex-col">
+
+    <header class="bg-[#ffff9e] p-4 shadow-md flex flex-col sm:flex-row items-center sm:justify-center gap-1 mb-5">
+    <div class="flex-shrink-0 mb-1 sm:mb-0">
+        <img src="anp-logo.png" alt="AN NHON PET Logo" class="w-24 h-24 sm:w-32 sm:h-32 object-contain">
+    </div>
+    <div class="text-center sm:text-left flex flex-col items-center sm:items-start">
+        <h1 class="text-xl sm:text-2xl font-bold text-blue-600 text-center">DỊCH VỤ THÚ CƯNG AN NHƠN<br><span class="nokia-font">AN NHƠN PET</span></h1>
+        <p class="text-gray-700 text-sm sm:text-base">Địa chỉ: 21 Lương Văn Can, P. Bình Định, T. Gia Lai</p>
+        <p class="text-gray-700 text-sm sm:text-base">Điện thoại: 0935.985.468 - 0388.13.8586</p>
+    </div>
+    </header>
+
+<div id="login-status" class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl pl-6 pr-6 pt-4 pb-0 mb-1">
+        <div class="flex flex-col sm:flex-row sm:justify-between items-center mb-4 space-y-2 sm:space-y-0">
+            <a href="../anphome.html" id="home-btn" class="px-6 py-2 bg-yellow-300 text-blue-700 font-medium rounded-lg hover:bg-yellow-400 border border-gray-300 transition w-full sm:w-auto text-center">
+            <i class="fas fa-house-laptop"></i><strong> Trang chủ</strong>
+            </a>
+            <div id="auth-status" class="text-center sm:text-right w-full sm:w-auto">
+               <span id="user-display" class="font-medium text-gray-700 block sm:inline"></span>
+               <button id="logout-btn" class="text-red-600 hover:text-red-800 font-semibold transition hidden mt-2 sm:mt-0">Đăng xuất</button>
+           </div>
+        </div>
+    </div>
+
+    <div id="login-form-container" class="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg mb-4">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">DỊCH VỤ THÚ CƯNG AN NHƠN</h2>
+
+    <form id="login-form" class="space-y-4">
+        <h2 class="text-3xl font-bold text-center text-gray-800">Đăng nhập</h2>
+        <div>
+            <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="login-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div>
+            <label for="login-password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+            <input type="password" id="login-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div class="flex items-center justify-between">
+            <a href="#" id="forgot-password-link" class="text-sm text-indigo-600 hover:text-indigo-500">Quên mật khẩu?</a>
+        </div>
+        <button id="login-submit-btn" type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Đăng nhập</button>
+        <div class="text-center text-sm">
+            <p>Nếu bạn chưa có tài khoản, hãy bấm nút bên dưới.</p>
+        </div>
+        <a href="#" id="register-btn" class="w-full mt-4 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-400 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">Đăng ký tài khoản mới</a>
+    </form>
+    
+    <form id="register-form" class="space-y-4 hidden">
+        <h2 class="text-3xl font-bold text-center text-gray-800">Đăng ký</h2>
+        <div>
+            <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="register-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div>
+            <label for="register-password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+            <input type="password" id="register-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <button id="register-submit-btn" type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Đăng ký</button>
+        <div class="text-center text-sm">
+            <p>Bạn đã có tài khoản? <a href="#" id="show-login-form" class="text-indigo-600 hover:text-indigo-500">Đăng nhập</a></p>
+        </div>
+    </form>
+    </div>
+
+    <div id="app-container" style="display: none;" class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl p-6 pb-5 mb-5">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Quản lý Chủ Vật nuôi</h1>
+            <p class="text-lg text-gray-600 mt-2">Đăng nhập thành công với ID của bạn: <span id="current-user-id" class="font-mono text-xs bg-gray-200 rounded-md px-2 py-1"></span></p>
+        </header>
+
+        <div class="form-container bg-white p-6 mb-8">
+            <div id="toggle-add-owner" class="collapsible-header">
+                <h2 class="text-xl font-semibold text-gray-800 mb-0">Thêm mới Chủ vật nuôi</h2>
+                <button type="button" class="collapsible-btn bg-blue-300 text-blue-600 p-2 rounded-full hover:bg-blue-400 transition" data-target="owners">
+                   <i id="owner-icon" class="fas fa-chevron-down collapsible-icon text-gray-600"></i>
+
+
+
+
+
+
+            </div>
+            <div id="add-owner-form-container" class="mt-4 hidden">
+                <form id="add-owner-form" class="space-y-4">
+                    <div>
+                        <label for="ownerName" class="block text-gray-700 font-medium mb-1">Họ và tên</label>
+                        <input type="text" id="ownerName" name="ownerName" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="phoneNumber" class="block text-gray-700 font-medium mb-1">Số điện thoại</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="address" class="block text-gray-700 font-medium mb-1">Địa chỉ</label>
+                        <textarea id="address" name="address" rows="2"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    <div class="flex space-x-2 justify-end">
+                        <button type="button" id="cancel-owner-btn" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu Chủ vật nuôi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="list-container bg-white p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Danh sách Chủ vật nuôi</h2>
+
+            <div class="mb-4">
+               <label for="owner-search" class="sr-only">Tìm kiếm Chủ vật nuôi</label>
+               <input type="text" id="owner-search" placeholder="Tìm kiếm theo tên hoặc SĐT..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div id="owner-list" class="mt-6 space-y-4 list-container h-80 overflow-y-auto">
+                <p class="text-gray-500 text-center">Đăng nhập để xem danh sách của bạn.</p>
+            </div>
+        </div>
+
+        <div id="management-section" class="form-container bg-white p-6 hidden">
+            <div class="flex items-center space-x-4 mb-4">
+                <p class="text-gray-600 font-semibold text-xl">Khách hàng: <span id="current-owner-name" class="font-bold text-gray-800"></span></p>
+                <div class="flex-grow"></div>
+                <button id="manage-pets-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                    <i class="fa-solid fa-paw mr-2"></i>Quản lý Thú nuôi
+                </button>
+                <button id="manage-payments-btn" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition">
+                    <i class="fa-solid fa-money-check-dollar mr-2"></i>Quản lý Thanh toán
+                </button>
+            </div>
+                        <button id="manage-owner-back-btn" class="px-4 py-2 mb-4 bg-gray-300 text-gray-700 rounded-lg transition hover:bg-gray-400"><i class="fas fa-arrow-left mr-2"></i> Quay lại</button>
+
+            <div id="pet-management-section" class="hidden">
+                <div id="toggle-add-pet" class="collapsible-header">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-0">Thêm và Quản lý Thú nuôi</h2>
+                    <button type="button" class="collapsible-btn bg-blue-300 text-blue-600 p-2 rounded-full hover:bg-blue-400 transition" data-target="pets">
+                       <i id="pet-icon" class="fas fa-chevron-down collapsible-icon text-gray-600"></i>
+                </div>
+                <div id="add-pet-form-container" class="mt-4 hidden">
+                    <form id="add-pet-form" class="space-y-4 mb-8">
+                        <div>
+                            <label for="petName" class="block text-gray-700 font-medium mb-1">Tên thú nuôi</label>
+                            <input type="text" id="petName" name="petName" required
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="petSpecies" class="block text-gray-700 font-medium mb-1">Loài thú nuôi</label>
+                            <select id="petSpecies" name="petSpecies" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="Chó">Chó</option>
+                                <option value="Mèo">Mèo</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="petBreed" class="block text-gray-700 font-medium mb-1">Giống</label>
+                            <input type="text" id="petBreed" name="petBreed"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="petBirthday" class="block text-gray-700 font-medium mb-1">Ngày sinh</label>
+                                <input type="date" id="petBirthday" name="petBirthday"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="petSex" class="block text-gray-700 font-medium mb-1">Giới tính</label>
+                                <select id="petSex" name="petSex" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="Đực">Đực</option>
+                                    <option value="Cái">Cái</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="petDescription" class="block text-gray-700 font-medium mb-1">Dấu hiệu nhận dạng, màu lông</label>
+                            <textarea id="petDescription" name="petDescription" rows="2"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <div class="flex space-x-2 justify-end">
+                            <button type="button" id="cancel-pet-btn" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu Thú nuôi</button>
+                       </div>
+                    </form>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-gray-800 mb-2 mt-4">Danh sách Thú nuôi</h3>
+                <div id="pet-list" class="space-y-4">
+                    <p class="text-gray-500 text-center">Hãy thêm thú cưng đầu tiên của chủ này.</p>
+                </div>
+            </div>
+
+            <div id="payment-management-section" class="hidden">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Lịch sử Thanh toán</h3>
+                <div id="payment-list" class="space-y-4">
+                    <p class="text-gray-500 text-center">Đang tải lịch sử thanh toán...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-modal-backdrop" class="modal">
+        <div id="custom-modal-container" class="modal-content max-w-sm">
+            <h3 class="text-xl font-bold text-gray-900 leading-tight mb-4">Thông báo</h3>
+            <p id="custom-modal-message" class="text-gray-700"></p>
+            <div class="mt-4">
+                <button onclick="document.getElementById('custom-modal-backdrop').style.display='none'" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="payment-modal-backdrop" class="modal">
+        <div id="payment-modal-container" class="modal-content max-w-lg relative text-left">
+            <button id="payment-modal-close-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"><i class="fa-solid fa-xmark fa-xl"></i></button>
+            <h3 id="payment-modal-title" class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-blue-500 pb-2">Cập nhật Thanh toán</h3>
+            <form id="payment-form" class="space-y-4">
+                <input type="hidden" id="recordId-hidden">
+                <input type="hidden" id="petId-hidden">
+                <div class="mb-4">
+                    <p class="text-sm text-gray-500">Tổng tiền hóa đơn:</p>
+                    <p id="totalPriceDisplay" class="text-2xl font-bold text-blue-600"></p>
+                </div>
+                <div>
+                    <label for="paymentStatus" class="block text-sm font-medium text-gray-700">Tình trạng</label>
+                    <select id="paymentStatus" name="paymentStatus" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                        <option value="unpaid">Chưa thanh toán</option>
+                        <option value="paid">Đã thanh toán</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="prepaidAmount" class="block text-sm font-medium text-gray-700">Số tiền ứng trước</label>
+                    <input type="number" id="prepaidAmount" name="prepaidAmount" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                </div>
+                <div class="mb-4">
+                    <p class="text-sm text-gray-500">Tổng số tiền còn nợ:</p>
+                    <p id="remainingDebtDisplay" class="text-2xl font-bold text-red-600"></p>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <footer class="bg-[#706055] text-white text-center py-3 mt-auto w-full">
+        <div class="container mx-auto px-4">
+            <div class="md:flex md:justify-between">
+                <div class="mb-1 md:mb-0">
+                    <h5 class="font-bold text-lg nokia-font">AN NHƠN PET</h5>
+                    <p class="text-sm text-green-200">Healthy pet for your happiness!</p>
+                </div>
+                <div class="text-sm">
+                    <p><span class="text-red-500">@annhonpetcare</span><span class="text-orange-400"> @annhonpetshop</span><span class="text-cyan-500"> @annhonpetspa</span><span class="text-blue-500"> @annhonpethotel</span></p>
+                    <p>Fanpage: https://www.facebook.com/annhonpet/</p>
+                </div>
+            </div>
+            <hr class="my-2 border-[#26ff4e] sm:mx-auto lg:my-3" />
+            <span class="block text-sm sm:text-center text-gray-200">© 2025 <a href="#" class="hover:underline">AnNhonPet™</a>. All Rights Reserved.</span>
+        </div>
+    </footer>
+
+
+   <script type="module" src="./owner-logic.js"></script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử Khám Bệnh - Pet Clinic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+    /* Tạo một container riêng cho nội dung chính */
+    #main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .form-container, .list-container, .pet-info-card {
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .record-item {
+            border-left: 4px solid #4ade80; /* Thêm đường viền màu xanh lá */
+        }
+        .record-item a {
+            display: block;
+        }
+
+      /* Khai báo font Nokia */
+      @font-face {
+      font-family: 'UTM Nokia';
+      src: url('UTM-Nokia.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      }
+
+      /* Style riêng cho dòng chữ "AN NHƠN PET" */
+      .nokia-font {
+      font-family: 'UTM Nokia', sans-serif;
+      }
+    </style>
+</head>
+<body class="bg-[#f4f4f4] max-w flex flex-col">
+
+    <header class="bg-[#ffff9e] p-4 shadow-md flex flex-col sm:flex-row items-center sm:justify-center gap-1 mb-5">
+    <div class="flex-shrink-0 mb-1 sm:mb-0">
+        <img src="anp-logo.png" alt="AN NHON PET Logo" class="w-24 h-24 sm:w-32 sm:h-32 object-contain">
+    </div>
+    <div class="text-center sm:text-left flex flex-col items-center sm:items-start">
+        <h1 class="text-xl sm:text-2xl font-bold text-blue-600 text-center">DỊCH VỤ THÚ CƯNG AN NHƠN<br><span class="nokia-font">AN NHƠN PET</span></h1>
+        <p class="text-gray-700 text-sm sm:text-base">Địa chỉ: 21 Lương Văn Can, P. Bình Định, T. Gia Lai</p>
+        <p class="text-gray-700 text-sm sm:text-base">Điện thoại: 0935.985.468 - 0388.13.8586</p>
+    </div>
+    </header>
+
+<div id="login-status" class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl pl-6 pr-6 pt-4 pb-0 mb-1">
+        <div class="flex flex-col sm:flex-row sm:justify-between items-center mb-4 space-y-2 sm:space-y-0">
+            <a href="../anphome.html" id="home-btn" class="px-6 py-2 bg-yellow-300 text-blue-700 font-medium rounded-lg hover:bg-yellow-400 border border-gray-300 transition w-full sm:w-auto text-center">
+            <i class="fas fa-house-laptop"></i><strong> Trang chủ</strong>
+            </a>
+            <div id="auth-status" class="text-center sm:text-right w-full sm:w-auto">
+               <span id="user-display" class="font-medium text-gray-700 block sm:inline"></span>
+               <button id="logout-btn" class="text-red-600 hover:text-red-800 font-semibold transition hidden mt-2 sm:mt-0">Đăng xuất</button>
+           </div>
+        </div>
+    </div>
+
+    <div id="content-container" class="w-full max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-2xl p-4 sm:p-6 mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Lịch sử Khám Bệnh</h1>
+        
+        <div class="pet-info-card bg-white p-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Thông tin Vật nuôi</h2>
+            <div id="pet-owner-info" class="space-y-2 text-gray-600">
+                <p><strong>Chủ vật nuôi:</strong> <span id="owner-name-display">...</span></p>
+                <p><strong>Điện thoại:</strong> <span id="owner-phone-display">...</span></p>
+                <p><strong>Vật nuôi:</strong> <span id="pet-name-display">...</span></p>
+                <p><strong>Loài:</strong> <span id="pet-species-display">...</span></p>
+            </div>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-6">
+                <a id="new-examination-btn" href="#" class="w-full sm:w-1/2 px-4 py-2 bg-blue-600 text-white text-center rounded-lg font-semibold hover:bg-blue-700 transition">Khám mới</a>
+                <a id="re-examination-btn" href="#" class="w-full sm:w-1/2 px-4 py-2 bg-purple-600 text-white text-center rounded-lg font-semibold hover:bg-purple-700 transition">Tái khám</a>
+            </div>
+        </div>
+
+        <div class="list-container bg-white p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Lịch sử Khám</h2>
+            <div id="records-list" class="space-y-4">
+                <p id="no-records-message" class="text-center text-gray-500 hidden">Chưa có hồ sơ khám bệnh nào cho vật nuôi này.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-[#706055] text-white text-center py-3 mt-auto w-full">
+        <div class="container mx-auto px-4">
+            <div class="md:flex md:justify-between">
+                <div class="mb-1 md:mb-0">
+                    <h5 class="font-bold text-lg nokia-font">AN NHƠN PET</h5>
+                    <p class="text-sm text-green-200">Healthy pet for your happiness!</p>
+                </div>
+                <div class="text-sm">
+                    <p><span class="text-red-500">@annhonpetcare</span><span class="text-orange-400"> @annhonpetshop</span><span class="text-cyan-500"> @annhonpetspa</span><span class="text-blue-500"> @annhonpethotel</span></p>
+                    <p>Fanpage: https://www.facebook.com/annhonpet/</p>
+                </div>
+            </div>
+            <hr class="my-2 border-[#26ff4e] sm:mx-auto lg:my-3" />
+            <span class="block text-sm sm:text-center text-gray-200">© 2025 <a href="#" class="hover:underline">AnNhonPet™</a>. All Rights Reserved.</span>
+        </div>
+    </footer>
+
+    <script type="module">
+        // Import các đối tượng từ file cấu hình Firebase và các hàm cần thiết
+        import { db, auth } from './firebase-config.js';
+        import { doc, getDoc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // Khai báo các biến và phần tử DOM
+        let currentUserId = null;
+        const urlParams = new URLSearchParams(window.location.search);
+        const ownerId = urlParams.get('ownerId');
+        const petId = urlParams.get('petId');
+        
+        const ownerNameDisplay = document.getElementById('owner-name-display');
+        const ownerPhoneDisplay = document.getElementById('owner-phone-display');
+        const petNameDisplay = document.getElementById('pet-name-display');
+        const petSpeciesDisplay = document.getElementById('pet-species-display');
+        const recordsListDiv = document.getElementById('records-list');
+        const noRecordsMessage = document.getElementById('no-records-message');
+        const newExaminationBtn = document.getElementById('new-examination-btn');
+        const reExaminationBtn = document.getElementById('re-examination-btn');
+
+        // Hàm nạp thông tin chủ và vật nuôi
+        async function fetchOwnerAndPetInfo(userId, ownerId, petId) {
+            try {
+                // Lấy thông tin chủ vật nuôi
+                const ownerDocRef = doc(db, `users/${userId}/private/data/owners`, ownerId);
+                const ownerDocSnap = await getDoc(ownerDocRef);
+                if (ownerDocSnap.exists()) {
+                    const ownerData = ownerDocSnap.data();
+                    ownerNameDisplay.textContent = ownerData.ownerName || 'Không rõ';
+                    ownerPhoneDisplay.textContent = ownerData.phoneNumber || 'Không rõ';
+                }
+
+                // Lấy thông tin vật nuôi
+                const petDocRef = doc(db, `users/${userId}/private/data/owners/${ownerId}/pets`, petId);
+                const petDocSnap = await getDoc(petDocRef);
+                if (petDocSnap.exists()) {
+                    const petData = petDocSnap.data();
+                    petNameDisplay.textContent = petData.petName || 'Không rõ';
+                    petSpeciesDisplay.textContent = petData.species || 'Không rõ';
+                }
+            } catch (error) {
+                console.error("Error fetching owner and pet info:", error);
+                alert("Lỗi khi tải thông tin chủ vật nuôi và vật nuôi.");
+            }
+        }
+
+        // Hàm lắng nghe lịch sử khám bệnh theo thời gian thực
+        function listenForMedicalRecords(userId, ownerId, petId) {
+            const recordsCollectionRef = collection(db, `users/${userId}/private/data/owners/${ownerId}/pets/${petId}/records`);
+            const q = query(recordsCollectionRef, orderBy("dateTime", "desc"));
+
+            onSnapshot(q, (snapshot) => {
+                recordsListDiv.innerHTML = '';
+                if (snapshot.empty) {
+                    noRecordsMessage.classList.remove('hidden');
+                } else {
+                    noRecordsMessage.classList.add('hidden');
+                    snapshot.forEach(doc => {
+                        const recordData = doc.data();
+                        const recordItem = document.createElement('div');
+                        recordItem.className = 'record-item p-4 bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200';
+                        
+                        // Chuyển đổi timestamp thành định dạng ngày giờ dễ đọc
+                        const formattedDateTime = new Date(recordData.dateTime).toLocaleString('vi-VN');
+                        
+                        // Tạo liên kết đến trang phiếu khám chi tiết
+                        recordItem.innerHTML = `
+                            <a href="examination-form - dang cs - goc tot.html?ownerId=${ownerId}&petId=${petId}&recordId=${doc.id}" class="block no-underline text-gray-800">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="font-bold">Ngày khám: ${formattedDateTime}</h4>
+                                    <span class="text-sm bg-gray-200 text-gray-600 px-2 py-1 rounded-full">ID: ${recordData.recordId || doc.id.substring(0, 5)}</span>
+                                </div>
+                                <p class="text-sm text-gray-600"><strong>Chẩn đoán:</strong> ${recordData.diagnosis || 'Chưa có'}</p>
+                                <p class="text-sm text-gray-600"><strong>Ghi chú:</strong> ${recordData.notes || 'Không có'}</p>
+                            </a>
+                        `;
+                        recordsListDiv.appendChild(recordItem);
+                    });
+                }
+            });
+        }
+
+        // Xử lý sự kiện sau khi toàn bộ DOM đã được tải
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lắng nghe trạng thái đăng nhập
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUserId = user.uid;
+                    if (ownerId && petId) {
+                        // Nạp thông tin chủ và vật nuôi
+                        await fetchOwnerAndPetInfo(currentUserId, ownerId, petId);
+                        // Lắng nghe và hiển thị lịch sử khám
+                        listenForMedicalRecords(currentUserId, ownerId, petId);
+                        
+                        // Cập nhật đường link cho các nút
+                        newExaminationBtn.href = `examination-form.html?ownerId=${ownerId}&petId=${petId}`;
+                        reExaminationBtn.href = `re-examination.html?ownerId=${ownerId}&petId=${petId}`;
+                    } else {
+                        alert("Không tìm thấy thông tin chủ vật nuôi hoặc vật nuôi. Vui lòng quay lại trang quản lý.");
+                        // Có thể chuyển hướng về trang quản lý chủ vật nuôi
+                        window.location.href = 'owner_pet_management.html'; 
+                    }
+                } else {
+                    alert("Bạn cần phải đăng nhập để xem trang này.");
+                    // Có thể chuyển hướng về trang đăng nhập
+                    // window.location.href = 'auth.html'; 
+                }
+            });
+        });
+    </script>
+</body>
+</html>
