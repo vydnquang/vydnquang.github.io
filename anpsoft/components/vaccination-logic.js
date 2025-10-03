@@ -1234,12 +1234,12 @@ const onScanSuccess = (decodedText, decodedResult) => {
         videoConstraints: {
             // Ưu tiên camera sau (ràng buộc này mạnh hơn đối tượng facingMode)
             facingMode: "environment", 
-            // Tùy chọn nâng cao (chỉ hỗ trợ trên một số trình duyệt/thiết bị)
+            /** KHÓA // Tùy chọn nâng cao (chỉ hỗ trợ trên một số trình duyệt/thiết bị)
             advanced: [{
                 // Yêu cầu lấy nét liên tục (nếu thiết bị hỗ trợ)
                 focusMode: "continuous", 
                 // Có thể thử giảm độ phân giải lý tưởng để giảm tải CPU hơn nữa (ví dụ: { ideal: 1280 } )
-            }]
+            }] */
         }
     };
 
@@ -3059,3 +3059,4 @@ setupAuthListeners(async (userId) => {
 });
 
 });
+
