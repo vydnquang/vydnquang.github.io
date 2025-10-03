@@ -305,16 +305,20 @@ class="bg-orange-400 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-orange-5
     <input type="text" id="search-input"
            class="block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
            placeholder="Quét mã QR hoặc nhập tên Thú cưng/Tên chủ để tìm kiếm">
-    
-    <button id="qr-scan-btn" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-md transition duration-300">
-        <i class="fas fa-qrcode text-gray-700"></i>
-    </button>
-    
-    <div id="qr-reader" style="width: 500px; display: none;"></div>
 
-    <button id="close-qr-btn" style="display: none;" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md">
-        Tắt Camera
-    </button>
+<!-- ĐOẠN CODE TẠO VÙNG CAMERA QUÉT QR -->
+    <button id="qr-scan-btn" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-md transition duration-300">
+    <i class="fas fa-qrcode text-gray-700"></i>
+</button>
+ 
+<div id="qr-reader" style="width: 100%; max-width: 500px; display: none;">
+    <video id="qr-video" class="w-full h-auto rounded-lg shadow-lg"></video>
+</div>
+
+<button id="close-qr-btn" style="display: none;" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md">
+    Tắt Camera
+</button>
+
 </div>
 
             <div><h2 class="text-2xl font-semibold text-center text-orange-600 mb-4">DANH SÁCH THÚ CƯNG</h2></div>
@@ -875,7 +879,8 @@ class="bg-orange-400 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-orange-5
     <script type="module" src="vaccination-logic.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+    <!-- <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script> -->
 
     </body>
 </html>
