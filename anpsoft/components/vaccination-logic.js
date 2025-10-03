@@ -1172,104 +1172,84 @@ async function loadVaccinePriceLists() {
 }
 
 
+// TOÀN BỘ LOGIC SỬ DỤNG CAMERA QUÉT MÃ QR VỚI ZXING
 // Khai báo các biến DOM cho nút và khung quét mã QR
-    const qrScanBtn = document.getElementById('qr-scan-btn');
-    const closeQrBtn = document.getElementById('close-qr-btn');
-    const qrReader = document.getElementById('qr-reader');
+const qrScanBtn = document.getElementById('qr-scan-btn');
+const closeQrBtn = document.getElementById('close-qr-btn');
+const videoElement = document.getElementById('qr-video'); // <--- Cần thêm thẻ <video>
+const qrReader = document.getElementById('qr-reader'); // <--- Giữ lại container
 
-    let html5QrCode;
+let codeReader;
+let videoStream;
 
-// Hàm xử lý khi quét mã QR thành công
-const onScanSuccess = (decodedText, decodedResult) => {
-    // decodedText chính là nội dung của mã QR (ID thú cưng)
+// --- HÀM XỬ LÝ THÀNH CÔNG ---
+const onScanSuccess = (result) => {
+    // result.text chính là nội dung của mã QR
+    const decodedText = result.text;
     
-    // ⭐ ĐÃ XÓA: Bỏ dòng alert() để tránh chặn luồng chính (tăng tốc độ UX) ⭐
-    // alert(`Mã QR đã quét: ${decodedText}`); 
-
-    // 1. Điền ID thú cưng vào ô tìm kiếm
     searchInput.value = decodedText;
-
-    // 2. Gọi hàm lọc để tự động tìm kiếm ngay lập tức
     filterPets();
 
-    // 3. Dừng camera (Đảm bảo việc dừng camera diễn ra sau khi tìm kiếm đã được kích hoạt)
-    html5QrCode.stop().then(ignore => {
-        qrReader.style.display = 'none';
-        qrScanBtn.style.display = 'block';
-        closeQrBtn.style.display = 'none';
-        
-        // ⭐ BỔ SUNG: KÍCH HOẠT RUNG NHẸ (Optional) ⭐
-        // Giúp người dùng biết đã quét thành công mà không cần thông báo trên màn hình
-        if (navigator.vibrate) {
-            navigator.vibrate(50); 
-        }
-        
-    }).catch(err => {
-        console.error("Lỗi khi dừng camera:", err);
-    });
+    // ⭐ Dừng stream video và ẩn giao diện ⭐
+    codeReader.reset(); 
+    qrReader.style.display = 'none';
+    qrScanBtn.style.display = 'block';
+    closeQrBtn.style.display = 'none';
+    
+    if (navigator.vibrate) {
+        navigator.vibrate(50);
+    }
 };
 
-    // Hàm xử lý khi có lỗi quét mã QR
-    const onScanFailure = (error) => {
-        // console.warn(`Mã QR không quét được, hãy thử lại: ${error}`);
-    };
+// --- HÀM KHỞI ĐỘNG CAMERA (BrowserMultiFormatReader) ---
+qrScanBtn?.addEventListener('click', async () => {
+    qrReader.style.display = 'block';
+    qrScanBtn.style.display = 'none';
+    closeQrBtn.style.display = 'block';
 
-    // Gắn sự kiện click cho nút "Quét mã QR"
-    qrScanBtn?.addEventListener('click', () => {
-        qrReader.style.display = 'block';
-        qrScanBtn.style.display = 'none';
-        closeQrBtn.style.display = 'block';
+    try {
+        // 1. Khởi tạo ZXing Reader
+        codeReader = new ZXing.BrowserMultiFormatReader(); // Hoặc BrowserMultiFormatReader nếu dùng import
 
-        html5QrCode = new Html5Qrcode("qr-reader");
-
-    // ⭐ CẤU HÌNH TỐI ƯU HÓA CAMERA VÀ HIỆU SUẤT ⭐
-    const qrCodeConfig = {
-        // 1. GIẢM FPS: Giảm tải CPU, khắc phục lỗi setTimeout và tăng độ ổn định của camera
-        fps: 5, 
+        // 2. Lấy ID của camera sau (để tránh lỗi)
+        const videoInputDevices = await codeReader.listVideoInputDevices();
+        const rearCamera = videoInputDevices.find(device => 
+            device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('environment')
+        );
         
-        // 2. KÍCH THƯỚC VÙNG QUÉT: Giữ nguyên để người dùng căn chỉnh tốt
-        qrbox: { width: 250, height: 250 },
-        
-        // 3. RÀNG BUỘC CAMERA (videoConstraints)
-        videoConstraints: {
-            // Ưu tiên camera sau (ràng buộc này mạnh hơn đối tượng facingMode)
-            facingMode: "environment", 
-            /** KHÓA // Tùy chọn nâng cao (chỉ hỗ trợ trên một số trình duyệt/thiết bị)
-            advanced: [{
-                // Yêu cầu lấy nét liên tục (nếu thiết bị hỗ trợ)
-                focusMode: "continuous", 
-                // Có thể thử giảm độ phân giải lý tưởng để giảm tải CPU hơn nữa (ví dụ: { ideal: 1280 } )
-            }] */
-        }
-    };
+        const cameraId = rearCamera ? rearCamera.deviceId : undefined;
 
-        html5QrCode.start(
-        // Thay vì chỉ truyền facingMode, truyền thẳng các ràng buộc chi tiết hơn
-        qrCodeConfig.videoConstraints, 
-        qrCodeConfig,
-        onScanSuccess,
-        onScanFailure
-    ).catch(err => {
-        console.error("Lỗi khi khởi động camera:", err);
+        // 3. Bắt đầu quét
+        // Sử dụng thẻ <video> đã tồn tại trong DOM
+        codeReader.decodeFromVideoDevice(
+            cameraId, 
+            'qr-video', // ID của thẻ <video> 
+            (result, error) => {
+                if (result) {
+                    onScanSuccess(result);
+                }
+                // Bạn có thể xử lý lỗi ở đây, nhưng ZXing thường rất yên tĩnh khi quét thất bại
+            }
+        );
+
+    } catch (err) {
+        console.error("Lỗi khi khởi động camera với ZXing:", err);
         alert("Không thể khởi động camera. Vui lòng cho phép quyền truy cập.");
         qrReader.style.display = 'none';
         qrScanBtn.style.display = 'block';
         closeQrBtn.style.display = 'none';
-    });
+    }
 });
 
-    // Gắn sự kiện click cho nút "Tắt Camera"
-    closeQrBtn?.addEventListener('click', () => {
-        if (html5QrCode) {
-            html5QrCode.stop().then(ignore => {
-                qrReader.style.display = 'none';
-                qrScanBtn.style.display = 'block';
-                closeQrBtn.style.display = 'none';
-            }).catch(err => {
-                console.error("Lỗi khi dừng camera:", err);
-            });
-        }
-    });
+// --- HÀM TẮT CAMERA ---
+closeQrBtn?.addEventListener('click', () => {
+    if (codeReader) {
+        codeReader.reset(); // Hàm reset của ZXing sẽ tự động tắt stream và giải phóng tài nguyên
+        qrReader.style.display = 'none';
+        qrScanBtn.style.display = 'block';
+        closeQrBtn.style.display = 'none';
+    }
+});
 
 
 
@@ -3059,4 +3039,3 @@ setupAuthListeners(async (userId) => {
 });
 
 });
-
