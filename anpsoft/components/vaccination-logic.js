@@ -2765,7 +2765,7 @@ function displayReminders(reminders) {
     // Cập nhật tiêu đề modal
     const reminderListTitle = document.getElementById('reminder-list-title');
     if (reminderListTitle) {
-        reminderListTitle.textContent = `DANH SÁCH NHẮC LỊCH TIÊM VACCINE (${filteredReminders.length}/${reminders.length})`;
+        reminderListTitle.textContent = `Danh sách Nhắc lịch tiêm chủng (${filteredReminders.length}/${reminders.length})`;
     }
 
     if (filteredReminders.length === 0) {
