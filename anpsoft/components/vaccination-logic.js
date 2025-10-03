@@ -1221,19 +1221,42 @@ const onScanSuccess = (decodedText, decodedResult) => {
         closeQrBtn.style.display = 'block';
 
         html5QrCode = new Html5Qrcode("qr-reader");
+
+    // ⭐ CẤU HÌNH TỐI ƯU HÓA CAMERA VÀ HIỆU SUẤT ⭐
+    const qrCodeConfig = {
+        // 1. GIẢM FPS: Giảm tải CPU, khắc phục lỗi setTimeout và tăng độ ổn định của camera
+        fps: 5, 
+        
+        // 2. KÍCH THƯỚC VÙNG QUÉT: Giữ nguyên để người dùng căn chỉnh tốt
+        qrbox: { width: 250, height: 250 },
+        
+        // 3. RÀNG BUỘC CAMERA (videoConstraints)
+        videoConstraints: {
+            // Ưu tiên camera sau (ràng buộc này mạnh hơn đối tượng facingMode)
+            facingMode: "environment", 
+            // Tùy chọn nâng cao (chỉ hỗ trợ trên một số trình duyệt/thiết bị)
+            advanced: [{
+                // Yêu cầu lấy nét liên tục (nếu thiết bị hỗ trợ)
+                focusMode: "continuous", 
+                // Có thể thử giảm độ phân giải lý tưởng để giảm tải CPU hơn nữa (ví dụ: { ideal: 1280 } )
+            }]
+        }
+    };
+
         html5QrCode.start(
-            { facingMode: "environment" }, // Ưu tiên camera sau
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-            onScanSuccess,
-            onScanFailure
-        ).catch(err => {
-            console.error("Lỗi khi khởi động camera:", err);
-            alert("Không thể khởi động camera. Vui lòng cho phép quyền truy cập.");
-            qrReader.style.display = 'none';
-            qrScanBtn.style.display = 'block';
-            closeQrBtn.style.display = 'none';
-        });
+        // Thay vì chỉ truyền facingMode, truyền thẳng các ràng buộc chi tiết hơn
+        qrCodeConfig.videoConstraints, 
+        qrCodeConfig,
+        onScanSuccess,
+        onScanFailure
+    ).catch(err => {
+        console.error("Lỗi khi khởi động camera:", err);
+        alert("Không thể khởi động camera. Vui lòng cho phép quyền truy cập.");
+        qrReader.style.display = 'none';
+        qrScanBtn.style.display = 'block';
+        closeQrBtn.style.display = 'none';
     });
+});
 
     // Gắn sự kiện click cho nút "Tắt Camera"
     closeQrBtn?.addEventListener('click', () => {
