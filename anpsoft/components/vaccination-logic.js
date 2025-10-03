@@ -918,7 +918,6 @@ if (petData && petData.species) {
             });
 
 
-
             // Bổ sung code cho nút "Gọi điện"
             document.getElementById('call-btn').onclick = () => {
                 const phoneNumber = ownerData.phoneNumber;
@@ -938,8 +937,6 @@ if (petData && petData.species) {
                     alert('Không có số điện thoại để chat Zalo.');
                 }
             };
-
-
 
 
             fetchVaccinationHistory(petId, ownerId);
@@ -1311,11 +1308,6 @@ function filterPets() {
 }
 
 
-
-
-
-
-
 // Hàm chính để tìm tất cả lịch tiêm sắp tới và cập nhật số lượng trên nút
 /**
  * Tải tất cả các phác đồ vaccine (chó và mèo) từ Firestore.
@@ -1404,56 +1396,87 @@ if (petSpeciesLower.includes('mèo') || petSpeciesLower.includes('cat')) {
                 if (!pet.vaccinations || pet.vaccinations.length === 0 || petProtocols.length === 0) {
                     return; // Bỏ qua nếu không có lịch sử tiêm hoặc không có phác đồ
                 }
-                
-                // Sắp xếp lịch sử tiêm theo ngày tiêm giảm dần
-                pet.vaccinations.sort((a, b) => new Date(b.date) - new Date(a.date));
-                const latestVaccine = pet.vaccinations[0]; // Mũi tiêm gần nhất
-                
-                // Tìm phác đồ tương ứng với tên mũi tiêm gần nhất
-                const matchingProtocol = petProtocols.find(p => p.name === latestVaccine.vaccineName);
 
-if (matchingProtocol) {
-    const nextDoseDays = matchingProtocol.nextDoseDays;
-    const nextDoseName = matchingProtocol.nextDoseName;
+                // ⭐ BƯỚC MỚI 1: TẠO SET (TẬP HỢP) TÊN CÁC MŨI ĐÃ TIÊM ⭐
+                // Giúp việc kiểm tra tồn tại cực nhanh (O(1))
+                const allVaccinatedNames = new Set(pet.vaccinations.map(v => v.vaccineName));
+                
+                // ⭐ BƯỚC MỚI 2: TÌM MŨI TIÊM GẦN NHẤT CHO MỖI PHÁC ĐỒ CÓ THỂ BẮT ĐẦU NHẮC NHỞ ⭐
+                
+                // Sử dụng Map để lưu lại mũi tiêm GẦN NHẤT cho mỗi TÊN MŨI TIÊM 
+                // đã tiêm (VD: Dại, 7 bệnh mũi 3)
+                const latestVaccinationsMap = pet.vaccinations.reduce((acc, current) => {
+                    const name = current.vaccineName;
+                    const currentDate = new Date(current.date);
+                    
+                    if (!acc[name] || new Date(acc[name].date) < currentDate) {
+                        acc[name] = current;
+                    }
+                    return acc;
+                }, {});
 
-    // ⭐ SỬ DỤNG HÀM TÍNH TOÁN LINH HOẠT MỚI ⭐
-    // nextDoseDays > 0 đảm bảo chúng ta chỉ nhắc nhở mũi tiêm tiếp theo (không phải mũi cuối cùng)
-    if (nextDoseDays && nextDoseDays > 0) {
+                
+                // ⭐ BƯỚC MỚI 3: LẶP QUA CÁC MŨI ĐÃ TIÊM GẦN NHẤT VÀ TÍNH TOÁN NHẮC NHỞ ⭐
+                Object.values(latestVaccinationsMap).forEach(latestVaccine => {
+                    
+                    // Lấy Tên mũi tiêm hiện tại (VD: '7 bệnh mũi 3' hoặc 'Dại')
+                    const currentVaccineName = latestVaccine.vaccineName;
+
+                    // 1. Tìm phác đồ tương ứng với mũi tiêm hiện tại
+                    const matchingProtocol = petProtocols.find(p => p.name === currentVaccineName);
+
+                    if (matchingProtocol) {
+                        const nextDoseName = matchingProtocol.nextDoseName;
+                        const nextDoseDays = matchingProtocol.nextDoseDays;
         
-        const nextInfo = calculateNextVaccinationInfo(
-            nextDoseDays,
-            nextDoseName,
-            latestVaccine.date // Ngày tiêm trước đó
-        );
 
-        // Logic lọc nhắc nhở: Chỉ hiển thị những lịch tiêm trong vòng 15 ngày tới HOẶC đã quá hạn (ví dụ: tối đa 60 ngày)
-        const maxDaysAhead = 15; // Số ngày tối đa để nhắc hẹn mũi tiêm sắp tới
-        const maxDaysOverdue = 60; // Số ngày tối đa khi mũi tiêm quá hạn
+                        // ⭐ BỔ SUNG: Kiểm tra xem đây có phải là mũi tiêm TỰ LẶP LẠI (Hằng năm) không ⭐
+                        const isSelfRepeating = currentVaccineName === nextDoseName;
+
+                        // Điều kiện tạo nhắc nhở:
+                        // 1. Phải có lịch trình tiếp theo (nextDoseDays > 0)
+                        // 2. PHẢI KHÔNG có trong lịch sử tiêm, HOẶC mũi tiêm là loại TỰ LẶP LẠI (Hằng năm)
+                        const shouldCreateReminder = nextDoseDays > 0 && 
+                                                    (!allVaccinatedNames.has(nextDoseName) || isSelfRepeating);
+
+                        if (shouldCreateReminder) {
+                            
+                            const nextInfo = calculateNextVaccinationInfo(
+                                nextDoseDays,
+                                nextDoseName, 
+                                latestVaccine.date 
+                            );
         
-        if (nextInfo.rawDate && nextInfo.daysRemaining <= maxDaysAhead && nextInfo.daysRemaining >= -maxDaysOverdue) {
-            
-            reminders.push({
-    // ⭐ BỔ SUNG HAI TRƯỜNG NÀY VÀO REMINDER OBJECT ⭐
-    petId: pet.petId,    
-    ownerId: ownerId, // OwnerId đã được định nghĩa ở vòng lặp ngoài
+                            // Logic lọc nhắc nhở (Không đổi so với code cũ của bạn)
+                            const maxDaysAhead = 15; 
+                            const maxDaysOverdue = 60; 
 
-                petName: pet.petName,
-                ownerName: owner.ownerName,
-                // ⭐ BỔ SUNG: ownerPhoneNumber để dùng cho nút gọi/zalo (Nếu trường này tồn tại trong object owner)
-                ownerPhoneNumber: owner.phoneNumber, 
-                
-                nextVaccine: nextInfo.nextDoseName, // Tên mũi tiêm tiếp theo
-                nextVaccineDate: nextInfo.nextDate, // Ngày tiêm tiếp theo (định dạng 'YYYY-MM-DD')
-                rawNextDate: nextInfo.rawDate, // Dùng để sắp xếp
-                statusText: nextInfo.statusText,
-                daysLeft: nextInfo.daysRemaining // Dùng để sắp xếp và tô màu
-            });
-        }
-    }
-}
-
-            });
-        }
+                            if (nextInfo.rawDate && nextInfo.daysRemaining <= maxDaysAhead && nextInfo.daysRemaining >= -maxDaysOverdue) {
+                                
+                                reminders.push({
+                                    // ... (các trường dữ liệu không đổi) ...
+                                    petId: pet.petId,
+                                    ownerId: ownerId, 
+                                    petName: pet.petName,
+                                    ownerName: owner.ownerName,
+                                    ownerPhoneNumber: owner.phoneNumber,
+                                    
+                                    // Tên mũi tiêm tiếp theo (Ví dụ: 'Dại nhắc lần 1', '7 bệnh hằng năm')
+                                    nextVaccine: nextInfo.nextDoseName, 
+                                    nextVaccineDate: nextInfo.nextDate, 
+                                    rawNextDate: nextInfo.rawDate, 
+                                    statusText: nextInfo.statusText,
+                                    daysLeft: nextInfo.daysRemaining 
+                                });
+                            }
+                        }
+                        // Nếu nextDoseName đã tồn tại trong allVaccinatedNames, thì nhắc nhở này bị bỏ qua.
+                        // Ví dụ: Mũi tiêm '7 bệnh mũi 2' có nextDoseName là '7 bệnh mũi 3'. Nếu '7 bệnh mũi 3' 
+                        // đã tiêm rồi, thì nhắc nhở cho '7 bệnh mũi 2' bị loại bỏ.
+                    }
+                })
+            });
+        }                
         return reminders;
         
     } catch (error) {
@@ -2449,9 +2472,17 @@ if (showUpcomingBtn) {
         let reminders = window.currentReminders;
         if (!reminders || reminders.length === 0) {
             // Trường hợp dữ liệu chưa được tải lần đầu hoặc chưa có, tải lại
-            reminders = await findUpcomingVaccinations(); 
+            reminders = await findUpcomingVaccinations();
+        
+            // ⭐ BỔ SUNG: LƯU VÀO window.currentReminders ngay sau khi tải ⭐
+            window.currentReminders = reminders; 
         }
         
+        // ⭐ VỊ TRÍ BỔ SUNG: THÊM LOGIC SẮP XẾP TẠI ĐÂY ⭐
+        // Sắp xếp Tăng dần theo daysLeft: 
+        // Số âm (Quá hạn) -> Số 0 (Hôm nay) -> Số dương (Sắp tới)
+        reminders.sort((a, b) => a.daysLeft - b.daysLeft); 
+
         // ⭐ THAY THẾ bằng hàm hiển thị DẠNG BẢNG mới ⭐
         displayReminders(reminders); 
         
@@ -2681,18 +2712,33 @@ async function saveListData(formElement, collectionRef, type) {
         };
     }
 
-    try {
+// CODE DÙNG TỪ NGỮ THÔNG BÁO THÂN THIỆN
         const docId = document.getElementById(`${type === 'staff' ? 'staff' : (type === 'dog_vaccine' ? 'dog-vaccine' : 'cat-vaccine')}-id`).value;
-        
+
+    // ⭐ BƯỚC 1: TẠO ÁNH XẠ (MAP) DỊCH TỪ TYPE SANG TIẾNG VIỆT ⭐
+    const typeMap = {
+        'staff': 'Nhân viên',
+        'dog_vaccine': 'Vắc xin Chó',
+        'cat_vaccine': 'Vắc xin Mèo',
+        // Thêm các loại type khác nếu cần
+    };
+    // Lấy tên tiếng Việt. Nếu không tìm thấy, dùng nguyên giá trị type.
+    const friendlyType = typeMap[type] || type;
+
+
+    try {  
         if (docId) {
             // Chế độ chỉnh sửa (UPDATE)
             const docRef = doc(collectionRef, docId);
             await updateDoc(docRef, saveData);
-            alert(`Cập nhật ${type} thành công!`);
+            // ⭐ Câu thông báo thân thiện ⭐
+            alert(`Cập nhật ${friendlyType} thành công!`); 
+
+
         } else {
             // Chế độ thêm mới (CREATE)
             await addDoc(collectionRef, saveData);
-            alert(`Thêm ${type} mới thành công!`);
+            alert(`Thêm ${friendlyType} mới thành công!`);
         }
         
         // Gọi hàm reset form sau khi lưu thành công
@@ -2700,7 +2746,7 @@ async function saveListData(formElement, collectionRef, type) {
         
     } catch (error) {
         console.error(`Lỗi khi lưu ${type}:`, error);
-        alert(`Lỗi khi lưu ${type}. Vui lòng kiểm tra console.`);
+        alert(`Lỗi khi lưu ${friendlyType}. Vui lòng kiểm tra console.`);
     }
 }
 
@@ -2727,12 +2773,6 @@ if (catVaccineForm) {
         saveListData(catVaccineForm, catVaccineColRef, 'cat_vaccine');
     });
 }
-
-
-
-
-
-
 
 // ************************************************************************************************************
 // --- LOGIC HIỂN THỊ MODAL NHẮC LỊCH TIÊM (DẠNG BẢNG) ---
