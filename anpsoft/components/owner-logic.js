@@ -147,6 +147,7 @@ function renderOwnerList(owners) {
             <div class="flex-grow">
                 <h3 class="font-semibold text-lg text-gray-800">${ownerData.ownerName}</h3>
                 <p class="text-gray-600 text-sm"><i class="fas fa-phone-alt mr-2 text-blue-500"></i>${ownerData.phoneNumber}</p>
+                <p class="text-gray-600 text-sm"><i class="fa-solid fa-user-group mr-2 text-orange-500"></i>${ownerData.pronoun}</p>
                 <p class="text-gray-600 text-sm"><i class="fas fa-map-marker-alt mr-2 text-green-500"></i>${ownerData.address || 'Không có địa chỉ'}</p>
             </div>
             <div>
@@ -212,6 +213,7 @@ function renderPet(docId, petData) {
             <h3 class="font-semibold text-lg text-gray-800">${petData.petName}</h3>
             <p class="text-gray-600 text-sm"><strong>Loài:</strong> ${petData.species}</p>
             <p class="text-gray-600 text-sm"><strong>Giống:</strong> ${petData.breed || 'N/A'}</p>
+            <p class="text-gray-600 text-sm"><strong>Tính biệt:</strong> ${petData.sex}</p>
         </div>
         <div class="flex-shrink-0 flex items-center space-x-2">
             <button class="edit-pet-btn text-blue-600 hover:text-blue-800 transition mr-2" data-id="${docId}">
@@ -341,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-        // Xử lý nút Sửa
+        // Xử lý nút Sửa (chủ nuôi)
         else if (e.target.closest('.edit-owner-btn')) {
             // Lấy dữ liệu và điền vào form
             const ownerRef = doc(db, `users/${currentUserId}/private/data/owners`, docId);
@@ -349,6 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (ownerDoc.exists()) {
                 const data = ownerDoc.data();
                 document.getElementById('ownerName').value = data.ownerName;
+                document.getElementById('pronoun').value = data.pronoun;
                 document.getElementById('phoneNumber').value = data.phoneNumber;
                 document.getElementById('address').value = data.address;
                 addOwnerForm.dataset.editingId = docId;
@@ -372,6 +375,7 @@ addOwnerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const editingId = addOwnerForm.dataset.editingId;
     const ownerName = document.getElementById('ownerName').value;
+    const pronoun = document.getElementById('pronoun').value; // Thêm trường mới
     const phoneNumber = document.getElementById('phoneNumber').value;
     const address = document.getElementById('address').value;
 
@@ -394,6 +398,7 @@ addOwnerForm.addEventListener('submit', async (e) => {
 
     // Bước 2: Cập nhật các trường thông tin từ form
     ownerData.ownerName = ownerName;
+    ownerData.pronoun = pronoun;
     ownerData.phoneNumber = phoneNumber;
     ownerData.address = address;
 
@@ -421,7 +426,7 @@ addOwnerForm.addEventListener('submit', async (e) => {
     }
 });
 
-    // Hủy bỏ sửa chữa
+    // Hủy bỏ sửa chữa (chủ thú cưng)
     document.getElementById('cancel-owner-btn').addEventListener('click', () => {
         addOwnerForm.reset();
         addOwnerForm.dataset.editingId = '';
@@ -449,7 +454,7 @@ addOwnerForm.addEventListener('submit', async (e) => {
                 }
             }
         }
-        // Xử lý nút Sửa
+        // Xử lý nút Sửa (thú cưng)
         else if (e.target.closest('.edit-pet-btn')) {
             // Lấy dữ liệu và điền vào form
             const petRef = doc(db, `users/${currentUserId}/private/data/owners/${currentOwnerDocId}/pets`, docId);
@@ -462,6 +467,7 @@ addOwnerForm.addEventListener('submit', async (e) => {
                 document.getElementById('petBirthday').value = data.dob;
                 document.getElementById('petSex').value = data.sex;
                 document.getElementById('petDescription').value = data.description;
+                document.getElementById('petIdChip').value = data.petIdChip;
                 addPetForm.dataset.editingId = docId;
                 document.getElementById('cancel-pet-btn').classList.remove('hidden');
                 addPetFormContainer.classList.remove('hidden');
@@ -489,6 +495,7 @@ addPetForm.addEventListener('submit', async (e) => {
     const dob = document.getElementById('petBirthday').value;
     const sex = document.getElementById('petSex').value;
     const description = document.getElementById('petDescription').value;
+    const petIdChip = document.getElementById('petIdChip').value;
 
     let petData = {};
 
@@ -514,6 +521,7 @@ addPetForm.addEventListener('submit', async (e) => {
     petData.dob = dob;
     petData.sex = sex;
     petData.description = description;
+    petData.petIdChip = petIdChip;
 
     // Bước 3: Kiểm tra và tạo avatar nếu chưa có
     if (!petData.avatar) {
@@ -539,7 +547,7 @@ addPetForm.addEventListener('submit', async (e) => {
     }
 });
 
-    // Hủy bỏ sửa chữa thú nuôi
+    // Hủy bỏ sửa chữa (thú nuôi)
     document.getElementById('cancel-pet-btn').addEventListener('click', () => {
         addPetForm.reset();
         addPetForm.dataset.editingId = '';
@@ -572,7 +580,7 @@ addPetForm.addEventListener('submit', async (e) => {
 
 
 //======================================================================
-//                9. XỬ LÝ TÌM KIẾM
+//                9. XỬ LÝ TÌM KIẾM CHỦ NUÔI
 //======================================================================
 ownerSearchInput.addEventListener('input', (e) => {
     const searchTerm = normalizeName(e.target.value);
