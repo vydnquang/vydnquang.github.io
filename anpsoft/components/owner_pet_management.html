@@ -166,11 +166,6 @@
                 <button type="button" class="collapsible-btn bg-blue-300 text-blue-600 p-2 rounded-full hover:bg-blue-400 transition" data-target="owners">
                    <i id="owner-icon" class="fas fa-chevron-down collapsible-icon text-gray-600"></i>
 
-
-
-
-
-
             </div>
             <div id="add-owner-form-container" class="mt-4 hidden">
                 <form id="add-owner-form" class="space-y-4">
@@ -179,6 +174,28 @@
                         <input type="text" id="ownerName" name="ownerName" required
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
+
+
+
+                        <div>
+                            <label for="pronoun" class="block text-gray-700 font-medium mb-1">Xưng hô với chủ thú nuôi</label>
+                            <select id="pronoun" name="pronoun" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Chọn cách xưng hô</option>
+                                <option value="Anh">Anh</option>
+                                <option value="Chị">Chị</option>
+                                <option value="Em">Em</option>
+                                <option value="Bạn">Bạn</option>
+                                <option value="Cháu">Cháu</option>
+                                <option value="Cô">Cô</option>
+                                <option value="Chú">Chú</option>
+                                <option value="Bác">Bác</option>
+                                <option value="Ông">Ông</option>
+                                <option value="Bà">Bà</option>
+                            </select>
+                        </div>
+
+
                     <div>
                         <label for="phoneNumber" class="block text-gray-700 font-medium mb-1">Số điện thoại</label>
                         <input type="tel" id="phoneNumber" name="phoneNumber" required
@@ -257,7 +274,7 @@
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label for="petSex" class="block text-gray-700 font-medium mb-1">Giới tính</label>
+                                <label for="petSex" class="block text-gray-700 font-medium mb-1">Tính biệt</label>
                                 <select id="petSex" name="petSex" required
                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     <option value="Đực">Đực</option>
@@ -269,6 +286,11 @@
                             <label for="petDescription" class="block text-gray-700 font-medium mb-1">Dấu hiệu nhận dạng, màu lông</label>
                             <textarea id="petDescription" name="petDescription" rows="2"
                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <div>
+                            <label for="petIdChip" class="block text-gray-700 font-medium mb-1">Số Microchip</label>
+                            <input type="text" id="petIdChip" name="petIdChip"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div class="flex space-x-2 justify-end">
                             <button type="button" id="cancel-pet-btn" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition hidden">Hủy</button>
