@@ -1744,7 +1744,7 @@ async function getOverdueVaccinations(allPets) {
     return new Set(overdueIds);
 }
 
-// Hàm này tìm kiếm 5 thú cưng được tiêm vaccine gần đây nhất
+// Hàm này tìm kiếm 20 thú cưng được tiêm vaccine gần đây nhất
 const getRecentlyVaccinatedPets = (pets) => {
     const recentlyVaccinated = pets.map(pet => {
         // ⭐ ĐÃ SỬA: Bỏ Object.values() và dùng cú pháp Optional Chaining ngắn gọn hơn ⭐
@@ -1766,8 +1766,8 @@ const getRecentlyVaccinatedPets = (pets) => {
 
     recentlyVaccinated.sort((a, b) => b.latestVaccinationDate - a.latestVaccinationDate);
 
-    // Giữ nguyên logic trả về Set của 5 petId gần nhất
-    return new Set(recentlyVaccinated.slice(0, 5).map(pet => pet.petId));
+    // Giữ nguyên logic trả về Set của 20 petId gần nhất
+    return new Set(recentlyVaccinated.slice(0, 20).map(pet => pet.petId));
 };
 
 
@@ -3079,3 +3079,4 @@ setupAuthListeners(async (userId) => {
 });
 
 });
+
