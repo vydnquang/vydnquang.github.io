@@ -1744,7 +1744,7 @@ async function getOverdueVaccinations(allPets) {
     return new Set(overdueIds);
 }
 
-// Hàm này tìm kiếm 20 thú cưng được tiêm vaccine gần đây nhất
+// Hàm này tìm kiếm 5 thú cưng được tiêm vaccine gần đây nhất
 const getRecentlyVaccinatedPets = (pets) => {
     const recentlyVaccinated = pets.map(pet => {
         // ⭐ ĐÃ SỬA: Bỏ Object.values() và dùng cú pháp Optional Chaining ngắn gọn hơn ⭐
@@ -1766,8 +1766,8 @@ const getRecentlyVaccinatedPets = (pets) => {
 
     recentlyVaccinated.sort((a, b) => b.latestVaccinationDate - a.latestVaccinationDate);
 
-    // Giữ nguyên logic trả về Set của 20 petId gần nhất
-    return new Set(recentlyVaccinated.slice(0, 20).map(pet => pet.petId));
+    // Giữ nguyên logic trả về Set của 5 petId gần nhất
+    return new Set(recentlyVaccinated.slice(0, 5).map(pet => pet.petId));
 };
 
 
@@ -3001,6 +3001,82 @@ function exportToNativeExcel(modalId, fileName, tableSelector) {
 }
 
 
+
+
+
+//======================================================================
+//   BỔ SUNG TÍNH NĂNG: XUẤT EXCEL LỊCH SỬ TIÊM PHÒNG CỦA THÚ CƯNG
+//======================================================================
+const exportPetVaccineBtn = document.getElementById('export-pet-vaccine-btn');
+
+if (exportPetVaccineBtn) {
+    exportPetVaccineBtn.addEventListener('click', async () => {
+        // Kiểm tra điều kiện định danh theo đúng các biến toàn cục (global) trong file của bạn
+        if (!currentUserId || !currentOwnerId || !currentPetId) {
+            alert("Không tìm thấy thông tin thú cưng hiện tại để xuất dữ liệu.");
+            return;
+        }
+
+        // Lấy tên thú cưng và tên chủ trực tiếp từ giao diện Modal để đặt tên file cho đẹp
+        const petNameText = document.getElementById('pet-detail-pet-name')?.textContent?.trim() || "ThuCung";
+        const ownerNameText = document.getElementById('pet-detail-pet-owner')?.textContent?.replace("Chủ:", "")?.trim() || "KhachHang";
+
+        // Đổi trạng thái nút để người dùng không bấm liên tục khi đang tải dữ liệu từ Firestore
+        exportPetVaccineBtn.disabled = true;
+        exportPetVaccineBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Đang xử lý...`;
+
+        try {
+            // Tận dụng chính xác đường dẫn sub-collection theo cấu trúc Firestore hiện tại của bạn
+            const vaccineCollectionRef = collection(db, `users/${currentUserId}/private/data/owners/${currentOwnerId}/pets/${currentPetId}/vaccinations`);
+            const vaccineSnapshot = await getDocs(vaccineCollectionRef);
+
+            const excelRows = [];
+
+            // Duyệt qua dữ liệu các mũi tiêm thu thập được từ Firestore
+            vaccineSnapshot.forEach((doc) => {
+                const data = doc.data();
+                excelRows.push({
+                    "Tên vắc xin": data.name || data.vaccineName,
+                    "Ngày tiêm": data.date || data.vaccineDate,
+                    // "Ngày tiêm kế tiếp": data.nextVaccineDate || "",
+                    "Bác sĩ": data.doctor || "",
+                    "Ghi chú": data.notes || ""
+                });
+            });
+
+            if (excelRows.length === 0) {
+                alert("Thú cưng này chưa có lịch sử tiêm phòng nào để xuất file!");
+                exportPetVaccineBtn.disabled = false;
+                exportPetVaccineBtn.innerHTML = `<i class="fa-solid fa-file-excel"></i> <span>Xuất Excel</span>`;
+                return;
+            }
+
+            // Khởi tạo và đóng gói dữ liệu thành file Excel thông qua SheetJS
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(excelRows);
+            XLSX.utils.book_append_sheet(wb, ws, "Lịch sử tiêm");
+
+            // Loại bỏ các ký tự đặc biệt trong tên để tránh lỗi lưu file hệ điều hành
+            const safePetName = petNameText.replace(/[^a-zA-Z0-9À-ỹ ]/g, "").replace(/\s+/g, "_");
+            const safeOwnerName = ownerNameText.replace(/[^a-zA-Z0-9À-ỹ ]/g, "").replace(/\s+/g, "_");
+            
+            // Tiến hành tải file xuống máy người dùng
+            XLSX.writeFile(wb, `LichSuTiem_${safePetName}_${safeOwnerName}.xlsx`);
+
+        } catch (error) {
+            console.error("Lỗi khi kết xuất file Excel mũi tiêm:", error);
+            alert("Đã xảy ra lỗi trong quá trình kết xuất dữ liệu Excel.");
+        } finally {
+            // Khôi phục lại trạng thái ban đầu của nút bấm
+            exportPetVaccineBtn.disabled = false;
+            exportPetVaccineBtn.innerHTML = `<i class="fa-solid fa-file-excel"></i> <span>Xuất Excel</span>`;
+        }
+    });
+}
+
+
+
+
 // Hàm xác thực người dùng đã đăng nhập (ở cuối file)
 setupAuthListeners(async (userId) => { 
     currentUserId = userId;
@@ -3079,4 +3155,3 @@ setupAuthListeners(async (userId) => {
 });
 
 });
-
